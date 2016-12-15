@@ -5,7 +5,6 @@ module Scumbag
   const generatorConstructor = Object.getPrototypeOf(function*(){}).constructor;
   let game:Phaser.Game;
   let blocks:Iterator<any>;
-  let paused = false;
 
 
   function storeActor(actor:Actor):void
@@ -46,14 +45,6 @@ module Scumbag
     export function transport(level:string,playerRegion:string)
     {
       game.state.start("Overworld",true,false,level,playerRegion);
-    }
-
-
-    export function* startFight(map:string)
-    {
-      storeActors();
-      paused = true;
-      (<Overworld>state).transition(map);
     }
 
 
@@ -147,7 +138,6 @@ module Scumbag
      * content is the key for the script */
     export function setScript(content:string,caller?:Actor)
     {
-      paused = false;
       ScriptContext.state = <GuiState>game.state.getCurrentState();
       ScriptContext.caller = caller;
       blocks = generatorConstructor("ctx",game.cache.getText("stdScript") +
@@ -158,24 +148,7 @@ module Scumbag
     /** runs the script for one block */
     export function runScript(value:number)
     {
-      //if (paused) return;
       blocks.next(value);
-    }
-
-    /** check if script execution was paused for a betle */
-    export function checkPaused():boolean
-    {
-      if (paused)
-      {
-        paused = false;
-        return true
-      }
-      return false;
-    }
-
-    export function clearPause():void
-    {
-      paused = false;
     }
   }
 };

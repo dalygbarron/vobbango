@@ -3,11 +3,20 @@ For this release
 - the credits never end if you minimise them or press gamepad buttons during
   them
 
-- add an animation player type thing to display little animations either on
-  actors, or in regions
+- add an animation player type thing to display little animations centred on a certain
+  point on the screen.
+
+- add a thing to have other animations for actors that they can display
 
 - add a thing to chuck a comprihensible error message when you put in a
   nonexistent region
+
+- make a more advanced background system that can do cool freaky stuff. probably
+  use json to describe the backgrounds so they can get parsed easy and that. and make it
+  that they can get faded in and stuff.
+
+- either make it that there is a second background in front of the bottom tile layer, or
+  that the bottom layer can fade out or dissapear or something
 
 - make a gui thing that waits for a sound to play all the way through.
 
@@ -25,3 +34,6 @@ For this release
   script can look for it.
   If I want to make bullets do really freaky stuff, I could catch them in a variable
   belonging to their master and control them from there.
+
+
+- base all my time based things on milliseconds so I don't have to do division
