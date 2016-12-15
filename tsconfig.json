@@ -1,0 +1,14 @@
+{
+    "compilerOptions":
+    {
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "outFile": "release/game.js",
+      "sourceMap": true,
+      "target":"es6"
+    },
+    "exclude":
+    [
+        "release","src/weapons"
+    ]
+}
