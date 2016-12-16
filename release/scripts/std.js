@@ -23,11 +23,41 @@ function* read(book,bookName,bookChip)
 }
 
 
-/** makes the game wait for some fellows to move about */
-function* wait(paths,colour,time)
+/** lets you run some callback function periodically */
+class Periodic
 {
-  yield ctx.state.buildWaiter(paths,colour,time);
+  constructor(period,callback)
+  {
+    this.period = period;
+    this.callback = callback;
+    this.time = 0;
+  }
+
+  update(elapsed)
+  {
+    this.time += elapsed;
+    if (this.time >= this.period)
+    {
+      while (this.time >= this.period) this.time -= this.period;
+      this.callback();
+    }
+  }
 }
+
+
+
+
+/** makes the actor wait until a certain amount of time has passed */
+function* wait(time)
+{
+  var elapsed = 0;
+  while (elapsed < time)
+  {
+    elapsed += yield;
+  }
+  return elapsed - time;
+}
+
 
 
 /** sets a unique switch for this actor that can hopefully not collide with

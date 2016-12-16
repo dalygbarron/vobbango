@@ -5,26 +5,15 @@ module Scumbag
   {
     tracking    = false;
     collide     = true;
-    bouncy      = false;
     scaleSpeed  = 0;
-    power       = 1;
 
-    deathGun:   Weapon;
-    deathSpawn: string;
 
     /** constructs the bullet */
-    constructor(game:Phaser.Game,key:string,deathGun:Weapon,deathSpawn:string)
+    constructor(game:Phaser.Game,key:string)
     {
       super(game,0,0,key);
-
       this.anchor.set(0.5);
-
-      this.checkWorldBounds = true;
-      this.outOfBoundsKill = true;
       this.exists = false;
-
-      this.deathGun = deathGun;
-      this.deathSpawn = deathSpawn;
     }
 
 
@@ -34,43 +23,26 @@ module Scumbag
      * speed is the speed it moves at
      * gx and gy are the gravity that affect it
      */
-    fire(x:number,y:number,angle:number,speed:number,gx:number,gy:number,lifespan:number)
+    fire(x:number,y:number,angle:number,speed:number,gx:number,gy:number)
     {
       this.reset(x,y);
-      this.scale.set(1);
 
-      this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
+      this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
       this.angle = angle;
-      this.body.gravity.set(gx, gy);
-
-      this.lifespan = lifespan;
+      this.body.gravity.set(gx,gy);
     }
 
 
     update()
     {
-      if (this.tracking)
+      /** if it's out of the camera, end it */
+      if (this.x < this.game.camera.x ||
+          this.x > this.game.camera.x + this.game.camera.width ||
+          this.y < this.game.camera.y ||
+          this.y > this.game.camera.y + this.game.camera.height)
       {
-        this.rotation = Math.atan2(this.body.velocity.y, this.body.velocity.x);
+        this.kill();
       }
-
-      if (this.scaleSpeed > 0)
-      {
-        this.scale.x += this.scaleSpeed;
-        this.scale.y += this.scaleSpeed;
-      }
-    }
-
-
-    kill()
-    {
-      if (this.deathGun != undefined) this.deathGun.fire(this);
-      if (this.deathSpawn != null)
-      {
-        let state = this.game.state.getCurrentState();
-        if (state instanceof Fight) state.addFighter(this.deathSpawn,this.x,this.y);
-      }
-      return super.kill();
     }
   }
 }

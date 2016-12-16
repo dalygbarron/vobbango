@@ -15,8 +15,8 @@ function *load()
     {
       ctx.setSlot(slot);
       ctx.addCharacter("John Fogle");
-      ctx.setPlayerKey("chad2")
-      ctx.transport("robardsCutscene","richExit");
+      ctx.setPlayerKey("chad")
+      ctx.transport("agara","start");
     }
     ctx.toOverworld();
   }

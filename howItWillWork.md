@@ -13,3 +13,17 @@ with bullets and the level will require a different system, since they aim at th
 of the player. Possibly I could just add a second object on top of the player. That is
 also good because it will make hiding and showing it easy as you go between strafe mode
 and normal mode
+
+
+
+ok to deal with controlling bullets after the fact, we can create a bullet pool construct
+which is important anyway for memory usage. And yeah so you just create these pools and
+add whatever to them, but they can then have shit done to them.
+Maybe get rid of everything in the normal bullet update function though to save time.
+that ruins tracking though :/ who cares, no bullet hell uses that
+ok so the overworld will have a function called add bulletgroup which returns a bullet
+group object, and it has a function letting you add bullets, with priority mode too.
+and also a mode letting you get an array of the active bullets, or maybe something that
+lets you run a function on all of them.
+Oh yeah, all bullets in a group will look the same and have basically the same properties,
+so for other stuff make another group.

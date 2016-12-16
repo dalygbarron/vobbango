@@ -154,13 +154,6 @@ module Scumbag
     }
 
 
-    buildWaiter(actorPaths:{name:string,path:string}[],colour:number = -1,
-                time:number = 0)
-    {
-      this.setGui(new Waiter(this.game,actorPaths,colour,time));
-    }
-
-
     /** sets the gui to some gui element */
     private setGui(gui:GuiElement):void
     {

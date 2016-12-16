@@ -2,6 +2,12 @@
 
 module Scumbag
 {
+  export function createActor(game:Phaser.Game,data:any)
+  {
+    return new Actor(game,data.x,data.y,name,data.properties.key,data.properties.controller);
+  }
+
+
   /** a fighter that will jump about and all that in the battle system */
   export class Actor extends Phaser.Sprite
   {
@@ -9,6 +15,7 @@ module Scumbag
     updating:   boolean       = true;
     moveOnSpot: boolean;
     controller: Controller;
+    script:     string;
 
     /** like a sprite, but also with tile width and height */
     constructor
@@ -25,6 +32,7 @@ module Scumbag
       //turn on physics
       this.game.physics.arcade.enable(this);
       this.body.collideWorldBounds = true;
+      this.body.immovable = true;
 
       //set it's dimensions
       this.body.width = this.width / 5 * 4;

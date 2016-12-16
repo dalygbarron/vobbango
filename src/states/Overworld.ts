@@ -6,24 +6,18 @@ module Scumbag
   /** detects if it's time to run a script or yeah or nah or whatever and that */
   function touches(a:Actor,b:Actor)
   {
-    if (a.moveMode == MovementMode.TemporaryPath ||
-        b.moveMode == MovementMode.TemporaryPath ||
-        a.getPage().autorun || b.getPage().autorun || this.collideCooldown > 0)
-    {
-      return true;
-    }
 
-    if (a == this.player && b.getPage().script != "")
+    if (a == this.player && b.script != "")
     {
       this.player.body.immovable = false;
       this.collideCooldown = 1.0;
-      Script.setScript(b.getPage().script,b);
+      Script.setScript(b.script,b);
     }
-    else if (b == this.player && a.getPage().script != "")
+    else if (b == this.player && a.script != "")
     {
       this.player.body.immovable = false;
       this.collideCooldown = 1.0;
-      Script.setScript(a.getPage().script,a);
+      Script.setScript(a.script,a);
     }
     return true;
   }
@@ -41,12 +35,7 @@ module Scumbag
   {
     let x = region.x + region.width / 2;
     let y = region.y + region.height / 2;
-
-    let page = new Page();
-    page.key = StateOfGame.parameters.playerKey;
-
-    let player = new Actor(game,x,y,"player",[page]);
-    player.moveMode = MovementMode.PlayerControlled;
+    let player = new Actor(game,x,y,"player",StateOfGame.parameters.playerKey,"playerController");
     return player;
   }
 
@@ -59,6 +48,7 @@ module Scumbag
     tilemap:          Phaser.Tilemap;
     collisionLayer:   Phaser.TilemapLayer;
     actors:           Phaser.Group;
+    bullets:          Phaser.Group;
     regions:          {[name:string]:Region};
     player:           Actor;
     overlay:          Phaser.TileSprite   = null;
@@ -68,6 +58,7 @@ module Scumbag
     playerRegion:     string;
     returning:        boolean;
     collideCooldown:  number = 0.0;
+
 
     /** overrides Phaser.State.init() */
     init(map:string = null,playerRegion:string)
@@ -130,10 +121,7 @@ module Scumbag
       //add player and stuff
       if (this.playerRegion == null)
       {
-        let page = new Page();
-        page.key = StateOfGame.parameters.playerKey;
-        this.player = new Actor(this.game,0,0,"player",[page]);
-        this.player.moveMode = MovementMode.PlayerControlled;
+        this.player = new Actor(this.game,0,0,"player",StateOfGame.parameters.playerKey,"playerController");
         this.player.body.immovable = false;
       }
       else
@@ -152,9 +140,7 @@ module Scumbag
         let y = actors[i].y + this.tilemap.tileHeight - actors[i].height / 2;
         let name = actors[i].name;
 
-        let actor = new Actor(this.game,x,y,name,
-                              createPages(actors[i].properties.pages,name,
-                                          this.tilemap.key,this.regions));
+        let actor = createActor(this.game,actors[i]);
 
         this.actors.add(actor);
       }
@@ -171,9 +157,6 @@ module Scumbag
 
       this.game.camera.follow(this.player);
       this.game.camera.focusOnXY(this.player.position.x,this.player.position.y);
-
-      /* run the script that was going before the battle */
-      if (Script.checkPaused()) Script.runScript(0);
 
       //if there ain't no things then don't go there
       if (this.tilemap.properties != null)
@@ -222,7 +205,6 @@ module Scumbag
 
       //add button press callbacks
       let device = InputManager.getInputDevice(0);
-      //device.addOnButtonPress(Button.a,actorCollide,this);
       device.addOnButtonPress(Button.b,pause,this);
 
       //start a play time counter
@@ -307,6 +289,7 @@ module Scumbag
       this.actors.setAll('updating',true);
     }
 
+
     /** gives you an actor by their name, or returns null if no actor has that
      * name */
     getActorByName(name:string):Actor
@@ -321,6 +304,7 @@ module Scumbag
       return null;
     }
 
+
     restoreActors():void
     {
       for (let i = 0;i < StateOfGame.parameters.actors.length;i++)
@@ -332,18 +316,9 @@ module Scumbag
     }
 
 
-    transition(map:string):void
+    createBulletGroup(master:Actor,speed:number,size:number,key:string):BulletGroup
     {
-      this.onGuiStart();
-      let transitioner = this.add.image(this.camera.x + this.game.width / 2,
-                                        this.camera.y + this.game.height / 2,
-                                        "transition");
-      transitioner.anchor.setTo(0.5,0.5);
-      let tween = this.add.tween(transitioner.scale).to({x:30,y:30},700,Phaser.Easing.Default,true);
-      this.add.tween(transitioner).to({angle:1000},700,Phaser.Easing.Default,true);
-      tween.onComplete.add(function(){this.game.state.start("Fight",true,false,map);},this);
-      this.game.sound.play("swish");
-
+      return new BulletGroup(this.game,this.bullets,master,speed,size,key);
     }
   }
 };

@@ -1,7 +1,7 @@
 module Scumbag
 {
   /** this is how you will address all the buttons */
-  export const enum Button
+  export enum Button
   {
     a,
     b,
@@ -18,7 +18,7 @@ module Scumbag
 
 
   /** this is how you address all the axes */
-  export const enum Axis
+  export enum Axis
   {
     Horizontal,
     Vertical,

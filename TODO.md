@@ -18,7 +18,7 @@ For this release
 - either make it that there is a second background in front of the bottom tile layer, or
   that the bottom layer can fade out or dissapear or something
 
-- make a gui thing that waits for a sound to play all the way through.
+- make a script thing that waits for a sound to play all the way through.
 
 - make it that enemies are controlled by external scripts, and make them yield instead of
   returning as it will be heaps good and remove the need for a lot of trash. hypothetically
