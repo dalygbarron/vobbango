@@ -21,7 +21,7 @@ module Scumbag
     {
       super();
       this.image = game.add.image(0,0,key);
-      InputManager.getInputDevice(0).addOnButtonPress(Button.a,click,this);
+      InputManager.getInputDevice(0).addOnButtonPress(Button.Shoot,click,this);
     }
 
 
@@ -75,7 +75,7 @@ module Scumbag
     /** implements GuiElement.destroy */
     destroy()
     {
-      InputManager.getInputDevice(0).removeOnButtonPress(Button.a,click);
+      InputManager.getInputDevice(0).removeOnButtonPress(Button.Shoot,click);
       this.image.destroy();
     }
   }

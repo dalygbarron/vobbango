@@ -15,16 +15,10 @@ module Scumbag
     {
       super();
       this.buttons = new Array<Phaser.Key>(Button.nButtons);
-      this.buttons[Button.a] = game.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
-      this.buttons[Button.b] = game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
-      this.buttons[Button.x] = game.input.keyboard.addKey(Phaser.KeyCode.Z);
-      this.buttons[Button.y] = game.input.keyboard.addKey(Phaser.KeyCode.A);
-      this.buttons[Button.l] = game.input.keyboard.addKey(Phaser.KeyCode.S);
-      this.buttons[Button.r] = game.input.keyboard.addKey(Phaser.KeyCode.X);
-      this.buttons[Button.lTrigger] = game.input.keyboard.addKey(Phaser.KeyCode.D);
-      this.buttons[Button.rTrigger] = game.input.keyboard.addKey(Phaser.KeyCode.C);
-      this.buttons[Button.select] = game.input.keyboard.addKey(Phaser.KeyCode.BACKSPACE);
-      this.buttons[Button.start] = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+      this.buttons[Button.Shoot] = game.input.keyboard.addKey(Phaser.KeyCode.Z);
+      this.buttons[Button.Strafe] = game.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
+      this.buttons[Button.Bomb] = game.input.keyboard.addKey(Phaser.KeyCode.X);
+      this.buttons[Button.Pause] = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
 
       this.up = game.input.keyboard.addKey(Phaser.KeyCode.UP);
       this.down = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);

@@ -14,6 +14,8 @@
     {"type": "image","key": "selector","url": "images/selector.png"},
     {"type": "image","key": "cancel","url": "images/cancel.png"},
     {"type": "image","key": "new","url": "images/new.png"},
+    {"type": "image","key": "heart","url": "images/heart.png"},
+    {"type": "image","key": "life","url": "images/life.png"},
 
     {"type": "image","key": "blood1","url": "images/blood1.png"},
     {"type": "image","key": "blood2","url": "images/blood2.png"},
@@ -39,6 +41,9 @@
     {"type":"text","key":"saveScript","url":"scripts/save.js"},
     {"type":"text","key":"stdScript","url":"scripts/std.js"},
     {"type":"text","key":"playerController","url":"scripts/playerController.js"},
-    {"type":"text","key":"circleController","url":"scripts/circleController.js"}
+    {"type":"text","key":"circleController","url":"scripts/circleController.js"},
+
+    {"type":"audio","key":"shot","urls":["audio/shot.ogg"],"autoDecode": true},
+    {"type":"audio","key":"die","urls":["audio/die.ogg"],"autoDecode": true}
   ]
 }

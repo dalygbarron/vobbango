@@ -13,6 +13,7 @@ module Scumbag
       playerKey:  string;
       actors:     {name:string,x:number,y:number}[];
       score:      number;
+      lives:      number;
       time:       number;
     }
 
@@ -34,6 +35,7 @@ module Scumbag
         playerKey:  "",
         actors:     new Array<{name:string,x:number,y:number}>(),
         score:      0,
+        lives:      3,
         time:       0
       };
 

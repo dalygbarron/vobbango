@@ -1,5 +1,10 @@
 For this release
 ===============
+- maybe make the player a sub class
+
+- make it that the scripts are all loaded automatically, and also there is some kind of
+  include syntax to add files to other files
+
 - the credits never end if you minimise them or press gamepad buttons during
   them
 

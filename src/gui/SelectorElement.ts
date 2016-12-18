@@ -28,7 +28,7 @@ module Scumbag
       super();
       this.image = game.add.image(this.x,this.y,key);
       this.children = children;
-      InputManager.getInputDevice(0).addOnButtonPress(Button.a,click,this);
+      InputManager.getInputDevice(0).addOnButtonPress(Button.Shoot,click,this);
 
       this.oldVerticalStick = InputManager.getInputDevice(0).getAxisState(Axis.Vertical);
 
@@ -128,7 +128,7 @@ module Scumbag
     /** implements GuiElement.destroy */
     destroy()
     {
-      InputManager.getInputDevice(0).removeOnButtonPress(Button.a,click);
+      InputManager.getInputDevice(0).removeOnButtonPress(Button.Shoot,click);
       this.image.destroy();
       for (let i = 0;i < this.children.length;i++)
       {

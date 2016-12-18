@@ -33,10 +33,11 @@ module Scumbag
 
   function addPlayerAtRegion(game:Phaser.Game,region:Region,key:string)
   {
-    let x = region.x + region.width / 2;
-    let y = region.y + region.height / 2;
-    let player = new Actor(game,x,y,"player",StateOfGame.parameters.playerKey,"playerController");
-    return player;
+    let playerData =
+    {
+      x:region.x + region.width / 2,y:region.y + region.height / 2,properties:{type:"player"}
+    }
+    return createActor(game,playerData);
   }
 
 
@@ -121,8 +122,8 @@ module Scumbag
       //add player and stuff
       if (this.playerRegion == null)
       {
-        this.player = new Actor(this.game,0,0,"player",StateOfGame.parameters.playerKey,"playerController");
-        this.player.body.immovable = false;
+        //this.player = new Actor(this.game,0,0,"player",StateOfGame.parameters.playerKey,"playerController");
+        //this.player.body.immovable = false;
       }
       else
       {
@@ -150,6 +151,9 @@ module Scumbag
       {
         this.restoreActors();
       }
+
+      //create the bullets group
+      this.bullets = this.game.add.group();
 
       //create the top layer of the world
       this.tilemap.createLayer("overhead");
@@ -205,7 +209,7 @@ module Scumbag
 
       //add button press callbacks
       let device = InputManager.getInputDevice(0);
-      device.addOnButtonPress(Button.b,pause,this);
+      device.addOnButtonPress(Button.Pause,pause,this);
 
       //start a play time counter
       StateOfGame.startTimer();
@@ -248,6 +252,54 @@ module Scumbag
       {
         this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS / 1000;
         this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS / 1000;
+      }
+
+      //check collisions between bullets and stuff
+      for (let child of this.bullets.children)
+      {
+        if (child instanceof BulletGroup)
+        {
+
+          var thePlayer = this.player;
+
+          //bullets and the level
+          this.game.physics.arcade.collide
+          (
+            child,this.collisionLayer,function(bullet:Bullet){bullet.kill()}
+          );
+
+          //bullets and enemies
+          this.game.physics.arcade.overlap
+          (
+            child,this.actors,
+            function(bullet,actor)
+            {
+              if (actor == (<BulletGroup>child).master ||
+                            actor == thePlayer)
+              {
+                return false;
+              }
+
+              actor.damage(1);
+              bullet.kill();
+            }
+          );
+
+          //bullets and the player's heart
+          this.game.physics.arcade.overlap
+          (
+            child,this.player.heart,
+            function(bullet,heart)
+            {
+              console.log("hi");
+              if ((<BulletGroup>child).master == thePlayer) return false;
+              console.log("HIT");
+              thePlayer.damage(1);
+              bullet.kill();
+            }
+          );
+
+        }
       }
 
       //check collisions between the characetrsand the level
@@ -316,9 +368,9 @@ module Scumbag
     }
 
 
-    createBulletGroup(master:Actor,speed:number,size:number,key:string):BulletGroup
+    createBulletGroup(master:Actor,speed:number,size:number,key:string,sound:string):BulletGroup
     {
-      return new BulletGroup(this.game,this.bullets,master,speed,size,key);
+      return new BulletGroup(this.game,this.bullets,master,speed,size,key,sound);
     }
   }
 };

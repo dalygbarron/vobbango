@@ -17,16 +17,10 @@ module Scumbag
       this.pad = pad;
 
       this.buttons = new Array(Button.nButtons);
-      this.buttons[Button.a] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
-      this.buttons[Button.b] = this.pad.getButton(Phaser.Gamepad.XBOX360_B);
-      this.buttons[Button.x] = this.pad.getButton(Phaser.Gamepad.XBOX360_X);
-      this.buttons[Button.y] = this.pad.getButton(Phaser.Gamepad.XBOX360_Y);
-      this.buttons[Button.l] = this.pad.getButton(Phaser.Gamepad.XBOX360_LEFT_BUMPER);
-      this.buttons[Button.r] = this.pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_BUMPER);
-      this.buttons[Button.select] = this.pad.getButton(Phaser.Gamepad.XBOX360_BACK);
-      this.buttons[Button.start] = this.pad.getButton(Phaser.Gamepad.XBOX360_START);
-      this.buttons[Button.lTrigger] = this.pad.getButton(Phaser.Gamepad.XBOX360_LEFT_TRIGGER);
-      this.buttons[Button.rTrigger] = this.pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
+      this.buttons[Button.Shoot] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
+      this.buttons[Button.Strafe] = this.pad.getButton(Phaser.Gamepad.XBOX360_B);
+      this.buttons[Button.Bomb] = this.pad.getButton(Phaser.Gamepad.XBOX360_X);
+      this.buttons[Button.Pause] = this.pad.getButton(Phaser.Gamepad.XBOX360_START);
 
       this.axes = new Array<number>(Axis.nAxes);
       this.axes[Axis.Horizontal] = Phaser.Gamepad.XBOX360_STICK_LEFT_X;

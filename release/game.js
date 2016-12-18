@@ -1,14 +1,24 @@
 var Scumbag;
 (function (Scumbag) {
     function createActor(game, data) {
-        return new Actor(game, data.x, data.y, name, data.properties.key, data.properties.controller);
+        if (data.properties.hasOwnProperty("type")) {
+            let enemyData = Scumbag.Enemies.getEnemyData(data.properties.type, game);
+            let actor = new Actor(game, data.x, data.y, name, enemyData.key, enemyData.controller, enemyData.health);
+            actor.properties = enemyData;
+            return actor;
+        }
+        let actor = new Actor(game, data.x, data.y, name, data.properties.key, data.properties.controller, data.properties.health);
+        actor.properties = data.properties;
+        return actor;
     }
     Scumbag.createActor = createActor;
     class Actor extends Phaser.Sprite {
-        constructor(game, x, y, name, key, scriptName) {
+        constructor(game, x, y, name, key, scriptName, health) {
             super(game, x, y, key);
             this.updating = true;
+            this.strafing = false;
             this.name = name;
+            this.health = health;
             this.game.physics.arcade.enable(this);
             this.body.collideWorldBounds = true;
             this.body.immovable = true;
@@ -16,21 +26,36 @@ var Scumbag;
             this.body.height = this.height / 12 * 5;
             this.body.offset.x = this.width / 10;
             this.body.offset.y = this.height / 12 * 7;
-            this.anchor.setTo(0.5, 0.5);
+            this.anchor.setTo(0.5);
             this.animations.add('front', [0, 1, 2, 3], 10, true);
             this.animations.add('back', [4, 5, 6, 7], 10, true);
+            this.heart = new Phaser.Sprite(game, 0, 0, "heart");
+            this.game.physics.arcade.enable(this.heart);
+            this.heart.body.width = this.heart.width / 3;
+            this.heart.body.height = this.heart.height / 3;
+            this.heart.body.offset.x = this.heart.width / 6;
+            this.heart.body.offset.y = this.heart.height / 6;
+            this.heart.anchor.setTo(0.5);
+            this.addChild(this.heart);
+            this.heart.alpha = 0;
             this.controller = new Scumbag.Controller(game, scriptName, this);
             game.add.existing(this);
         }
         update() {
-            if (!this.updating) {
+            if (!(this.updating && this.alive)) {
                 if (!this.moveOnSpot)
                     this.animations.stop();
                 return;
             }
             this.controller.run(this.game.time.elapsedMS);
+            if (this.strafing)
+                this.heart.alpha = 1;
+            else
+                this.heart.alpha = 0;
             let angle = Math.atan2(this.body.velocity.y, this.body.velocity.x);
             if (this.body.velocity.x != 0 || this.body.velocity.y != 0 || this.moveOnSpot) {
+                if (!this.strafing)
+                    this.angle = angle;
                 if (angle < 0)
                     this.animations.play("back");
                 else
@@ -95,9 +120,6 @@ var Scumbag;
             this.body.gravity.set(gx, gy);
         }
         update() {
-            if (this.tracking) {
-                this.rotation = Math.atan2(this.body.velocity.y, this.body.velocity.x);
-            }
             if (this.x < this.game.camera.x ||
                 this.x > this.game.camera.x + this.game.camera.width ||
                 this.y < this.game.camera.y ||
@@ -112,12 +134,18 @@ var Scumbag;
 (function (Scumbag) {
     let num = 0;
     class BulletGroup extends Phaser.Group {
-        constructor(game, parent, master, speed, size, key) {
+        constructor(game, parent, master, speed, size, key, sound) {
             super(game, parent, (num++).toString(), false, true, Phaser.Physics.ARCADE);
             this.master = master;
             this.speed = speed;
+            this.sound = sound;
             for (let i = 0; i < size; i++) {
-                this.add(new Scumbag.Bullet(game, key), true);
+                let bullet = new Scumbag.Bullet(game, key);
+                this.add(bullet, true);
+                bullet.body.width = this.width / 5 * 4;
+                bullet.body.height = this.height / 5 * 4;
+                bullet.body.offset.x = this.width / 10;
+                bullet.body.offset.y = this.height / 10;
             }
         }
         fire(x, y, gx, gy, angle) {
@@ -158,6 +186,7 @@ var Scumbag;
                 if (data[i].name == type)
                     return data[i];
             }
+            console.error("Couldn't find an enemy called " + type);
             return null;
         }
         Enemies.getEnemyData = getEnemyData;
@@ -513,7 +542,7 @@ var Scumbag;
             super();
             this.go = false;
             this.image = game.add.image(0, 0, key);
-            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.a, click, this);
+            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Shoot, click, this);
         }
         bringToFront() {
             this.image.bringToTop();
@@ -537,7 +566,7 @@ var Scumbag;
                 return 0;
         }
         destroy() {
-            Scumbag.InputManager.getInputDevice(0).removeOnButtonPress(Scumbag.Button.a, click);
+            Scumbag.InputManager.getInputDevice(0).removeOnButtonPress(Scumbag.Button.Shoot, click);
             this.image.destroy();
         }
     }
@@ -586,7 +615,7 @@ var Scumbag;
             this.selection = 0;
             this.image = game.add.image(this.x, this.y, key);
             this.children = children;
-            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.a, click, this);
+            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Shoot, click, this);
             this.oldVerticalStick = Scumbag.InputManager.getInputDevice(0).getAxisState(Scumbag.Axis.Vertical);
             let yPadding = 0;
             for (let i = 0; i < this.children.length; i++) {
@@ -643,7 +672,7 @@ var Scumbag;
                 return 0;
         }
         destroy() {
-            Scumbag.InputManager.getInputDevice(0).removeOnButtonPress(Scumbag.Button.a, click);
+            Scumbag.InputManager.getInputDevice(0).removeOnButtonPress(Scumbag.Button.Shoot, click);
             this.image.destroy();
             for (let i = 0; i < this.children.length; i++) {
                 this.children[i].destroy();
@@ -736,7 +765,7 @@ var Scumbag;
             this.selection = 0;
             this.image = game.add.image(this.x, this.y, key);
             this.children = children;
-            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.a, click, this);
+            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Shoot, click, this);
             this.oldHorizontalStick = Scumbag.InputManager.getInputDevice(0).getAxisState(Scumbag.Axis.Horizontal);
             let xPadding = 0;
             for (let i = 0; i < this.children.length; i++) {
@@ -807,7 +836,7 @@ var Scumbag;
                 return 0;
         }
         destroy() {
-            Scumbag.InputManager.getInputDevice(0).removeOnButtonPress(Scumbag.Button.a, click);
+            Scumbag.InputManager.getInputDevice(0).removeOnButtonPress(Scumbag.Button.Shoot, click);
             this.image.destroy();
             for (let i = 0; i < this.children.length; i++) {
                 this.children[i].destroy();
@@ -1019,17 +1048,11 @@ var Scumbag;
 var Scumbag;
 (function (Scumbag) {
     (function (Button) {
-        Button[Button["a"] = 0] = "a";
-        Button[Button["b"] = 1] = "b";
-        Button[Button["x"] = 2] = "x";
-        Button[Button["y"] = 3] = "y";
-        Button[Button["l"] = 4] = "l";
-        Button[Button["r"] = 5] = "r";
-        Button[Button["select"] = 6] = "select";
-        Button[Button["start"] = 7] = "start";
-        Button[Button["lTrigger"] = 8] = "lTrigger";
-        Button[Button["rTrigger"] = 9] = "rTrigger";
-        Button[Button["nButtons"] = 10] = "nButtons";
+        Button[Button["Shoot"] = 0] = "Shoot";
+        Button[Button["Strafe"] = 1] = "Strafe";
+        Button[Button["Bomb"] = 2] = "Bomb";
+        Button[Button["Pause"] = 3] = "Pause";
+        Button[Button["nButtons"] = 4] = "nButtons";
     })(Scumbag.Button || (Scumbag.Button = {}));
     var Button = Scumbag.Button;
     (function (Axis) {
@@ -1049,16 +1072,10 @@ var Scumbag;
             super();
             this.pad = pad;
             this.buttons = new Array(Scumbag.Button.nButtons);
-            this.buttons[Scumbag.Button.a] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
-            this.buttons[Scumbag.Button.b] = this.pad.getButton(Phaser.Gamepad.XBOX360_B);
-            this.buttons[Scumbag.Button.x] = this.pad.getButton(Phaser.Gamepad.XBOX360_X);
-            this.buttons[Scumbag.Button.y] = this.pad.getButton(Phaser.Gamepad.XBOX360_Y);
-            this.buttons[Scumbag.Button.l] = this.pad.getButton(Phaser.Gamepad.XBOX360_LEFT_BUMPER);
-            this.buttons[Scumbag.Button.r] = this.pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_BUMPER);
-            this.buttons[Scumbag.Button.select] = this.pad.getButton(Phaser.Gamepad.XBOX360_BACK);
-            this.buttons[Scumbag.Button.start] = this.pad.getButton(Phaser.Gamepad.XBOX360_START);
-            this.buttons[Scumbag.Button.lTrigger] = this.pad.getButton(Phaser.Gamepad.XBOX360_LEFT_TRIGGER);
-            this.buttons[Scumbag.Button.rTrigger] = this.pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
+            this.buttons[Scumbag.Button.Shoot] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
+            this.buttons[Scumbag.Button.Strafe] = this.pad.getButton(Phaser.Gamepad.XBOX360_B);
+            this.buttons[Scumbag.Button.Bomb] = this.pad.getButton(Phaser.Gamepad.XBOX360_X);
+            this.buttons[Scumbag.Button.Pause] = this.pad.getButton(Phaser.Gamepad.XBOX360_START);
             this.axes = new Array(Scumbag.Axis.nAxes);
             this.axes[Scumbag.Axis.Horizontal] = Phaser.Gamepad.XBOX360_STICK_LEFT_X;
             this.axes[Scumbag.Axis.Vertical] = Phaser.Gamepad.XBOX360_STICK_LEFT_Y;
@@ -1117,16 +1134,10 @@ var Scumbag;
         constructor(game) {
             super();
             this.buttons = new Array(Scumbag.Button.nButtons);
-            this.buttons[Scumbag.Button.a] = game.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
-            this.buttons[Scumbag.Button.b] = game.input.keyboard.addKey(Phaser.KeyCode.CONTROL);
-            this.buttons[Scumbag.Button.x] = game.input.keyboard.addKey(Phaser.KeyCode.Z);
-            this.buttons[Scumbag.Button.y] = game.input.keyboard.addKey(Phaser.KeyCode.A);
-            this.buttons[Scumbag.Button.l] = game.input.keyboard.addKey(Phaser.KeyCode.S);
-            this.buttons[Scumbag.Button.r] = game.input.keyboard.addKey(Phaser.KeyCode.X);
-            this.buttons[Scumbag.Button.lTrigger] = game.input.keyboard.addKey(Phaser.KeyCode.D);
-            this.buttons[Scumbag.Button.rTrigger] = game.input.keyboard.addKey(Phaser.KeyCode.C);
-            this.buttons[Scumbag.Button.select] = game.input.keyboard.addKey(Phaser.KeyCode.BACKSPACE);
-            this.buttons[Scumbag.Button.start] = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+            this.buttons[Scumbag.Button.Shoot] = game.input.keyboard.addKey(Phaser.KeyCode.Z);
+            this.buttons[Scumbag.Button.Strafe] = game.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
+            this.buttons[Scumbag.Button.Bomb] = game.input.keyboard.addKey(Phaser.KeyCode.X);
+            this.buttons[Scumbag.Button.Pause] = game.input.keyboard.addKey(Phaser.KeyCode.ESC);
             this.up = game.input.keyboard.addKey(Phaser.KeyCode.UP);
             this.down = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);
             this.left = game.input.keyboard.addKey(Phaser.KeyCode.LEFT);
@@ -1419,10 +1430,10 @@ var Scumbag;
         Scumbag.Script.setScript(this.game.cache.getText("saveScript"));
     }
     function addPlayerAtRegion(game, region, key) {
-        let x = region.x + region.width / 2;
-        let y = region.y + region.height / 2;
-        let player = new Scumbag.Actor(game, x, y, "player", Scumbag.StateOfGame.parameters.playerKey, "playerController");
-        return player;
+        let playerData = {
+            x: region.x + region.width / 2, y: region.y + region.height / 2, properties: { type: "player" }
+        };
+        return Scumbag.createActor(game, playerData);
     }
     class Overworld extends Scumbag.GuiState {
         constructor(...args) {
@@ -1464,8 +1475,6 @@ var Scumbag;
             this.tilemap.createLayer("things");
             this.regions = Scumbag.createRegions(this.tilemap.objects["regions"]);
             if (this.playerRegion == null) {
-                this.player = new Scumbag.Actor(this.game, 0, 0, "player", Scumbag.StateOfGame.parameters.playerKey, "playerController");
-                this.player.body.immovable = false;
             }
             else {
                 this.player = addPlayerAtRegion(this.game, this.regions[this.playerRegion], Scumbag.StateOfGame.parameters.playerKey);
@@ -1483,6 +1492,7 @@ var Scumbag;
             if (this.returning) {
                 this.restoreActors();
             }
+            this.bullets = this.game.add.group();
             this.tilemap.createLayer("overhead");
             this.game.camera.follow(this.player);
             this.game.camera.focusOnXY(this.player.position.x, this.player.position.y);
@@ -1518,7 +1528,7 @@ var Scumbag;
                 }
             }
             let device = Scumbag.InputManager.getInputDevice(0);
-            device.addOnButtonPress(Scumbag.Button.b, pause, this);
+            device.addOnButtonPress(Scumbag.Button.Pause, pause, this);
             Scumbag.StateOfGame.startTimer();
         }
         render() {
@@ -1535,6 +1545,28 @@ var Scumbag;
             if (this.overlay != null && this.overlay.tilePosition != null) {
                 this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS / 1000;
                 this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS / 1000;
+            }
+            for (let child of this.bullets.children) {
+                if (child instanceof Scumbag.BulletGroup) {
+                    var thePlayer = this.player;
+                    this.game.physics.arcade.collide(child, this.collisionLayer, function (bullet) { bullet.kill(); });
+                    this.game.physics.arcade.overlap(child, this.actors, function (bullet, actor) {
+                        if (actor == child.master ||
+                            actor == thePlayer) {
+                            return false;
+                        }
+                        actor.damage(1);
+                        bullet.kill();
+                    });
+                    this.game.physics.arcade.overlap(child, this.player.heart, function (bullet, heart) {
+                        console.log("hi");
+                        if (child.master == thePlayer)
+                            return false;
+                        console.log("HIT");
+                        thePlayer.damage(1);
+                        bullet.kill();
+                    });
+                }
             }
             this.game.physics.arcade.collide(this.actors, this.collisionLayer);
             this.collideCooldown -= this.game.time.elapsedMS / 1000;
@@ -1573,8 +1605,8 @@ var Scumbag;
                 dude.y = Scumbag.StateOfGame.parameters.actors[i].y;
             }
         }
-        createBulletGroup(master, speed, size, key) {
-            return new Scumbag.BulletGroup(this.game, this.bullets, master, speed, size, key);
+        createBulletGroup(master, speed, size, key, sound) {
+            return new Scumbag.BulletGroup(this.game, this.bullets, master, speed, size, key, sound);
         }
     }
     Scumbag.Overworld = Overworld;

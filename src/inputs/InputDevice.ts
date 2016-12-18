@@ -3,16 +3,10 @@ module Scumbag
   /** this is how you will address all the buttons */
   export enum Button
   {
-    a,
-    b,
-    x,
-    y,
-    l,
-    r,
-    select,
-    start,
-    lTrigger,
-    rTrigger,
+    Shoot,
+    Strafe,
+    Bomb,
+    Pause,
     nButtons
   }
 
