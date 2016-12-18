@@ -12,7 +12,7 @@ var thickCircle = new Periodic(90,function()
   bullets.fire
   (
     caller.body.x + xOffset,caller.body.y,player.body.x - caller.body.x,
-    player.body.y - caller.body.y,angle
+    player.body.y - caller.body.y,Math.random() * Math.PI * 2 - Math.PI
   );
 });
 
@@ -30,7 +30,7 @@ var thinCircle = new Periodic(70,function()
 while (caller.health > 50)
 {
   var elapsed = yield(null);
-  angle += elapsed / 100;
+  angle += elapsed / 110;
   thinCircle.update(elapsed);
 }
 

@@ -7,7 +7,7 @@
     },
     {
       "name":"player","key":"chad","controller":"playerController",
-      "health":1,"directional":true,"moveSpeed":150,"strafeSpeed":90
+      "health":1,"directional":true,"moveSpeed":180,"strafeSpeed":90
     }
   ]
 }

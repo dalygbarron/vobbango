@@ -52,6 +52,7 @@ module Scumbag
     bullets:          Phaser.Group;
     regions:          {[name:string]:Region};
     player:           Actor;
+    lives:            Phaser.TileSprite;
     overlay:          Phaser.TileSprite   = null;
     overlayDriftX:    number;
     overlayDriftY:    number;
@@ -59,6 +60,7 @@ module Scumbag
     playerRegion:     string;
     returning:        boolean;
     collideCooldown:  number = 0.0;
+    hitCooldown:      number = 0.0;
 
 
     /** overrides Phaser.State.init() */
@@ -196,6 +198,7 @@ module Scumbag
           }
         }
 
+        //create the overlay
         if (this.tilemap.properties.hasOwnProperty("overlay"))
         {
           let overlayData = this.tilemap.properties.overlay.split(",");
@@ -206,6 +209,10 @@ module Scumbag
           this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
         }
       }
+
+      //create the lives display
+      this.lives = this.game.add.tileSprite(0,0,60,20,"life");
+      this.lives.fixedToCamera = true;
 
       //add button press callbacks
       let device = InputManager.getInputDevice(0);
@@ -226,6 +233,20 @@ module Scumbag
         this.game.debug.spriteBounds(actor);
       },this);
       */
+
+      /*
+      this.game.debug.body(this.player.heart,"#FF0000AA");
+
+
+      this.bullets.forEach(function(bulletGroup)
+      {
+        bulletGroup.forEach(function(bullet)
+        {
+          this.game.debug.body(bullet,"#FF0000AA");
+        },this);
+      },this);
+      */
+
     }
 
     shutdown()
@@ -250,8 +271,15 @@ module Scumbag
       //drift the overlay
       if (this.overlay != null && this.overlay.tilePosition != null)
       {
-        this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS / 1000;
-        this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS / 1000;
+        this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS;
+        this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS;
+      }
+
+      //update the invulnerability thing
+      if (this.hitCooldown > 0)
+      {
+        this.hitCooldown -= this.game.time.elapsedMS;
+        if (this.hitCooldown <= 0) this.player.blendMode = PIXI.blendModes.NORMAL;
       }
 
       //check collisions between bullets and stuff
@@ -259,9 +287,6 @@ module Scumbag
       {
         if (child instanceof BulletGroup)
         {
-
-          var thePlayer = this.player;
-
           //bullets and the level
           this.game.physics.arcade.collide
           (
@@ -275,32 +300,47 @@ module Scumbag
             function(bullet,actor)
             {
               if (actor == (<BulletGroup>child).master ||
-                            actor == thePlayer)
+                            actor == this.player)
               {
                 return false;
               }
 
               actor.damage(1);
               bullet.kill();
-            }
+            },
+            null,
+            this
           );
+
 
           //bullets and the player's heart
-          this.game.physics.arcade.overlap
-          (
-            child,this.player.heart,
-            function(bullet,heart)
-            {
-              console.log("hi");
-              if ((<BulletGroup>child).master == thePlayer) return false;
-              console.log("HIT");
-              thePlayer.damage(1);
-              bullet.kill();
-            }
-          );
-
+          if ((<BulletGroup>child).master != this.player)
+          {
+            this.game.physics.arcade.overlap
+            (
+              child,this.player.heart,
+              function(a,b)
+              {
+                if (a instanceof Bullet) a.kill();
+                if (b instanceof Bullet) b.kill();
+                if (this.hitCooldown <= 0)
+                {
+                  this.game.sound.play("die");
+                  this.hitCooldown = 1500;
+                  this.player.blendMode = PIXI.blendModes.MULTIPLY;
+                  StateOfGame.parameters.lives -= 1;
+                  if (StateOfGame.parameters.lives <= 0) this.game.state.start("Gameover");
+                }
+              },
+              null,
+              this
+            );
+          }
         }
       }
+
+      //keep the lives bar right
+      this.lives.width = 20 * StateOfGame.parameters.lives;
 
       //check collisions between the characetrsand the level
       this.game.physics.arcade.collide(this.actors,this.collisionLayer);

@@ -28,10 +28,10 @@ module Scumbag
       {
         let bullet = new Bullet(game,key);
         this.add(bullet,true);
-        bullet.body.width = this.width / 5 * 4;
-        bullet.body.height = this.height / 5 * 4;
-        bullet.body.offset.x = this.width / 10;
-        bullet.body.offset.y = this.height / 10;
+        bullet.body.width = bullet.width / 5 * 4;
+        bullet.body.height = bullet.height / 5 * 4;
+        bullet.body.offset.x = bullet.width / 10;
+        bullet.body.offset.y = bullet.height / 10;
       }
     }
 

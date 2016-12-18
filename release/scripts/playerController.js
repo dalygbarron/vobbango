@@ -1,4 +1,4 @@
-var bullets = state.createBulletGroup(caller,300,40,'blood1');
+var bullets = state.createBulletGroup(caller,300,40,'bullet2',"shot");
 var xOffset = caller.body.width / 2;
 
 /** the player's bullet firing periodical thing */

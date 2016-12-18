@@ -31,11 +31,11 @@ var Scumbag;
             this.animations.add('back', [4, 5, 6, 7], 10, true);
             this.heart = new Phaser.Sprite(game, 0, 0, "heart");
             this.game.physics.arcade.enable(this.heart);
+            this.heart.anchor.setTo(0.5);
             this.heart.body.width = this.heart.width / 3;
             this.heart.body.height = this.heart.height / 3;
-            this.heart.body.offset.x = this.heart.width / 6;
-            this.heart.body.offset.y = this.heart.height / 6;
-            this.heart.anchor.setTo(0.5);
+            this.heart.body.offset.x = this.heart.width / 3;
+            this.heart.body.offset.y = this.heart.height / 3;
             this.addChild(this.heart);
             this.heart.alpha = 0;
             this.controller = new Scumbag.Controller(game, scriptName, this);
@@ -142,10 +142,10 @@ var Scumbag;
             for (let i = 0; i < size; i++) {
                 let bullet = new Scumbag.Bullet(game, key);
                 this.add(bullet, true);
-                bullet.body.width = this.width / 5 * 4;
-                bullet.body.height = this.height / 5 * 4;
-                bullet.body.offset.x = this.width / 10;
-                bullet.body.offset.y = this.height / 10;
+                bullet.body.width = bullet.width / 5 * 4;
+                bullet.body.height = bullet.height / 5 * 4;
+                bullet.body.offset.x = bullet.width / 10;
+                bullet.body.offset.y = bullet.height / 10;
             }
         }
         fire(x, y, gx, gy, angle) {
@@ -304,6 +304,7 @@ var Scumbag;
                     playerKey: "",
                     actors: new Array(),
                     score: 0,
+                    lives: 3,
                     time: 0
                 };
         }
@@ -1441,6 +1442,7 @@ var Scumbag;
             this.background = null;
             this.overlay = null;
             this.collideCooldown = 0.0;
+            this.hitCooldown = 0.0;
         }
         init(map = null, playerRegion) {
             this.playerRegion = playerRegion;
@@ -1527,6 +1529,8 @@ var Scumbag;
                     this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
                 }
             }
+            this.lives = this.game.add.tileSprite(0, 0, 60, 20, "life");
+            this.lives.fixedToCamera = true;
             let device = Scumbag.InputManager.getInputDevice(0);
             device.addOnButtonPress(Scumbag.Button.Pause, pause, this);
             Scumbag.StateOfGame.startTimer();
@@ -1543,31 +1547,44 @@ var Scumbag;
                 this.background.update(this.camera.x, this.camera.y);
             }
             if (this.overlay != null && this.overlay.tilePosition != null) {
-                this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS / 1000;
-                this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS / 1000;
+                this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS;
+                this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS;
+            }
+            if (this.hitCooldown > 0) {
+                this.hitCooldown -= this.game.time.elapsedMS;
+                if (this.hitCooldown <= 0)
+                    this.player.blendMode = PIXI.blendModes.NORMAL;
             }
             for (let child of this.bullets.children) {
                 if (child instanceof Scumbag.BulletGroup) {
-                    var thePlayer = this.player;
                     this.game.physics.arcade.collide(child, this.collisionLayer, function (bullet) { bullet.kill(); });
                     this.game.physics.arcade.overlap(child, this.actors, function (bullet, actor) {
                         if (actor == child.master ||
-                            actor == thePlayer) {
+                            actor == this.player) {
                             return false;
                         }
                         actor.damage(1);
                         bullet.kill();
-                    });
-                    this.game.physics.arcade.overlap(child, this.player.heart, function (bullet, heart) {
-                        console.log("hi");
-                        if (child.master == thePlayer)
-                            return false;
-                        console.log("HIT");
-                        thePlayer.damage(1);
-                        bullet.kill();
-                    });
+                    }, null, this);
+                    if (child.master != this.player) {
+                        this.game.physics.arcade.overlap(child, this.player.heart, function (a, b) {
+                            if (a instanceof Scumbag.Bullet)
+                                a.kill();
+                            if (b instanceof Scumbag.Bullet)
+                                b.kill();
+                            if (this.hitCooldown <= 0) {
+                                this.game.sound.play("die");
+                                this.hitCooldown = 1500;
+                                this.player.blendMode = PIXI.blendModes.MULTIPLY;
+                                Scumbag.StateOfGame.parameters.lives -= 1;
+                                if (Scumbag.StateOfGame.parameters.lives <= 0)
+                                    this.game.state.start("Gameover");
+                            }
+                        }, null, this);
+                    }
                 }
             }
+            this.lives.width = 20 * Scumbag.StateOfGame.parameters.lives;
             this.game.physics.arcade.collide(this.actors, this.collisionLayer);
             this.collideCooldown -= this.game.time.elapsedMS / 1000;
             this.game.physics.arcade.collide(this.actors, this.actors, touches, null, this);

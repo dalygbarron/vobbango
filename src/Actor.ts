@@ -32,7 +32,7 @@ module Scumbag
     controller: Controller;
     script:     string;
     properties: any;
-
+    
     /** like a sprite, but also with tile width and height */
     constructor
     (
@@ -66,12 +66,12 @@ module Scumbag
       //create it's heart
       this.heart = new Phaser.Sprite(game,0,0,"heart");
       this.game.physics.arcade.enable(this.heart);
+      this.heart.anchor.setTo(0.5);
       this.heart.body.width = this.heart.width / 3;
       this.heart.body.height = this.heart.height / 3;
-      this.heart.body.offset.x = this.heart.width / 6;
-      this.heart.body.offset.y = this.heart.height / 6;
+      this.heart.body.offset.x = this.heart.width / 3;
+      this.heart.body.offset.y = this.heart.height / 3;
 
-      this.heart.anchor.setTo(0.5);
       this.addChild(this.heart);
       this.heart.alpha = 0;
 
@@ -117,7 +117,7 @@ module Scumbag
     }
 
     /** sets the actor's string on the current page */
-    setKey(key:string)
+    setKey(key:string):void
     {
       if (key == "") this.alpha = 0;
       else this.loadTexture(key);
