@@ -34,7 +34,7 @@ module Scumbag
 
       //chuck on a sweet beat
       MusicManager.stopSong(MusicChannel.Ambience);
-      MusicManager.playSong(this.game,data.music,MusicChannel.Music);
+      MusicManager.playSong(data.music,MusicChannel.Music);
 
       //set the word wrap width
       bodyFont.wordWrapWidth = this.game.width;

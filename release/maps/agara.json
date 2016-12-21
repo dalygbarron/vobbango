@@ -67,6 +67,31 @@
                  "width":32,
                  "x":435.75683212493,
                  "y":102.333519241495
+                }, 
+                {
+                 "height":24,
+                 "id":92,
+                 "name":"weed! haha",
+                 "properties":
+                    {
+                     "controller":"wandererController",
+                     "key":"chad",
+                     "moveSpeed":"100",
+                     "script":"ctx.state.buildPause(\"Paused\",\"Return\",\"Quit\");\nyield;"
+                    },
+                 "propertytypes":
+                    {
+                     "controller":"string",
+                     "key":"string",
+                     "moveSpeed":"string",
+                     "script":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":32,
+                 "x":561.244841048522,
+                 "y":192.963747908533
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -98,11 +123,11 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":92,
+ "nextobjectid":93,
  "orientation":"orthogonal",
  "properties":
     {
-     "music":"music"
+     "music":"battle"
     },
  "propertytypes":
     {

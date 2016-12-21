@@ -106,12 +106,12 @@ module Scumbag
 
     export function playAmbience(key:string)
     {
-      MusicManager.playSong(game,key,MusicChannel.Ambience);
+      MusicManager.playSong(key,MusicChannel.Ambience);
     }
 
     export function playMusic(key:string)
     {
-      MusicManager.playSong(game,key,MusicChannel.Music);
+      MusicManager.playSong(key,MusicChannel.Music);
     }
 
     export function stopMusic() {MusicManager.stopSong(MusicChannel.Music)}

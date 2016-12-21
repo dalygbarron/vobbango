@@ -9,11 +9,18 @@ module Scumbag
 
   export namespace MusicManager
   {
+    let game:               Phaser.Game;
     let currentSongKey:     string[]        = new Array<string>(MusicChannel.NChannels);
     let currentSong:        Phaser.Sound[]  = new Array<Phaser.Sound>(MusicChannel.NChannels);
 
+
+    export function init(theGame:Phaser.Game):void
+    {
+      game = theGame;
+    }
+
     /** play some song unless it's already playing */
-    export function playSong(game:Phaser.Game,key:string,channel:MusicChannel):void
+    export function playSong(key:string,channel:MusicChannel):void
     {
       if (currentSongKey[channel] == key) return;
       if (currentSongKey[channel] != null)
@@ -34,6 +41,14 @@ module Scumbag
       {
         currentSong[channel].destroy();
         currentSongKey[channel] = null;
+      }
+    }
+
+    export function fadeOut(time:number,channel:MusicChannel):void
+    {
+      if (currentSong[channel] != null)
+      {
+        currentSong[channel].fadeOut(time);
       }
     }
   }

@@ -10,20 +10,20 @@ namespace Scumbag
     /** builds the controller and lets it access the scnee */
     constructor(game:Phaser.Game,scriptName:string,caller:Actor)
     {
-      console.log(scriptName);
-
       let input = InputManager.getInputDevice(0);
       this.script = generatorConstructor
       (
-        "state","caller","input","Axis","Button",game.cache.getText("stdScript")+
-                                                 game.cache.getText(scriptName)
-      )(<Overworld>game.state.getCurrentState(),caller,input,Axis,Button);
+        "state","caller","input","Axis","Button","sound","music","Channel",
+        game.cache.getText("stdScript")+game.cache.getText(scriptName)
+      )(<Overworld>game.state.getCurrentState(),caller,input,Axis,Button,game.sound,MusicManager,MusicChannel);
     }
 
 
-    run(elapsed:number)
+    /** runs the controller's script.
+     * returns false normally, or true when the script is over */
+    run(elapsed:number):boolean
     {
-      this.script.next(elapsed);
+      return this.script.next(elapsed).done;
     }
   }
 };

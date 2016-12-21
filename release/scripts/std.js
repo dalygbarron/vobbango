@@ -6,8 +6,16 @@
  * and text is the text in the textbox */
 function* say(name,chip,text)
 {
- ctx.state.buildTextbox(name,text,chip);
- yield;
+  state.buildTextbox(name,text,chip);
+  yield;
+}
+
+
+/** like say, but uses info from the caller to guess the name and chip and stuff */
+function* speak(mood,text)
+{
+  state.buildTextbox(caller.properties.name,text,caller.properties.name+"_"+mood);
+  yield;
 }
 
 
@@ -56,6 +64,14 @@ function* wait(time)
     elapsed += yield;
   }
   return elapsed - time;
+}
+
+
+/** makes the actor wait until an animation has played to continue */
+function* waitAnimation(name)
+{
+  caller.animations.play(name);
+  while (!caller.animations.currentAnim.isFinished) yield;
 }
 
 

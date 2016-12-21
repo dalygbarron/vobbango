@@ -5,18 +5,21 @@ var Scumbag;
             let enemyData = Scumbag.Enemies.getEnemyData(data.properties.type, game);
             let actor = new Actor(game, data.x, data.y, name, enemyData.key, enemyData.controller, enemyData.health);
             actor.properties = enemyData;
+            actor.script = game.cache.getText(enemyData.script);
             return actor;
         }
         let actor = new Actor(game, data.x, data.y, name, data.properties.key, data.properties.controller, data.properties.health);
         actor.properties = data.properties;
+        actor.script = data.properties.script;
         return actor;
     }
     Scumbag.createActor = createActor;
     class Actor extends Phaser.Sprite {
-        constructor(game, x, y, name, key, scriptName, health) {
+        constructor(game, x, y, name, key, controllerName, health) {
             super(game, x, y, key);
             this.updating = true;
             this.strafing = false;
+            this.fighting = false;
             this.name = name;
             this.health = health;
             this.game.physics.arcade.enable(this);
@@ -38,16 +41,19 @@ var Scumbag;
             this.heart.body.offset.y = this.heart.height / 3;
             this.addChild(this.heart);
             this.heart.alpha = 0;
-            this.controller = new Scumbag.Controller(game, scriptName, this);
+            this.controller = new Scumbag.Controller(game, controllerName, this);
             game.add.existing(this);
         }
         update() {
             if (!(this.updating && this.alive)) {
+                this.body.velocity.x = 0;
+                this.body.velocity.y = 0;
                 if (!this.moveOnSpot)
                     this.animations.stop();
                 return;
             }
-            this.controller.run(this.game.time.elapsedMS);
+            if (this.controller.run(this.game.time.elapsedMS))
+                this.kill();
             if (this.strafing)
                 this.heart.alpha = 1;
             else
@@ -56,23 +62,33 @@ var Scumbag;
             if (this.body.velocity.x != 0 || this.body.velocity.y != 0 || this.moveOnSpot) {
                 if (!this.strafing)
                     this.angle = angle;
-                if (angle < 0)
-                    this.animations.play("back");
-                else
-                    this.animations.play("front");
-                if (Math.abs(angle) < Math.PI / 2)
-                    this.scale.x = 1;
-                else if (Math.abs(angle) > Math.PI / 2)
-                    this.scale.x = -1;
+                if ((this.animations.currentAnim.name == "front" ||
+                    this.animations.currentAnim.name == "back") ||
+                    this.animations.currentAnim.isFinished) {
+                    if (angle < 0)
+                        this.animations.play("back");
+                    else
+                        this.animations.play("front");
+                    if (Math.abs(angle) < Math.PI / 2)
+                        this.scale.x = 1;
+                    else if (Math.abs(angle) > Math.PI / 2)
+                        this.scale.x = -1;
+                }
             }
-            else
+            else if (this.animations.currentAnim.name == "front" ||
+                this.animations.currentAnim.name == "back") {
                 this.animations.stop();
+            }
         }
         setKey(key) {
             if (key == "")
                 this.alpha = 0;
             else
                 this.loadTexture(key);
+        }
+        damage(amount) {
+            this.health -= amount;
+            return this;
         }
     }
     Scumbag.Actor = Actor;
@@ -164,13 +180,11 @@ var Scumbag;
     const generatorConstructor = Object.getPrototypeOf(function* () { }).constructor;
     class Controller {
         constructor(game, scriptName, caller) {
-            console.log(scriptName);
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", game.cache.getText("stdScript") +
-                game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", game.cache.getText("stdScript") + game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel);
         }
         run(elapsed) {
-            this.script.next(elapsed);
+            return this.script.next(elapsed).done;
         }
     }
     Scumbag.Controller = Controller;
@@ -218,9 +232,14 @@ var Scumbag;
     var MusicChannel = Scumbag.MusicChannel;
     var MusicManager;
     (function (MusicManager) {
+        let game;
         let currentSongKey = new Array(MusicChannel.NChannels);
         let currentSong = new Array(MusicChannel.NChannels);
-        function playSong(game, key, channel) {
+        function init(theGame) {
+            game = theGame;
+        }
+        MusicManager.init = init;
+        function playSong(key, channel) {
             if (currentSongKey[channel] == key)
                 return;
             if (currentSongKey[channel] != null) {
@@ -238,6 +257,12 @@ var Scumbag;
             }
         }
         MusicManager.stopSong = stopSong;
+        function fadeOut(time, channel) {
+            if (currentSong[channel] != null) {
+                currentSong[channel].fadeOut(time);
+            }
+        }
+        MusicManager.fadeOut = fadeOut;
     })(MusicManager = Scumbag.MusicManager || (Scumbag.MusicManager = {}));
 })(Scumbag || (Scumbag = {}));
 var Scumbag;
@@ -425,11 +450,11 @@ var Scumbag;
         function playSound(key) { game.sound.play(key); }
         ScriptContext.playSound = playSound;
         function playAmbience(key) {
-            Scumbag.MusicManager.playSong(game, key, Scumbag.MusicChannel.Ambience);
+            Scumbag.MusicManager.playSong(key, Scumbag.MusicChannel.Ambience);
         }
         ScriptContext.playAmbience = playAmbience;
         function playMusic(key) {
-            Scumbag.MusicManager.playSong(game, key, Scumbag.MusicChannel.Music);
+            Scumbag.MusicManager.playSong(key, Scumbag.MusicChannel.Music);
         }
         ScriptContext.playMusic = playMusic;
         function stopMusic() { Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Music); }
@@ -1193,6 +1218,7 @@ var Scumbag;
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             this.scale.pageAlignHorizontally = true;
             this.game.stage.smoothed = false;
+            Scumbag.MusicManager.init(this.game);
             this.game.input.gamepad.start();
             this.game.state.start('Preloader', true, false);
         }
@@ -1266,6 +1292,7 @@ var Scumbag;
             this.setGui(new Scumbag.Window(this.game, "window", new Array(head, shelf)));
         }
         buildSlot(cancelFirst = false) {
+            console.error("build");
             let children = [];
             for (let i = 0; i < N_SAVES; i++) {
                 let head = new Scumbag.TextElement(this.game, "Slot " + (i + 1), headingFont);
@@ -1322,7 +1349,7 @@ var Scumbag;
             let data = this.game.cache.getJSON("credits");
             this.background = this.add.sprite(0, 0, data.background);
             Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
-            Scumbag.MusicManager.playSong(this.game, data.music, Scumbag.MusicChannel.Music);
+            Scumbag.MusicManager.playSong(data.music, Scumbag.MusicChannel.Music);
             bodyFont.wordWrapWidth = this.game.width;
             this.items = this.game.add.group();
             let y = this.game.height;
@@ -1373,7 +1400,7 @@ var Scumbag;
             this.logo.anchor.setTo(0.5, 0.5);
             this.add.tween(this.background).to({ alpha: 1 }, 500, Phaser.Easing.Default, true);
             this.add.tween(this.logo).to({ y: this.game.height / 2 - this.logo.height / 2 }, 700, Phaser.Easing.Elastic.In, true, 500);
-            Scumbag.MusicManager.playSong(this.game, 'deadMusic', Scumbag.MusicChannel.Music);
+            Scumbag.MusicManager.playSong('deadMusic', Scumbag.MusicChannel.Music);
             Scumbag.Script.setScript(this.game.cache.getText("deadScript"));
         }
         postGuiUpdate() { }
@@ -1396,7 +1423,7 @@ var Scumbag;
             this.add.tween(this.background).to({ alpha: 1 }, 500, Phaser.Easing.Default, true);
             this.add.tween(this.logo).to({ alpha: 1 }, 800, Phaser.Easing.Default, true, 500);
             Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
-            Scumbag.MusicManager.playSong(this.game, "scumtime", Scumbag.MusicChannel.Music);
+            Scumbag.MusicManager.playSong("scumtime", Scumbag.MusicChannel.Music);
             Scumbag.InputManager.init(this.game);
             Scumbag.StateOfGame.flush();
             Scumbag.StateOfGame.stopTimer();
@@ -1413,15 +1440,25 @@ var Scumbag;
 var Scumbag;
 (function (Scumbag) {
     function touches(a, b) {
-        if (a == this.player && b.script != "") {
-            this.player.body.immovable = false;
-            this.collideCooldown = 1.0;
-            Scumbag.Script.setScript(b.script, b);
+        if (a == this.player) {
+            if (b.fighting) {
+                this.hurtPlayer();
+            }
+            else if (b.script != "" && this.collideCooldown <= 0) {
+                this.player.body.immovable = false;
+                this.collideCooldown = 1.0;
+                Scumbag.Script.setScript(b.script, b);
+            }
         }
-        else if (b == this.player && a.script != "") {
-            this.player.body.immovable = false;
-            this.collideCooldown = 1.0;
-            Scumbag.Script.setScript(a.script, a);
+        else if (b == this.player) {
+            if (a.fighting) {
+                this.hurtPlayer();
+            }
+            else if (a.script != "" && this.collideCooldown <= 0) {
+                this.player.body.immovable = false;
+                this.collideCooldown = 1.0;
+                Scumbag.Script.setScript(a.script, a);
+            }
         }
         return true;
     }
@@ -1503,13 +1540,13 @@ var Scumbag;
                     if (this.tilemap.properties.music == "none")
                         Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Music);
                     else
-                        Scumbag.MusicManager.playSong(this.game, this.tilemap.properties.music, Scumbag.MusicChannel.Music);
+                        Scumbag.MusicManager.playSong(this.tilemap.properties.music, Scumbag.MusicChannel.Music);
                 }
                 if (this.tilemap.properties.hasOwnProperty("ambience")) {
                     if (this.tilemap.properties.ambience == "none")
                         Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
                     else
-                        Scumbag.MusicManager.playSong(this.game, this.tilemap.properties.ambience, Scumbag.MusicChannel.Ambience);
+                        Scumbag.MusicManager.playSong(this.tilemap.properties.ambience, Scumbag.MusicChannel.Ambience);
                 }
                 else {
                     Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
@@ -1572,14 +1609,7 @@ var Scumbag;
                                 a.kill();
                             if (b instanceof Scumbag.Bullet)
                                 b.kill();
-                            if (this.hitCooldown <= 0) {
-                                this.game.sound.play("die");
-                                this.hitCooldown = 1500;
-                                this.player.blendMode = PIXI.blendModes.MULTIPLY;
-                                Scumbag.StateOfGame.parameters.lives -= 1;
-                                if (Scumbag.StateOfGame.parameters.lives <= 0)
-                                    this.game.state.start("Gameover");
-                            }
+                            this.hurtPlayer();
                         }, null, this);
                     }
                 }
@@ -1602,6 +1632,11 @@ var Scumbag;
         onGuiStart() {
             this.player.updating = false;
             this.actors.setAll('updating', false);
+            this.bullets.forEach(function (group) {
+                group.forEach(function (bullet) {
+                    bullet.kill();
+                }, this);
+            }, this);
         }
         onGuiEnd() {
             this.player.updating = true;
@@ -1621,6 +1656,16 @@ var Scumbag;
                 dude.x = Scumbag.StateOfGame.parameters.actors[i].x;
                 dude.y = Scumbag.StateOfGame.parameters.actors[i].y;
             }
+        }
+        hurtPlayer() {
+            if (this.hitCooldown > 0)
+                return;
+            this.game.sound.play("die");
+            this.hitCooldown = 1500;
+            this.player.blendMode = PIXI.blendModes.MULTIPLY;
+            Scumbag.StateOfGame.parameters.lives -= 1;
+            if (Scumbag.StateOfGame.parameters.lives <= 0)
+                this.game.state.start("Gameover");
         }
         createBulletGroup(master, speed, size, key, sound) {
             return new Scumbag.BulletGroup(this.game, this.bullets, master, speed, size, key, sound);

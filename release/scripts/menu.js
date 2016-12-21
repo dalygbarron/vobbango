@@ -56,7 +56,7 @@ while (true)
   if (value == 1)
   {
     yield* load();
-
+    return;
   }
   //show a pic of me!
   else if (value == 2)

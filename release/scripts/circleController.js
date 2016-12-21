@@ -1,10 +1,14 @@
 var angle = 0;
 
-var bullets = state.createBulletGroup(caller,100,40,'blood1',null);
-var otherBullets = state.createBulletGroup(caller,80,70,'blood2','shot');
+var bullets = state.createBulletGroup(caller,100,40,'blood1','shot');
+var otherBullets = state.createBulletGroup(caller,80,70,'blood2','drip');
 
 var player = state.player;
 var xOffset = caller.body.width / 2;
+
+caller.animations.add("red",[8,9,8,9,10,9,10,11],4,false);
+
+
 
 /** a periodic thing for firing a thick circle in the bullets group */
 var thickCircle = new Periodic(90,function()
@@ -24,9 +28,12 @@ var thinCircle = new Periodic(70,function()
 
 
 
+yield* speak("n","I am going to kill you");
+
 
 
 /* just fires thinCircle */
+caller.fighting = true;
 while (caller.health > 50)
 {
   var elapsed = yield(null);
@@ -34,12 +41,21 @@ while (caller.health > 50)
   thinCircle.update(elapsed);
 }
 
+//a little chat in between
+caller.fighting = false;
+music.fadeOut(1000,Channel.Music);//TODO: put this into std
+yield* speak("n","Yeah ok, but check out...");
+sound.play("charge");
+yield* waitAnimation("red");
+music.playSong("trogBattle",Channel.Music);
+yield* speak("n","MELTING ATTACK!!");
+caller.fighting = true;
 
+
+
+//second loop with both at once
 thinCircle.period *= 2;
-
-
-/* first loop fires thin circle and thick circle */
-while (true)
+while (caller.health > 0)
 {
   var elapsed = yield(null);
   angle += elapsed / 150;
@@ -50,3 +66,8 @@ while (true)
   thickCircle.update(elapsed);
   thinCircle.update(elapsed);
 }
+
+caller.fighting = false;
+yield* speak("n","I am dead now");
+sound.play("fiendDeath");
+yield* waitAnimation("red");

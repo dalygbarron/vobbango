@@ -3,21 +3,35 @@
 
 module Scumbag
 {
+
   /** detects if it's time to run a script or yeah or nah or whatever and that */
   function touches(a:Actor,b:Actor)
   {
-
-    if (a == this.player && b.script != "")
+    if (a == this.player)
     {
-      this.player.body.immovable = false;
-      this.collideCooldown = 1.0;
-      Script.setScript(b.script,b);
+      if (b.fighting)
+      {
+        this.hurtPlayer();
+      }
+      else if (b.script != "" && this.collideCooldown <= 0)
+      {
+        this.player.body.immovable = false;
+        this.collideCooldown = 1.0;
+        Script.setScript(b.script,b);
+      }
     }
-    else if (b == this.player && a.script != "")
+    else if (b == this.player)
     {
-      this.player.body.immovable = false;
-      this.collideCooldown = 1.0;
-      Script.setScript(a.script,a);
+      if (a.fighting)
+      {
+        this.hurtPlayer();
+      }
+      else if (a.script != "" && this.collideCooldown <= 0)
+      {
+        this.player.body.immovable = false;
+        this.collideCooldown = 1.0;
+        Script.setScript(a.script,a);
+      }
     }
     return true;
   }
@@ -171,13 +185,13 @@ module Scumbag
         if (this.tilemap.properties.hasOwnProperty("music"))
         {
           if (this.tilemap.properties.music == "none") MusicManager.stopSong(MusicChannel.Music);
-          else MusicManager.playSong(this.game,this.tilemap.properties.music,MusicChannel.Music);
+          else MusicManager.playSong(this.tilemap.properties.music,MusicChannel.Music);
         }
 
         if (this.tilemap.properties.hasOwnProperty("ambience"))
         {
           if (this.tilemap.properties.ambience == "none") MusicManager.stopSong(MusicChannel.Ambience);
-          else MusicManager.playSong(this.game,this.tilemap.properties.ambience,MusicChannel.Ambience);
+          else MusicManager.playSong(this.tilemap.properties.ambience,MusicChannel.Ambience);
         }
         else
         {
@@ -323,14 +337,7 @@ module Scumbag
               {
                 if (a instanceof Bullet) a.kill();
                 if (b instanceof Bullet) b.kill();
-                if (this.hitCooldown <= 0)
-                {
-                  this.game.sound.play("die");
-                  this.hitCooldown = 1500;
-                  this.player.blendMode = PIXI.blendModes.MULTIPLY;
-                  StateOfGame.parameters.lives -= 1;
-                  if (StateOfGame.parameters.lives <= 0) this.game.state.start("Gameover");
-                }
+                this.hurtPlayer();
               },
               null,
               this
@@ -371,6 +378,13 @@ module Scumbag
     {
       this.player.updating = false;
       this.actors.setAll('updating',false);
+      this.bullets.forEach(function(group)
+      {
+        group.forEach(function(bullet)
+        {
+          bullet.kill();
+        },this);
+      },this);
     }
 
 
@@ -405,6 +419,17 @@ module Scumbag
         dude.x = StateOfGame.parameters.actors[i].x;
         dude.y = StateOfGame.parameters.actors[i].y;
       }
+    }
+
+    /** does the stuff that happens when the plauer is hurt */
+    hurtPlayer()
+    {
+      if (this.hitCooldown > 0) return;
+      this.game.sound.play("die");
+      this.hitCooldown = 1500;
+      this.player.blendMode = PIXI.blendModes.MULTIPLY;
+      StateOfGame.parameters.lives -= 1;
+      if (StateOfGame.parameters.lives <= 0) this.game.state.start("Gameover");
     }
 
 

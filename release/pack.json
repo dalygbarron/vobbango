@@ -14,6 +14,7 @@
     {"type": "image","key": "selector","url": "images/selector.png"},
     {"type": "image","key": "cancel","url": "images/cancel.png"},
     {"type": "image","key": "new","url": "images/new.png"},
+    {"type": "image","key": "clicker","url": "images/clicker.png"},
     {"type": "image","key": "heart","url": "images/heart.png"},
     {"type": "image","key": "life","url": "images/life.png"},
 
@@ -23,7 +24,7 @@
 
     {"type": "image","key": "ast_n","url": "chips/ast_n.png"},
     {"type": "image","key": "sharret_n","url": "chips/sharret_n.png"},
-    {"type": "image","key": "dirk_n","url": "chips/dirk_n.png"},
+    {"type": "image","key": "chad_n","url": "chips/dirk_n.png"},
 
     {
       "type": "spritesheet","key": "chad","url": "images/chad.png",
@@ -43,8 +44,16 @@
     {"type":"text","key":"stdScript","url":"scripts/std.js"},
     {"type":"text","key":"playerController","url":"scripts/playerController.js"},
     {"type":"text","key":"circleController","url":"scripts/circleController.js"},
+    {"type":"text","key":"wandererController","url":"scripts/wandererController.js"},
 
+    {"type":"audio","key":"tick","urls":["audio/tick.ogg"],"autoDecode": true},
     {"type":"audio","key":"shot","urls":["audio/shot.ogg"],"autoDecode": true},
-    {"type":"audio","key":"die","urls":["audio/die.ogg"],"autoDecode": true}
+    {"type":"audio","key":"drip","urls":["audio/drip.ogg"],"autoDecode": true},
+    {"type":"audio","key":"die","urls":["audio/die.ogg"],"autoDecode": true},
+    {"type":"audio","key":"fiendDeath","urls":["audio/fiendDeath.ogg"],"autoDecode": true},
+    {"type":"audio","key":"charge","urls":["audio/charge.ogg"],"autoDecode": true},
+
+    {"type":"audio","key":"battle","urls":["audio/battle.ogg"],"autoDecode":true},
+    {"type":"audio","key":"trogBattle","urls":["audio/trogBattle.ogg"],"autoDecode":true}
   ]
 }

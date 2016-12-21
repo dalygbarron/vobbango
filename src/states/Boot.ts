@@ -18,6 +18,7 @@ module Scumbag
       this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
       this.scale.pageAlignHorizontally = true;
       this.game.stage.smoothed = false;
+      MusicManager.init(this.game);
 
       this.game.input.gamepad.start();
 

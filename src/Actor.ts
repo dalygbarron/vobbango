@@ -10,13 +10,14 @@ module Scumbag
       let enemyData = Enemies.getEnemyData(data.properties.type,game);
       let actor = new Actor(game,data.x,data.y,name,enemyData.key,enemyData.controller,enemyData.health);
       actor.properties = enemyData;
-      //TODO: make the actual region properties overide the other ones
+      actor.script = game.cache.getText(enemyData.script);
       return actor;
     }
 
     /* bespoke artisanal enemy */
     let actor = new Actor(game,data.x,data.y,name,data.properties.key,data.properties.controller,data.properties.health);
     actor.properties = data.properties;
+    actor.script = data.properties.script;
     return actor;
   }
 
@@ -27,16 +28,17 @@ module Scumbag
     name:       string;
     updating:   boolean   = true;
     strafing:   boolean   = false;
+    fighting:   boolean   = false;
     heart:      Phaser.Sprite;
     moveOnSpot: boolean;
     controller: Controller;
     script:     string;
     properties: any;
-    
+
     /** like a sprite, but also with tile width and height */
     constructor
     (
-      game:Phaser.Game,x:number,y:number,name:string,key:string,scriptName:string,
+      game:Phaser.Game,x:number,y:number,name:string,key:string,controllerName:string,
       health:number
     )
     {
@@ -76,7 +78,7 @@ module Scumbag
       this.heart.alpha = 0;
 
       //create it's controller
-      this.controller = new Controller(game,scriptName,this);
+      this.controller = new Controller(game,controllerName,this);
 
       //add it to the scene
       game.add.existing(this);
@@ -88,12 +90,14 @@ module Scumbag
     {
       if (!(this.updating && this.alive))
       {
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
         if (!this.moveOnSpot) this.animations.stop();
         return;
       }
 
-      //run the controller
-      this.controller.run(this.game.time.elapsedMS);
+      //run the controller, and kill the actor if it's over
+      if (this.controller.run(this.game.time.elapsedMS)) this.kill();
 
       //show or hide heart
       if (this.strafing) this.heart.alpha = 1;
@@ -107,12 +111,22 @@ module Scumbag
       )
       {
         if (!this.strafing) this.angle = angle;
-        if (angle < 0) this.animations.play("back");
-        else this.animations.play("front");
-        if (Math.abs(angle) < Math.PI / 2) this.scale.x = 1;
-        else if (Math.abs(angle) > Math.PI / 2) this.scale.x = -1;
+
+        if ((this.animations.currentAnim.name == "front" ||
+             this.animations.currentAnim.name == "back") ||
+            this.animations.currentAnim.isFinished)
+        {
+          if (angle < 0) this.animations.play("back");
+          else this.animations.play("front");
+          if (Math.abs(angle) < Math.PI / 2) this.scale.x = 1;
+          else if (Math.abs(angle) > Math.PI / 2) this.scale.x = -1;
+        }
       }
-      else this.animations.stop();
+      else if (this.animations.currentAnim.name == "front" ||
+           this.animations.currentAnim.name == "back")
+      {
+        this.animations.stop();
+      }
 
     }
 
@@ -121,6 +135,13 @@ module Scumbag
     {
       if (key == "") this.alpha = 0;
       else this.loadTexture(key);
+    }
+
+    /** overrides damage() so that it doesn't kill them */
+    damage(amount:number):Actor
+    {
+      this.health -= amount;
+      return this;
     }
   }
 };
