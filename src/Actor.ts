@@ -30,6 +30,7 @@ module Scumbag
     strafing:   boolean   = false;
     fighting:   boolean   = false;
     heart:      Phaser.Sprite;
+    halo:       Phaser.Sprite;
     moveOnSpot: boolean;
     controller: Controller;
     script:     string;
@@ -69,10 +70,7 @@ module Scumbag
       this.heart = new Phaser.Sprite(game,0,0,"heart");
       this.game.physics.arcade.enable(this.heart);
       this.heart.anchor.setTo(0.5);
-      this.heart.body.width = this.heart.width / 3;
-      this.heart.body.height = this.heart.height / 3;
-      this.heart.body.offset.x = this.heart.width / 3;
-      this.heart.body.offset.y = this.heart.height / 3;
+      this.heart.body.setCircle(this.heart.width / 9,this.heart.width / 9 * 4,this.heart.height / 9 * 4);
 
       this.addChild(this.heart);
       this.heart.alpha = 0;
@@ -95,6 +93,19 @@ module Scumbag
         if (!this.moveOnSpot) this.animations.stop();
         return;
       }
+
+
+      //if it's out of the camera, restore it's health
+      /** if it's out of the camera, end it */
+      if (this.x < this.game.camera.x ||
+          this.x > this.game.camera.x + this.game.camera.width ||
+          this.y < this.game.camera.y ||
+          this.y > this.game.camera.y + this.game.camera.height)
+      {
+        this.health = this.properties.health;
+      }
+
+
 
       //run the controller, and kill the actor if it's over
       if (this.controller.run(this.game.time.elapsedMS)) this.kill();
@@ -123,11 +134,10 @@ module Scumbag
         }
       }
       else if (this.animations.currentAnim.name == "front" ||
-           this.animations.currentAnim.name == "back")
+               this.animations.currentAnim.name == "back")
       {
         this.animations.stop();
       }
-
     }
 
     /** sets the actor's string on the current page */
@@ -142,6 +152,21 @@ module Scumbag
     {
       this.health -= amount;
       return this;
+    }
+
+    setHalo(key:string,nFrames:number,framerate:number,duration:number=1000)
+    {
+      if (this.halo != null) this.halo.destroy();
+      this.halo = this.game.add.sprite(0,0,key);
+      this.halo.anchor.set(0.5);
+      let frames = [];
+      for (let i = 0;i < nFrames;i++) frames.push(i);
+      this.halo.animations.add("animation",frames,duration,true);
+      this.halo.animations.play("animation");
+      this.addChild(this.halo);
+      this.halo.alpha = 0;
+      this.game.add.tween(this.halo).to({alpha:1},duration,Phaser.Easing.Default,true);
+      this.halo.blendMode = PIXI.blendModes.MULTIPLY;
     }
   }
 };

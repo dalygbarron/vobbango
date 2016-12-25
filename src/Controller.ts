@@ -14,7 +14,7 @@ namespace Scumbag
       this.script = generatorConstructor
       (
         "state","caller","input","Axis","Button","sound","music","Channel",
-        game.cache.getText("stdScript")+game.cache.getText(scriptName)
+        game.cache.getText(scriptName)
       )(<Overworld>game.state.getCurrentState(),caller,input,Axis,Button,game.sound,MusicManager,MusicChannel);
     }
 

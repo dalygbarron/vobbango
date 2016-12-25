@@ -18,6 +18,8 @@
     {"type": "image","key": "heart","url": "images/heart.png"},
     {"type": "image","key": "life","url": "images/life.png"},
 
+    {"type":"image","key":"fog","url":"images/fog.png"},
+
     {"type": "image","key": "blood1","url": "images/blood1.png"},
     {"type": "image","key": "blood2","url": "images/blood2.png"},
     {"type": "image","key": "bullet2","url": "images/bullet2.png"},
@@ -26,17 +28,13 @@
     {"type": "image","key": "sharret_n","url": "chips/sharret_n.png"},
     {"type": "image","key": "chad_n","url": "chips/dirk_n.png"},
 
-    {
-      "type": "spritesheet","key": "chad","url": "images/chad.png",
-      "frameWidth": 24,"frameHeight": 48
-    },
-    {
-      "type": "spritesheet","key": "chad2","url": "images/chad2.png",
-      "frameWidth": 24,"frameHeight": 48
-    },
+    {"type":"spritesheet","key":"chad","url":"images/chad.png","frameWidth":24,"frameHeight":48},
+    {"type":"spritesheet","key":"chad2","url":"images/chad2.png","frameWidth":24,"frameHeight":48},
     {"type":"spritesheet","key":"ast","url":"images/ast.png","frameWidth":24,"frameHeight":48},
     {"type":"spritesheet","key":"sharret","url":"images/sharret.png","frameWidth":24,"frameHeight":48},
 
+    {"type":"spritesheet","key":"grass","url":"images/grass.png","frameWidth":48,"frameHeight":88},
+    {"type":"spritesheet","key":"waves","url":"images/waves.png","frameWidth":100,"frameHeight":50},
 
     {"type":"text","key":"menuScript","url":"scripts/menu.js"},
     {"type":"text","key":"deadScript","url":"scripts/dead.js"},

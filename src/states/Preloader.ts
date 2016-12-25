@@ -18,6 +18,7 @@ module Scumbag
 
       //Load our actual games assets
       this.game.load.pack("main","pack.json");
+      this.game.load.pack("scripts","scriptPack.json");
     }
 
     create()

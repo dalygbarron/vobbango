@@ -1,13 +1,28 @@
+#ifndef STD_H
+#define STD_H
+/** the standard library that all other scripts are appended to before they are
+ * run */
+
+
+/** builds a textbox where name is the speaker's name, chip is the chip graphic,
+ * and text is the text in the textbox */
 function* say(name,chip,text)
 {
   state.buildTextbox(name,text,chip);
   yield;
 }
+
+
+/** like say, but uses info from the caller to guess the name and chip and stuff */
 function* speak(mood,text)
 {
   state.buildTextbox(caller.properties.name,text,caller.properties.name+"_"+mood);
   yield;
 }
+
+
+/** reads out the contents of the book property belonging to the actor denoted
+ * by name */
 function* read(book,bookName,bookChip)
 {
   var content = ctx.state.tilemap.properties[book].split("-");
@@ -16,6 +31,9 @@ function* read(book,bookName,bookChip)
     yield* say(bookName,bookChip,content[i].trim());
   }
 }
+
+
+/** lets you run some callback function periodically */
 class Periodic
 {
   constructor(period,callback)
@@ -24,6 +42,7 @@ class Periodic
     this.callback = callback;
     this.time = 0;
   }
+
   update(elapsed)
   {
     this.time += elapsed;
@@ -34,6 +53,11 @@ class Periodic
     }
   }
 }
+
+
+
+
+/** makes the actor wait until a certain amount of time has passed */
 function* wait(time)
 {
   var elapsed = 0;
@@ -43,53 +67,44 @@ function* wait(time)
   }
   return elapsed - time;
 }
+
+
+/** makes the actor wait until an animation has played to continue */
 function* waitAnimation(name)
 {
   caller.animations.play(name);
   while (!caller.animations.currentAnim.isFinished) yield;
 }
+
 function* waitEffect(x,y,name,nFrames,framerate)
 {
   var effect = state.addEffect(x,y,name,nFrames,framerate);
   while (effect.alive) yield;
 }
+
+
+
+/** sets a unique switch for this actor that can hopefully not collide with
+ * any other switch in the game */
 function setSelfSwitch(name,value)
 {
   ctx.setSwitch(ctx.state.tilemap.key+"-"+ctx.caller.name+"-"+name,value);
 }
+
+/** gets a unique switch for this actor that can hopefully not collide with
+ * any other switch in the game */
 function getSelfSwitch(name)
 {
   return ctx.getSwitch(ctx.state.tilemap.key+"-"+ctx.caller.name+"-"+name,value);
 }
+
+/** tells you if two arrays have each element equal and are of equal length */
 function compareArrays(a,b)
 {
   if (a.length != b.length) return false;
   for (var i = 0 ;i < a.length;i++) if (a[i] != b[i]) return false;
   return true;
 }
-var bullets = state.createBulletGroup(caller,300,40,'bullet2',"shot");
-var xOffset = caller.body.width / 2;
-var shooting = new Periodic(90,function()
-{
-  bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,caller.angle + (Math.random() / 4 - 0.125));
-});
-while (true)
-{
-  var elapsed = yield;
-  if (input.getButtonState(Button.Strafe))
-  {
-    caller.strafing = true;
-    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.strafeSpeed;
-    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.strafeSpeed;
-  }
-  else
-  {
-    caller.strafing = false;
-    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.moveSpeed;
-    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.moveSpeed;
-  }
-  if (input.getButtonState(Button.Shoot))
-  {
-    shooting.update(elapsed);
-  }
-}
+
+
+#endif

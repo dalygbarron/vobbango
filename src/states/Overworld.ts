@@ -129,7 +129,7 @@ module Scumbag
       this.collisionLayer.resizeWorld();
       this.collisionLayer.visible = false;
 
-      this.tilemap.createLayer("background");
+      let bottomLayer = this.tilemap.createLayer("background");
       this.tilemap.createLayer("things");
 
       //create the regions
@@ -167,6 +167,38 @@ module Scumbag
       {
         this.restoreActors();
       }
+
+      //create objects
+      this.tilemap.forEach
+      (
+        function(tile)
+        {
+          tile.blendeMode = PIXI.blendModes.MULTIPLY;
+          if (tile.hasOwnProperty("properties"))
+          {
+            if (tile.properties.hasOwnProperty("spawn"))
+            {
+              var data = tile.properties.spawn.split("-");
+              var type = data[0];
+              var chance = parseFloat(data[1]);
+              if (Math.random() < chance)
+              {
+                let object = new Phaser.Sprite
+                (
+                  this.game,tile.x * tile.width + Math.random() * tile.width,
+                  tile.y * tile.height + Math.random() * tile.height,type
+                );
+                let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
+                object.anchor.set(0.5,verticalAnchor);
+                object.animations.add("stand",[0,1,2],3 - Math.random() * 3,true);
+                object.animations.play("stand");
+                this.actors.add(object);
+              }
+            }
+          }
+        },
+        this,0,0,this.tilemap.width,this.tilemap.height,0
+      );
 
       //create the bullets group
       this.bullets = this.game.add.group();
@@ -239,16 +271,13 @@ module Scumbag
 
     /** overrides Phaser.State.render() */
     render()
-    {
-      /*
+    {/*
       this.actors.forEach(function(actor)
       {
         this.game.debug.body(actor,"#FF0000AA");
         this.game.debug.spriteBounds(actor);
       },this);
-      */
 
-      /*
       this.game.debug.body(this.player.heart,"#FF0000AA");
 
 
@@ -259,9 +288,8 @@ module Scumbag
           this.game.debug.body(bullet,"#FF0000AA");
         },this);
       },this);
-      */
 
-    }
+    */}
 
     shutdown()
     {
@@ -378,11 +406,17 @@ module Scumbag
     {
       this.player.updating = false;
       this.actors.setAll('updating',false);
+
       this.bullets.forEach(function(group)
       {
         group.forEach(function(bullet)
         {
-          bullet.kill();
+          bullet.savedGX = bullet.body.gravity.x;
+          bullet.savedGY = bullet.body.gravity.y;
+          bullet.savedVX = bullet.body.velocity.x;
+          bullet.savedVY = bullet.body.velocity.y;
+          bullet.body.velocity.set(0);
+          bullet.body.gravity.set(0);
         },this);
       },this);
     }
@@ -393,6 +427,16 @@ module Scumbag
     {
       this.player.updating = true;
       this.actors.setAll('updating',true);
+      this.bullets.forEach(function(group)
+      {
+        group.forEach(function(bullet)
+        {
+          bullet.body.gravity.x = bullet.savedGX;
+          bullet.body.gravity.y = bullet.savedGY;
+          bullet.body.velocity.x = bullet.savedVX;
+          bullet.body.velocity.y = bullet.savedVY;
+        },this);
+      },this);
     }
 
 
@@ -436,6 +480,40 @@ module Scumbag
     createBulletGroup(master:Actor,speed:number,size:number,key:string,sound:string):BulletGroup
     {
       return new BulletGroup(this.game,this.bullets,master,speed,size,key,sound);
+    }
+
+
+    addEffect(x:number,y:number,key:string,nFrames:number,framerate:number):Phaser.Sprite
+    {
+      let effect = this.game.add.sprite(x,y,key);
+      effect.anchor.setTo(0.5);
+      let frames = [];
+      for (let i = 0;i < nFrames;i++) frames.push(i);
+      effect.animations.add("animation",frames,framerate);
+      effect.animations.play("animation");
+      effect.animations.currentAnim.killOnComplete = true;
+      return effect;
+    }
+
+
+    setOverlay(key:string,driftX:number,driftY:number,time:number=1000)
+    {
+      if (this.overlay != null) this.overlay.destroy();
+      this.overlay = this.game.add.tileSprite(0,0,this.game.width,this.game.height,key);
+      this.overlay.fixedToCamera = true;
+      this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
+      this.overlayDriftX = driftX;
+      this.overlayDriftY = driftY;
+      this.overlay.alpha = 0;
+      this.add.tween(this.overlay).to({alpha:1},time,Phaser.Easing.Default,true);
+    }
+
+
+    removeOverlay(time:number=1000)
+    {
+      if (this.overlay == null) return;
+      let tween = this.add.tween(this.overlay).to({alpha:0},time,Phaser.Easing.Default,true);
+      tween.onComplete.add(function(){this.overlay.destroy()},this);
     }
   }
 };

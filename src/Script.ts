@@ -140,8 +140,7 @@ module Scumbag
     {
       ScriptContext.state = <GuiState>game.state.getCurrentState();
       ScriptContext.caller = caller;
-      blocks = generatorConstructor("ctx",game.cache.getText("stdScript") +
-                                    content)(ScriptContext);
+      blocks = generatorConstructor("ctx",content)(ScriptContext);
       runScript(0);
     }
 

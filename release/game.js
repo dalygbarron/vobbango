@@ -35,10 +35,7 @@ var Scumbag;
             this.heart = new Phaser.Sprite(game, 0, 0, "heart");
             this.game.physics.arcade.enable(this.heart);
             this.heart.anchor.setTo(0.5);
-            this.heart.body.width = this.heart.width / 3;
-            this.heart.body.height = this.heart.height / 3;
-            this.heart.body.offset.x = this.heart.width / 3;
-            this.heart.body.offset.y = this.heart.height / 3;
+            this.heart.body.setCircle(this.heart.width / 9, this.heart.width / 9 * 4, this.heart.height / 9 * 4);
             this.addChild(this.heart);
             this.heart.alpha = 0;
             this.controller = new Scumbag.Controller(game, controllerName, this);
@@ -51,6 +48,12 @@ var Scumbag;
                 if (!this.moveOnSpot)
                     this.animations.stop();
                 return;
+            }
+            if (this.x < this.game.camera.x ||
+                this.x > this.game.camera.x + this.game.camera.width ||
+                this.y < this.game.camera.y ||
+                this.y > this.game.camera.y + this.game.camera.height) {
+                this.health = this.properties.health;
             }
             if (this.controller.run(this.game.time.elapsedMS))
                 this.kill();
@@ -90,6 +93,21 @@ var Scumbag;
             this.health -= amount;
             return this;
         }
+        setHalo(key, nFrames, framerate, duration = 1000) {
+            if (this.halo != null)
+                this.halo.destroy();
+            this.halo = this.game.add.sprite(0, 0, key);
+            this.halo.anchor.set(0.5);
+            let frames = [];
+            for (let i = 0; i < nFrames; i++)
+                frames.push(i);
+            this.halo.animations.add("animation", frames, duration, true);
+            this.halo.animations.play("animation");
+            this.addChild(this.halo);
+            this.halo.alpha = 0;
+            this.game.add.tween(this.halo).to({ alpha: 1 }, duration, Phaser.Easing.Default, true);
+            this.halo.blendMode = PIXI.blendModes.MULTIPLY;
+        }
     }
     Scumbag.Actor = Actor;
 })(Scumbag || (Scumbag = {}));
@@ -123,14 +141,16 @@ var Scumbag;
     class Bullet extends Phaser.Sprite {
         constructor(game, key) {
             super(game, 0, 0, key);
-            this.tracking = false;
-            this.collide = true;
-            this.scaleSpeed = 0;
             this.anchor.set(0.5);
             this.exists = false;
         }
         fire(x, y, angle, speed, gx, gy) {
             this.reset(x, y);
+            this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
+            this.angle = angle;
+            this.body.gravity.set(gx, gy);
+        }
+        redirect(angle, speed, gx = 0, gy = 0) {
             this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
             this.angle = angle;
             this.body.gravity.set(gx, gy);
@@ -158,10 +178,7 @@ var Scumbag;
             for (let i = 0; i < size; i++) {
                 let bullet = new Scumbag.Bullet(game, key);
                 this.add(bullet, true);
-                bullet.body.width = bullet.width / 5 * 4;
-                bullet.body.height = bullet.height / 5 * 4;
-                bullet.body.offset.x = bullet.width / 10;
-                bullet.body.offset.y = bullet.height / 10;
+                bullet.body.setCircle(bullet.width / 3, bullet.width / 4, bullet.height / 4);
             }
         }
         fire(x, y, gx, gy, angle) {
@@ -170,6 +187,7 @@ var Scumbag;
             let bullet = this.getFirstExists(false);
             if (bullet != null)
                 bullet.fire(x, y, angle, this.speed, gx, gy);
+            return bullet;
         }
     }
     Scumbag.BulletGroup = BulletGroup;
@@ -181,7 +199,7 @@ var Scumbag;
     class Controller {
         constructor(game, scriptName, caller) {
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", game.cache.getText("stdScript") + game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel);
         }
         run(elapsed) {
             return this.script.next(elapsed).done;
@@ -477,8 +495,7 @@ var Scumbag;
         function setScript(content, caller) {
             ScriptContext.state = game.state.getCurrentState();
             ScriptContext.caller = caller;
-            blocks = generatorConstructor("ctx", game.cache.getText("stdScript") +
-                content)(ScriptContext);
+            blocks = generatorConstructor("ctx", content)(ScriptContext);
             runScript(0);
         }
         Script.setScript = setScript;
@@ -1510,7 +1527,7 @@ var Scumbag;
             this.tilemap.setCollisionBetween(0, 6569);
             this.collisionLayer.resizeWorld();
             this.collisionLayer.visible = false;
-            this.tilemap.createLayer("background");
+            let bottomLayer = this.tilemap.createLayer("background");
             this.tilemap.createLayer("things");
             this.regions = Scumbag.createRegions(this.tilemap.objects["regions"]);
             if (this.playerRegion == null) {
@@ -1531,6 +1548,24 @@ var Scumbag;
             if (this.returning) {
                 this.restoreActors();
             }
+            this.tilemap.forEach(function (tile) {
+                tile.blendeMode = PIXI.blendModes.MULTIPLY;
+                if (tile.hasOwnProperty("properties")) {
+                    if (tile.properties.hasOwnProperty("spawn")) {
+                        var data = tile.properties.spawn.split("-");
+                        var type = data[0];
+                        var chance = parseFloat(data[1]);
+                        if (Math.random() < chance) {
+                            let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, tile.y * tile.height + Math.random() * tile.height, type);
+                            let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
+                            object.anchor.set(0.5, verticalAnchor);
+                            object.animations.add("stand", [0, 1, 2], 3 - Math.random() * 3, true);
+                            object.animations.play("stand");
+                            this.actors.add(object);
+                        }
+                    }
+                }
+            }, this, 0, 0, this.tilemap.width, this.tilemap.height, 0);
             this.bullets = this.game.add.group();
             this.tilemap.createLayer("overhead");
             this.game.camera.follow(this.player);
@@ -1634,13 +1669,26 @@ var Scumbag;
             this.actors.setAll('updating', false);
             this.bullets.forEach(function (group) {
                 group.forEach(function (bullet) {
-                    bullet.kill();
+                    bullet.savedGX = bullet.body.gravity.x;
+                    bullet.savedGY = bullet.body.gravity.y;
+                    bullet.savedVX = bullet.body.velocity.x;
+                    bullet.savedVY = bullet.body.velocity.y;
+                    bullet.body.velocity.set(0);
+                    bullet.body.gravity.set(0);
                 }, this);
             }, this);
         }
         onGuiEnd() {
             this.player.updating = true;
             this.actors.setAll('updating', true);
+            this.bullets.forEach(function (group) {
+                group.forEach(function (bullet) {
+                    bullet.body.gravity.x = bullet.savedGX;
+                    bullet.body.gravity.y = bullet.savedGY;
+                    bullet.body.velocity.x = bullet.savedVX;
+                    bullet.body.velocity.y = bullet.savedVY;
+                }, this);
+            }, this);
         }
         getActorByName(name) {
             for (let i = 0; i < this.actors.length; i++) {
@@ -1670,6 +1718,34 @@ var Scumbag;
         createBulletGroup(master, speed, size, key, sound) {
             return new Scumbag.BulletGroup(this.game, this.bullets, master, speed, size, key, sound);
         }
+        addEffect(x, y, key, nFrames, framerate) {
+            let effect = this.game.add.sprite(x, y, key);
+            effect.anchor.setTo(0.5);
+            let frames = [];
+            for (let i = 0; i < nFrames; i++)
+                frames.push(i);
+            effect.animations.add("animation", frames, framerate);
+            effect.animations.play("animation");
+            effect.animations.currentAnim.killOnComplete = true;
+            return effect;
+        }
+        setOverlay(key, driftX, driftY, time = 1000) {
+            if (this.overlay != null)
+                this.overlay.destroy();
+            this.overlay = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, key);
+            this.overlay.fixedToCamera = true;
+            this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
+            this.overlayDriftX = driftX;
+            this.overlayDriftY = driftY;
+            this.overlay.alpha = 0;
+            this.add.tween(this.overlay).to({ alpha: 1 }, time, Phaser.Easing.Default, true);
+        }
+        removeOverlay(time = 1000) {
+            if (this.overlay == null)
+                return;
+            let tween = this.add.tween(this.overlay).to({ alpha: 0 }, time, Phaser.Easing.Default, true);
+            tween.onComplete.add(function () { this.overlay.destroy(); }, this);
+        }
     }
     Scumbag.Overworld = Overworld;
 })(Scumbag || (Scumbag = {}));
@@ -1681,6 +1757,7 @@ var Scumbag;
             this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
             this.game.load.pack("main", "pack.json");
+            this.game.load.pack("scripts", "scriptPack.json");
         }
         create() {
             var tween = this.add.tween(this.preloadBar).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);

@@ -3,11 +3,6 @@ module Scumbag
   /** a bullet that gets shot about the place and stuff */
   export class Bullet extends Phaser.Sprite
   {
-    tracking    = false;
-    collide     = true;
-    scaleSpeed  = 0;
-
-
     /** constructs the bullet */
     constructor(game:Phaser.Game,key:string)
     {
@@ -21,12 +16,20 @@ module Scumbag
      * x and y are it's position to start at
      * angle is the angle it is fired at
      * speed is the speed it moves at
-     * gx and gy are the gravity that affect it
-     */
+     * gx and gy are the gravity that affect it */
     fire(x:number,y:number,angle:number,speed:number,gx:number,gy:number)
     {
       this.reset(x,y);
 
+      this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
+      this.angle = angle;
+      this.body.gravity.set(gx,gy);
+    }
+
+    /** changes the direction of the bullet
+     * angle is the angle it changes to */
+    redirect(angle:number,speed:number,gx:number=0,gy:number=0)
+    {
       this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
       this.angle = angle;
       this.body.gravity.set(gx,gy);
