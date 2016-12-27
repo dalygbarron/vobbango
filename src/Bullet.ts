@@ -23,6 +23,7 @@ module Scumbag
 
       this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
       this.angle = angle;
+      this.rotation = angle;
       this.body.gravity.set(gx,gy);
     }
 
@@ -32,6 +33,7 @@ module Scumbag
     {
       this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
       this.angle = angle;
+      this.rotation = angle;
       this.body.gravity.set(gx,gy);
     }
 

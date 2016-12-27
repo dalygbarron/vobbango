@@ -23,6 +23,7 @@
     {"type": "image","key": "blood1","url": "images/blood1.png"},
     {"type": "image","key": "blood2","url": "images/blood2.png"},
     {"type": "image","key": "bullet2","url": "images/bullet2.png"},
+    {"type": "image","key": "hammerBullet","url": "images/hammerBullet.png"},
 
     {"type": "image","key": "ast_n","url": "chips/ast_n.png"},
     {"type": "image","key": "sharret_n","url": "chips/sharret_n.png"},

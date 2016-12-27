@@ -40,7 +40,7 @@ class Periodic
   {
     this.period = period;
     this.callback = callback;
-    this.time = 0;
+    this.time = this.period;
   }
 
   update(elapsed)
@@ -52,6 +52,13 @@ class Periodic
       this.callback();
     }
   }
+}
+
+
+/** tells you if a value is close to a target, within the margin */
+function close(value,target,margin)
+{
+  return (value >= target - margin && value <= target + margin);
 }
 
 
@@ -82,6 +89,37 @@ function* waitEffect(x,y,name,nFrames,framerate)
   while (effect.alive) yield;
 }
 
+
+
+function* waitMove(x,y)
+{
+  while (true)
+  {
+    var angle = Math.atan2(y - caller.y,x - caller.x);
+    caller.body.velocity.x = Math.cos(angle) * caller.properties.moveSpeed;
+    caller.body.velocity.y = Math.sin(angle) * caller.properties.moveSpeed;
+    yield* wait(50);
+    if (close(caller.x,x,5) && close(caller.y,y,5)) return;
+  }
+}
+
+
+function* waitRandomMove(time)
+{
+  var angle = Math.random() * Math.PI * 2 - Math.PI;
+  caller.body.velocity.x = Math.sin(angle) * caller.properties.moveSpeed;
+  caller.body.velocity.y = Math.cos(angle) * caller.properties.moveSpeed;
+  yield* wait(time);
+}
+
+
+function* waitMoveToRegion(region)
+{
+  var region = state.regions[region];
+  var x = region.x + region.width / 2;
+  var y = region.y + region.height / 2;
+  yield* waitMove(x,y);
+}
 
 
 /** sets a unique switch for this actor that can hopefully not collide with

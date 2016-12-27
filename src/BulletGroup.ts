@@ -28,7 +28,7 @@ module Scumbag
       {
         let bullet = new Bullet(game,key);
         this.add(bullet,true);
-        bullet.body.setCircle(bullet.width / 3,bullet.width / 4,bullet.height / 4);
+        bullet.body.setCircle(bullet.width / 4,bullet.width / 4,bullet.height / 4);
       }
     }
 
@@ -36,9 +36,17 @@ module Scumbag
     fire(x:number,y:number,gx:number,gy:number,angle:number):Bullet
     {
       if (this.sound != null) this.game.sound.play(this.sound);
-
       let bullet = this.getFirstExists(false);
       if (bullet != null) bullet.fire(x,y,angle,this.speed,gx,gy);
+      return bullet;
+    }
+
+
+    fireAtSpeed(x,y,angle,speed):Bullet
+    {
+      if (this.sound != null) this.game.sound.play(this.sound);
+      let bullet = this.getFirstExists(false);
+      if (bullet != null) bullet.fire(x,y,angle,speed,0,0);
       return bullet;
     }
   }

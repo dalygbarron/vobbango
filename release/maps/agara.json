@@ -115,6 +115,17 @@
                  "width":43,
                  "x":416.317624093698,
                  "y":351.605688789738
+                }, 
+                {
+                 "height":34.1394025604552,
+                 "id":93,
+                 "name":"finalArea",
+                 "rotation":0,
+                 "type":"region",
+                 "visible":true,
+                 "width":44.0967283072546,
+                 "x":412.603129445235,
+                 "y":96.9919393077288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -123,7 +134,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":93,
+ "nextobjectid":94,
  "orientation":"orthogonal",
  "properties":
     {

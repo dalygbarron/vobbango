@@ -148,11 +148,13 @@ var Scumbag;
             this.reset(x, y);
             this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
             this.angle = angle;
+            this.rotation = angle;
             this.body.gravity.set(gx, gy);
         }
         redirect(angle, speed, gx = 0, gy = 0) {
             this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
             this.angle = angle;
+            this.rotation = angle;
             this.body.gravity.set(gx, gy);
         }
         update() {
@@ -178,7 +180,7 @@ var Scumbag;
             for (let i = 0; i < size; i++) {
                 let bullet = new Scumbag.Bullet(game, key);
                 this.add(bullet, true);
-                bullet.body.setCircle(bullet.width / 3, bullet.width / 4, bullet.height / 4);
+                bullet.body.setCircle(bullet.width / 4, bullet.width / 4, bullet.height / 4);
             }
         }
         fire(x, y, gx, gy, angle) {
@@ -187,6 +189,14 @@ var Scumbag;
             let bullet = this.getFirstExists(false);
             if (bullet != null)
                 bullet.fire(x, y, angle, this.speed, gx, gy);
+            return bullet;
+        }
+        fireAtSpeed(x, y, angle, speed) {
+            if (this.sound != null)
+                this.game.sound.play(this.sound);
+            let bullet = this.getFirstExists(false);
+            if (bullet != null)
+                bullet.fire(x, y, angle, speed, 0, 0);
             return bullet;
         }
     }
@@ -1556,7 +1566,7 @@ var Scumbag;
                         var type = data[0];
                         var chance = parseFloat(data[1]);
                         if (Math.random() < chance) {
-                            let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, tile.y * tile.height + Math.random() * tile.height, type);
+                            let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, (tile.y * tile.height - this.player.height) + Math.random() * tile.height, type);
                             let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
                             object.anchor.set(0.5, verticalAnchor);
                             object.animations.add("stand", [0, 1, 2], 3 - Math.random() * 3, true);

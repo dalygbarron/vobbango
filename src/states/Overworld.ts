@@ -186,7 +186,8 @@ module Scumbag
                 let object = new Phaser.Sprite
                 (
                   this.game,tile.x * tile.width + Math.random() * tile.width,
-                  tile.y * tile.height + Math.random() * tile.height,type
+                  (tile.y * tile.height - this.player.height) + Math.random() * tile.height,
+                  type
                 );
                 let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
                 object.anchor.set(0.5,verticalAnchor);
@@ -271,7 +272,9 @@ module Scumbag
 
     /** overrides Phaser.State.render() */
     render()
-    {/*
+    {
+
+      /*
       this.actors.forEach(function(actor)
       {
         this.game.debug.body(actor,"#FF0000AA");
@@ -285,7 +288,7 @@ module Scumbag
       {
         bulletGroup.forEach(function(bullet)
         {
-          this.game.debug.body(bullet,"#FF0000AA");
+          this.game.debug.body(bullet);
         },this);
       },this);
 
