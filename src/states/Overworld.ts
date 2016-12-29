@@ -12,6 +12,7 @@ module Scumbag
       if (b.fighting)
       {
         this.hurtPlayer();
+        return false;
       }
       else if (b.script != "" && this.collideCooldown <= 0)
       {
@@ -25,6 +26,7 @@ module Scumbag
       if (a.fighting)
       {
         this.hurtPlayer();
+        return false;
       }
       else if (a.script != "" && this.collideCooldown <= 0)
       {
@@ -280,9 +282,9 @@ module Scumbag
         //this.game.debug.spriteBounds(actor);
       },this);
 
-      this.game.debug.body(this.player.heart,"#FF0000AA");
+      this.game.debug.body(this.player.heart);
 
-
+      /*
       this.bullets.forEach(function(bulletGroup)
       {
         bulletGroup.forEach(function(bullet)

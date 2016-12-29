@@ -10,8 +10,8 @@
       "health":40,"directional":false,"moveSpeed":120
     },
     {
-      "name":"gunman","key":"gunman","controller":"kubusController.js",
-      "health":40,"directional":false,"moveSpeed":120
+      "name":"spider","key":"spider","controller":"spiderController.js",
+      "health":5,"directional":true,"moveSpeed":200,"period":350
     },
     {
       "name":"player","key":"chad","controller":"playerController.js",

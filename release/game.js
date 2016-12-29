@@ -1480,6 +1480,7 @@ var Scumbag;
         if (a == this.player) {
             if (b.fighting) {
                 this.hurtPlayer();
+                return false;
             }
             else if (b.script != "" && this.collideCooldown <= 0) {
                 this.player.body.immovable = false;
@@ -1490,6 +1491,7 @@ var Scumbag;
         else if (b == this.player) {
             if (a.fighting) {
                 this.hurtPlayer();
+                return false;
             }
             else if (a.script != "" && this.collideCooldown <= 0) {
                 this.player.body.immovable = false;

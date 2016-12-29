@@ -30,11 +30,11 @@
     {"type": "image","key": "chad_n","url": "chips/dirk_n.png"},
 
     {"type":"spritesheet","key":"kubus","url":"images/kubus.png","frameWidth":50,"frameHeight":50},
-    {"type":"spritesheet","key":"gunman","url":"images/gunman.png","frameWidth":243,"frameHeight":155},
     {"type":"spritesheet","key":"chad","url":"images/chad.png","frameWidth":24,"frameHeight":48},
     {"type":"spritesheet","key":"chad2","url":"images/chad2.png","frameWidth":24,"frameHeight":48},
     {"type":"spritesheet","key":"ast","url":"images/ast.png","frameWidth":24,"frameHeight":48},
     {"type":"spritesheet","key":"sharret","url":"images/sharret.png","frameWidth":24,"frameHeight":48},
+    {"type":"spritesheet","key":"spider","url":"images/spider.png","frameWidth":24,"frameHeight":24},
 
     {"type":"spritesheet","key":"grass","url":"images/grass.png","frameWidth":48,"frameHeight":88},
     {"type":"spritesheet","key":"thistle","url":"images/thistle.png","frameWidth":160,"frameHeight":64},

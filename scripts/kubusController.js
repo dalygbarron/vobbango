@@ -39,7 +39,6 @@ function* spearBit()
   yield* waitMoveNearPosition(GAP,xOrigin,yOrigin,MOVE_RADIUS);
 }
 
-
+caller.fighting = true;
 while (caller.health > 0) yield* spearBit();
-
 state.addEffect(caller.x,caller.y,"waves",2);
