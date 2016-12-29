@@ -8,14 +8,14 @@ module Scumbag
     if (data.properties.hasOwnProperty("type"))
     {
       let enemyData = Enemies.getEnemyData(data.properties.type,game);
-      let actor = new Actor(game,data.x,data.y,name,enemyData.key,enemyData.controller,enemyData.health);
+      let actor = new Actor(game,data.x,data.y,name,enemyData.key,enemyData.controller,enemyData.health,enemyData.directional || enemyData.directional === undefined);
       actor.properties = enemyData;
       actor.script = game.cache.getText(enemyData.script);
       return actor;
     }
 
     /* bespoke artisanal enemy */
-    let actor = new Actor(game,data.x,data.y,name,data.properties.key,data.properties.controller,data.properties.health);
+    let actor = new Actor(game,data.x,data.y,name,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional || true);
     actor.properties = data.properties;
     actor.script = data.properties.script;
     return actor;
@@ -40,7 +40,7 @@ module Scumbag
     constructor
     (
       game:Phaser.Game,x:number,y:number,name:string,key:string,controllerName:string,
-      health:number
+      health:number,directional:boolean
     )
     {
       //run superconstructor
@@ -55,21 +55,34 @@ module Scumbag
       this.body.collideWorldBounds = true;
       this.body.immovable = true;
 
-      //set it's dimensions
-      this.body.width = this.width / 5 * 4;
-      this.body.height = this.height / 12 * 5;
-      this.body.offset.x = this.width / 10;
-      this.body.offset.y = this.height / 12 * 7;
+      if (directional)
+      {
+        //set it's dimensions
+        this.body.width = this.width / 5 * 4;
+        this.body.height = this.height / 12 * 5;
+        this.body.offset.x = this.width / 10;
+        this.body.offset.y = this.height / 12 * 7;
 
-      //do animation type crap
-      this.anchor.setTo(0.5);
-      this.animations.add('front',[0,1,2,3],10,true);
-      this.animations.add('back',[4,5,6,7],10,true);
+        //do animation type crap
+        this.anchor.setTo(0.5,0.5);
+        this.animations.add('front',[0,1,2,3],10,true);
+        this.animations.add('back',[4,5,6,7],10,true);
+      }
+      else
+      {
+        //set it's dimensions
+        this.body.setCircle(this.width / 2);
+
+        //do animation type crap
+        this.anchor.setTo(0.5);
+        this.animations.add('front',[0,1,2,3],10,true);
+        this.animations.add('back',[0,1,2,3],10,true);
+      }
 
       //create it's heart
       this.heart = new Phaser.Sprite(game,0,0,"heart");
       this.game.physics.arcade.enable(this.heart);
-      this.heart.anchor.setTo(0.5);
+      this.heart.anchor.setTo(0.5,0.5);
       this.heart.body.setCircle(this.heart.width / 9,this.heart.width / 9 * 4,this.heart.height / 9 * 4);
 
       this.addChild(this.heart);
@@ -93,19 +106,6 @@ module Scumbag
         if (!this.moveOnSpot) this.animations.stop();
         return;
       }
-
-
-      //if it's out of the camera, restore it's health
-      /** if it's out of the camera, end it */
-      if (this.x < this.game.camera.x ||
-          this.x > this.game.camera.x + this.game.camera.width ||
-          this.y < this.game.camera.y ||
-          this.y > this.game.camera.y + this.game.camera.height)
-      {
-        this.health = this.properties.health;
-      }
-
-
 
       //run the controller, and kill the actor if it's over
       if (this.controller.run(this.game.time.elapsedMS)) this.kill();

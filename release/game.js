@@ -3,19 +3,19 @@ var Scumbag;
     function createActor(game, data) {
         if (data.properties.hasOwnProperty("type")) {
             let enemyData = Scumbag.Enemies.getEnemyData(data.properties.type, game);
-            let actor = new Actor(game, data.x, data.y, name, enemyData.key, enemyData.controller, enemyData.health);
+            let actor = new Actor(game, data.x, data.y, name, enemyData.key, enemyData.controller, enemyData.health, enemyData.directional || enemyData.directional === undefined);
             actor.properties = enemyData;
             actor.script = game.cache.getText(enemyData.script);
             return actor;
         }
-        let actor = new Actor(game, data.x, data.y, name, data.properties.key, data.properties.controller, data.properties.health);
+        let actor = new Actor(game, data.x, data.y, name, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional || true);
         actor.properties = data.properties;
         actor.script = data.properties.script;
         return actor;
     }
     Scumbag.createActor = createActor;
     class Actor extends Phaser.Sprite {
-        constructor(game, x, y, name, key, controllerName, health) {
+        constructor(game, x, y, name, key, controllerName, health, directional) {
             super(game, x, y, key);
             this.updating = true;
             this.strafing = false;
@@ -25,16 +25,24 @@ var Scumbag;
             this.game.physics.arcade.enable(this);
             this.body.collideWorldBounds = true;
             this.body.immovable = true;
-            this.body.width = this.width / 5 * 4;
-            this.body.height = this.height / 12 * 5;
-            this.body.offset.x = this.width / 10;
-            this.body.offset.y = this.height / 12 * 7;
-            this.anchor.setTo(0.5);
-            this.animations.add('front', [0, 1, 2, 3], 10, true);
-            this.animations.add('back', [4, 5, 6, 7], 10, true);
+            if (directional) {
+                this.body.width = this.width / 5 * 4;
+                this.body.height = this.height / 12 * 5;
+                this.body.offset.x = this.width / 10;
+                this.body.offset.y = this.height / 12 * 7;
+                this.anchor.setTo(0.5, 0.5);
+                this.animations.add('front', [0, 1, 2, 3], 10, true);
+                this.animations.add('back', [4, 5, 6, 7], 10, true);
+            }
+            else {
+                this.body.setCircle(this.width / 2);
+                this.anchor.setTo(0.5);
+                this.animations.add('front', [0, 1, 2, 3], 10, true);
+                this.animations.add('back', [0, 1, 2, 3], 10, true);
+            }
             this.heart = new Phaser.Sprite(game, 0, 0, "heart");
             this.game.physics.arcade.enable(this.heart);
-            this.heart.anchor.setTo(0.5);
+            this.heart.anchor.setTo(0.5, 0.5);
             this.heart.body.setCircle(this.heart.width / 9, this.heart.width / 9 * 4, this.heart.height / 9 * 4);
             this.addChild(this.heart);
             this.heart.alpha = 0;
@@ -48,12 +56,6 @@ var Scumbag;
                 if (!this.moveOnSpot)
                     this.animations.stop();
                 return;
-            }
-            if (this.x < this.game.camera.x ||
-                this.x > this.game.camera.x + this.game.camera.width ||
-                this.y < this.game.camera.y ||
-                this.y > this.game.camera.y + this.game.camera.height) {
-                this.health = this.properties.health;
             }
             if (this.controller.run(this.game.time.elapsedMS))
                 this.kill();
@@ -184,6 +186,10 @@ var Scumbag;
             }
         }
         fire(x, y, gx, gy, angle) {
+            if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
+                y < this.game.camera.y || y > this.game.camera.y + this.game.height) {
+                return null;
+            }
             if (this.sound != null)
                 this.game.sound.play(this.sound);
             let bullet = this.getFirstExists(false);
@@ -192,6 +198,10 @@ var Scumbag;
             return bullet;
         }
         fireAtSpeed(x, y, angle, speed) {
+            if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
+                y < this.game.camera.y || y > this.game.camera.y + this.game.height) {
+                return null;
+            }
             if (this.sound != null)
                 this.game.sound.play(this.sound);
             let bullet = this.getFirstExists(false);
@@ -1569,7 +1579,7 @@ var Scumbag;
                             let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, (tile.y * tile.height - this.player.height) + Math.random() * tile.height, type);
                             let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
                             object.anchor.set(0.5, verticalAnchor);
-                            object.animations.add("stand", [0, 1, 2], 3 - Math.random() * 3, true);
+                            object.animations.add("stand", null, 3 - Math.random() * 3, true);
                             object.animations.play("stand");
                             this.actors.add(object);
                         }
@@ -1579,7 +1589,7 @@ var Scumbag;
             this.bullets = this.game.add.group();
             this.tilemap.createLayer("overhead");
             this.game.camera.follow(this.player);
-            this.game.camera.focusOnXY(this.player.position.x, this.player.position.y);
+            this.game.camera.deadzone = new Phaser.Rectangle(150, 150, this.game.width - 300, this.game.height - 300);
             if (this.tilemap.properties != null) {
                 if (this.tilemap.properties.hasOwnProperty("music")) {
                     if (this.tilemap.properties.music == "none")
@@ -1728,13 +1738,10 @@ var Scumbag;
         createBulletGroup(master, speed, size, key, sound) {
             return new Scumbag.BulletGroup(this.game, this.bullets, master, speed, size, key, sound);
         }
-        addEffect(x, y, key, nFrames, framerate) {
+        addEffect(x, y, key, framerate) {
             let effect = this.game.add.sprite(x, y, key);
             effect.anchor.setTo(0.5);
-            let frames = [];
-            for (let i = 0; i < nFrames; i++)
-                frames.push(i);
-            effect.animations.add("animation", frames, framerate);
+            effect.animations.add("animation", null, framerate);
             effect.animations.play("animation");
             effect.animations.currentAnim.killOnComplete = true;
             return effect;

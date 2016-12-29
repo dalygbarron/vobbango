@@ -113,6 +113,27 @@ function* waitRandomMove(time)
 }
 
 
+function* waitMoveNearPosition(time,x,y,maxDistance)
+{
+  var distance = Math.cos(Math.atan2(caller.y - y,caller.x - x)) * (caller.x - x);
+
+  console.log(distance);
+
+  if (distance < maxDistance)
+  {
+    var angle = Math.random() * Math.PI * 2 - Math.PI;
+    caller.body.velocity.x = Math.sin(angle) * caller.properties.moveSpeed;
+    caller.body.velocity.y = Math.cos(angle) * caller.properties.moveSpeed;
+    yield* wait(time);
+  }
+  else
+  {
+    console.log(x,y);
+    yield* waitMove(x,y);
+  }
+}
+
+
 function* waitMoveToRegion(region)
 {
   var region = state.regions[region];

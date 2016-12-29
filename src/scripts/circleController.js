@@ -6,6 +6,7 @@ var otherBullets = state.createBulletGroup(caller,80,70,'blood2','drip');
 var hammerBullets = state.createBulletGroup(caller,100,60,'hammerBullet','shot');
 var player = state.player;
 var xOffset = caller.body.width / 2;
+var yOffset = caller.body.height / 2;
 caller.animations.add("red",[8,9,8,9,10,9,10,11],4,false);
 
 
@@ -14,7 +15,7 @@ function* waveBit()
   const N_WAVES = 10;
   var currentOnes = [];
 
-  for (var i = 0;i < N_WAVES;i++) currentOnes.push(bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,Math.PI * 2 / N_WAVES * i - Math.PI));
+  for (var i = 0;i < N_WAVES;i++) currentOnes.push(bullets.fire(caller.body.x + xOffset,caller.body.y + yOffset,0,0,Math.PI * 2 / N_WAVES * i - Math.PI));
   yield* wait(1000);
   for (var i = 0;i < N_WAVES;i++) currentOnes[i].redirect(Math.atan2(player.y - currentOnes[i].y,player.x - currentOnes[i].x),bullets.speed);
 }
@@ -92,7 +93,7 @@ var thickCircle = new Periodic(90,function()
 {
   bullets.fire
   (
-    caller.body.x + xOffset,caller.body.y,player.body.x - caller.body.x,
+    caller.body.x + xOffset,caller.body.y + yOffset,player.body.x - caller.body.x,
     player.body.y - caller.body.y,Math.random() * Math.PI * 2 - Math.PI
   );
 });
@@ -100,8 +101,9 @@ var thickCircle = new Periodic(90,function()
 /** periodic for a thin circle in otherBullets */
 var thinCircle = new Periodic(70,function()
 {
-  otherBullets.fire(caller.body.x + xOffset,caller.body.y,0,0,angle);
+  otherBullets.fire(caller.body.x + xOffset,caller.body.y + yOffset,0,0,angle);
 });
+
 
 
 

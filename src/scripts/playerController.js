@@ -1,13 +1,13 @@
 #include "std.js"
 
 
-var bullets = state.createBulletGroup(caller,300,40,'bullet2',"shot");
+var bullets = state.createBulletGroup(caller,500,40,'bullet2',"shot");
 var xOffset = caller.body.width / 2;
 
 /** the player's bullet firing periodical thing */
-var shooting = new Periodic(90,function()
+var shooting = new Periodic(60,function()
 {
-  bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,caller.angle + (Math.random() / 4 - 0.125));
+  bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,caller.angle + (Math.random() / 3 - 1 / 6));
 });
 
 /* the loop */

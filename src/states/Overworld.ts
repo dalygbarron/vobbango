@@ -191,7 +191,7 @@ module Scumbag
                 );
                 let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
                 object.anchor.set(0.5,verticalAnchor);
-                object.animations.add("stand",[0,1,2],3 - Math.random() * 3,true);
+                object.animations.add("stand",null,3 - Math.random() * 3,true);
                 object.animations.play("stand");
                 this.actors.add(object);
               }
@@ -209,7 +209,7 @@ module Scumbag
 
 
       this.game.camera.follow(this.player);
-      this.game.camera.focusOnXY(this.player.position.x,this.player.position.y);
+      this.game.camera.deadzone = new Phaser.Rectangle(150,150,this.game.width - 300,this.game.height - 300);
 
       //if there ain't no things then don't go there
       if (this.tilemap.properties != null)
@@ -273,12 +273,11 @@ module Scumbag
     /** overrides Phaser.State.render() */
     render()
     {
-
       /*
       this.actors.forEach(function(actor)
       {
-        this.game.debug.body(actor,"#FF0000AA");
-        this.game.debug.spriteBounds(actor);
+        this.game.debug.body(actor);
+        //this.game.debug.spriteBounds(actor);
       },this);
 
       this.game.debug.body(this.player.heart,"#FF0000AA");
@@ -291,8 +290,8 @@ module Scumbag
           this.game.debug.body(bullet);
         },this);
       },this);
-
-    */}
+      */
+    }
 
     shutdown()
     {
@@ -486,13 +485,11 @@ module Scumbag
     }
 
 
-    addEffect(x:number,y:number,key:string,nFrames:number,framerate:number):Phaser.Sprite
+    addEffect(x:number,y:number,key:string,framerate:number):Phaser.Sprite
     {
       let effect = this.game.add.sprite(x,y,key);
       effect.anchor.setTo(0.5);
-      let frames = [];
-      for (let i = 0;i < nFrames;i++) frames.push(i);
-      effect.animations.add("animation",frames,framerate);
+      effect.animations.add("animation",null,framerate);
       effect.animations.play("animation");
       effect.animations.currentAnim.killOnComplete = true;
       return effect;

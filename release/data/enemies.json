@@ -2,12 +2,20 @@
   "enemies":
   [
     {
-      "name":"chad","key":"chad2","controller":"circleController",
-      "health":100,"directional":true,"moveSpeed":100
+      "name":"chad","key":"chad2","controller":"circleController.js",
+      "health":100,"directional":false,"moveSpeed":100
     },
     {
-      "name":"player","key":"chad","controller":"playerController",
-      "health":1,"directional":true,"moveSpeed":180,"strafeSpeed":90
+      "name":"kubus","key":"kubus","controller":"kubusController.js",
+      "health":40,"directional":false,"moveSpeed":120
+    },
+    {
+      "name":"gunman","key":"gunman","controller":"kubusController.js",
+      "health":40,"directional":false,"moveSpeed":120
+    },
+    {
+      "name":"player","key":"chad","controller":"playerController.js",
+      "health":1,"moveSpeed":180,"strafeSpeed":90
     }
   ]
 }

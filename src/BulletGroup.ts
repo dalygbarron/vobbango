@@ -35,6 +35,12 @@ module Scumbag
 
     fire(x:number,y:number,gx:number,gy:number,angle:number):Bullet
     {
+      if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
+          y < this.game.camera.y || y > this.game.camera.y + this.game.height)
+      {
+        return null;
+      }
+
       if (this.sound != null) this.game.sound.play(this.sound);
       let bullet = this.getFirstExists(false);
       if (bullet != null) bullet.fire(x,y,angle,this.speed,gx,gy);
@@ -44,6 +50,12 @@ module Scumbag
 
     fireAtSpeed(x,y,angle,speed):Bullet
     {
+      if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
+          y < this.game.camera.y || y > this.game.camera.y + this.game.height)
+      {
+        return null;
+      }
+
       if (this.sound != null) this.game.sound.play(this.sound);
       let bullet = this.getFirstExists(false);
       if (bullet != null) bullet.fire(x,y,angle,speed,0,0);

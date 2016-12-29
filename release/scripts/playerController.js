@@ -75,6 +75,23 @@ function* waitRandomMove(time)
   caller.body.velocity.y = Math.cos(angle) * caller.properties.moveSpeed;
   yield* wait(time);
 }
+function* waitMoveNearPosition(time,x,y,maxDistance)
+{
+  var distance = Math.cos(Math.atan2(caller.y - y,caller.x - x)) * (caller.x - x);
+  console.log(distance);
+  if (distance < maxDistance)
+  {
+    var angle = Math.random() * Math.PI * 2 - Math.PI;
+    caller.body.velocity.x = Math.sin(angle) * caller.properties.moveSpeed;
+    caller.body.velocity.y = Math.cos(angle) * caller.properties.moveSpeed;
+    yield* wait(time);
+  }
+  else
+  {
+    console.log(x,y);
+    yield* waitMove(x,y);
+  }
+}
 function* waitMoveToRegion(region)
 {
   var region = state.regions[region];
@@ -96,11 +113,11 @@ function compareArrays(a,b)
   for (var i = 0 ;i < a.length;i++) if (a[i] != b[i]) return false;
   return true;
 }
-var bullets = state.createBulletGroup(caller,300,40,'bullet2',"shot");
+var bullets = state.createBulletGroup(caller,500,40,'bullet2',"shot");
 var xOffset = caller.body.width / 2;
-var shooting = new Periodic(90,function()
+var shooting = new Periodic(60,function()
 {
-  bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,caller.angle + (Math.random() / 4 - 0.125));
+  bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,caller.angle + (Math.random() / 3 - 1 / 6));
 });
 while (true)
 {
