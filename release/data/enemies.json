@@ -6,16 +6,28 @@
       "health":100,"directional":false,"moveSpeed":100
     },
     {
-      "name":"kubus","key":"kubus","controller":"kubusController.js",
-      "health":40,"directional":false,"moveSpeed":120
+      "name":"beetle","key":"beetle","controller":"kubusController.js",
+      "health":15,"directional":false,"moveSpeed":110,"deathFrames":[4,5,6]
+    },
+    {
+      "name":"shooter","key":"dotbango","controller":"shooterController.js",
+      "health":1,"directional":true,"moveSpeed":0,"deathFrames":[8,9,10,11]
+    },
+    {
+      "name":"dotbango","key":"dotbango","controller":"kubusController.js",
+      "health":15,"directional":true,"moveSpeed":70,"deathFrames":[9,10,11,12]
     },
     {
       "name":"spider","key":"spider","controller":"spiderController.js",
-      "health":5,"directional":true,"moveSpeed":200,"period":350
+      "health":1,"directional":true,"moveSpeed":200,"period":350
     },
     {
       "name":"player","key":"chad","controller":"playerController.js",
       "health":1,"moveSpeed":180,"strafeSpeed":90
+    },
+    {
+      "name":"savePoint","key":"save","controller":"staticController.js","health":1,
+      "script":"save.js","directional":true,"moveOnSpot":true
     }
   ]
 }

@@ -35,8 +35,10 @@ module Scumbag
 
     fire(x:number,y:number,gx:number,gy:number,angle:number):Bullet
     {
-      if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
-          y < this.game.camera.y || y > this.game.camera.y + this.game.height)
+      if (x < this.game.camera.x - this.game.camera.width / 2 ||
+          x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
+          y < this.game.camera.y - this.game.camera.height / 2 ||
+          y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2)
       {
         return null;
       }
@@ -50,8 +52,10 @@ module Scumbag
 
     fireAtSpeed(x,y,angle,speed):Bullet
     {
-      if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
-          y < this.game.camera.y || y > this.game.camera.y + this.game.height)
+      if (x < this.game.camera.x - this.game.camera.width / 2 ||
+          x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
+          y < this.game.camera.y - this.game.camera.height / 2 ||
+          y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2)
       {
         return null;
       }

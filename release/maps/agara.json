@@ -55,8 +55,8 @@
                  "name":"weed! haha",
                  "properties":
                     {
-                     "controller":"wandererController",
-                     "key":"chad",
+                     "controller":"staticController.js",
+                     "key":"stasbango",
                      "moveSpeed":"100",
                      "script":"ctx.state.buildPause(\"Paused\",\"Return\",\"Quit\");\nyield;"
                     },
@@ -77,10 +77,10 @@
                 {
                  "height":50,
                  "id":106,
-                 "name":"kubus",
+                 "name":" beetle",
                  "properties":
                     {
-                     "type":"kubus"
+                     "type":"beetle"
                     },
                  "propertytypes":
                     {
@@ -90,27 +90,8 @@
                  "type":"actor",
                  "visible":true,
                  "width":50,
-                 "x":331.975744186047,
-                 "y":841.890639534884
-                }, 
-                {
-                 "height":50,
-                 "id":107,
-                 "name":"kubus",
-                 "properties":
-                    {
-                     "type":"kubus"
-                    },
-                 "propertytypes":
-                    {
-                     "type":"string"
-                    },
-                 "rotation":0,
-                 "type":"actor",
-                 "visible":true,
-                 "width":50,
-                 "x":391.977744186047,
-                 "y":533.225639534884
+                 "x":372.975744186047,
+                 "y":581.890639534884
                 }, 
                 {
                  "height":16,
@@ -128,8 +109,8 @@
                  "type":"actor",
                  "visible":true,
                  "width":16,
-                 "x":264,
-                 "y":999
+                 "x":311,
+                 "y":740
                 }, 
                 {
                  "height":16,
@@ -147,8 +128,8 @@
                  "type":"actor",
                  "visible":true,
                  "width":16,
-                 "x":320,
-                 "y":1020
+                 "x":365,
+                 "y":405
                 }, 
                 {
                  "height":16,
@@ -166,8 +147,8 @@
                  "type":"actor",
                  "visible":true,
                  "width":16,
-                 "x":372,
-                 "y":1034
+                 "x":221,
+                 "y":1061
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -189,19 +170,8 @@
                  "type":"region",
                  "visible":true,
                  "width":43,
-                 "x":299.619949675093,
-                 "y":1121.46615390602
-                }, 
-                {
-                 "height":34.1394025604552,
-                 "id":93,
-                 "name":"finalArea",
-                 "rotation":0,
-                 "type":"region",
-                 "visible":true,
-                 "width":44.0967283072546,
-                 "x":486.603129445235,
-                 "y":95.6586059743955
+                 "x":291.619949675093,
+                 "y":1205.46615390602
                 }, 
                 {
                  "height":24,
@@ -223,12 +193,12 @@
                  "y":335.906976744186
                 }, 
                 {
-                 "height":155,
+                 "height":43,
                  "id":108,
                  "name":"end",
                  "properties":
                     {
-                     "script":"ctx.transport(\"next\",\"start\");"
+                     "script":"ctx.transport(\"slots\",\"start\");"
                     },
                  "propertytypes":
                     {
@@ -239,7 +209,102 @@
                  "visible":true,
                  "width":328,
                  "x":282,
-                 "y":-100
+                 "y":2
+                }, 
+                {
+                 "height":64,
+                 "id":114,
+                 "name":"kubus",
+                 "properties":
+                    {
+                     "type":"dotbango"
+                    },
+                 "propertytypes":
+                    {
+                     "type":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":48,
+                 "x":714,
+                 "y":580
+                }, 
+                {
+                 "height":50,
+                 "id":115,
+                 "name":"kubus",
+                 "properties":
+                    {
+                     "type":"kubus"
+                    },
+                 "propertytypes":
+                    {
+                     "type":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":50,
+                 "x":709,
+                 "y":711
+                }, 
+                {
+                 "height":16,
+                 "id":116,
+                 "name":"spider",
+                 "properties":
+                    {
+                     "type":"spider"
+                    },
+                 "propertytypes":
+                    {
+                     "type":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":16,
+                 "x":427.333333333333,
+                 "y":886
+                }, 
+                {
+                 "height":16,
+                 "id":117,
+                 "name":"spider",
+                 "properties":
+                    {
+                     "type":"spider"
+                    },
+                 "propertytypes":
+                    {
+                     "type":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":16,
+                 "x":534,
+                 "y":398.666666666667
+                }, 
+                {
+                 "height":16,
+                 "id":118,
+                 "name":"spider",
+                 "properties":
+                    {
+                     "type":"spider"
+                    },
+                 "propertytypes":
+                    {
+                     "type":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":16,
+                 "x":334,
+                 "y":896
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -248,11 +313,11 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":112,
+ "nextobjectid":119,
  "orientation":"orthogonal",
  "properties":
     {
-     "music":"trogBattle"
+     "music":"first"
     },
  "propertytypes":
     {

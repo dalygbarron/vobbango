@@ -7,6 +7,8 @@ module Scumbag
   /** detects if it's time to run a script or yeah or nah or whatever and that */
   function touches(a:Actor,b:Actor)
   {
+    if (a.dead || b.dead) return false;
+
     if (a == this.player)
     {
       if (b.fighting)
@@ -51,9 +53,9 @@ module Scumbag
   {
     let playerData =
     {
-      x:region.x + region.width / 2,y:region.y + region.height / 2,properties:{type:"player"}
+      x:region.x,y:region.y,width:region.width,height:region.height,properties:{type:"player"}
     }
-    return createActor(game,playerData);
+    return createActor(game,"player",playerData);
   }
 
 
@@ -140,8 +142,8 @@ module Scumbag
       //add player and stuff
       if (this.playerRegion == null)
       {
-        //this.player = new Actor(this.game,0,0,"player",StateOfGame.parameters.playerKey,"playerController");
-        //this.player.body.immovable = false;
+        this.player = createActor(this.game,"player",{x:0,y:0,width:1,height:1,properties:{type:"player"}});
+        this.player.body.immovable = false;
       }
       else
       {
@@ -155,20 +157,13 @@ module Scumbag
       let actors = this.tilemap.objects["actors"];
       for (let i in actors)
       {
-        let x = actors[i].x + actors[i].width / 2;
-        let y = actors[i].y + this.tilemap.tileHeight - actors[i].height / 2;
-        let name = actors[i].name;
-
-        let actor = createActor(this.game,actors[i]);
-
+        let actor = createActor(this.game,actors[i].name,actors[i]);
         this.actors.add(actor);
       }
 
+
       //load actors
-      if (this.returning)
-      {
-        this.restoreActors();
-      }
+      if (this.returning) this.restoreActors();
 
       //create objects
       this.tilemap.forEach
@@ -204,6 +199,7 @@ module Scumbag
       );
 
       //create the bullets group
+      console.log('bullets');
       this.bullets = this.game.add.group();
 
       //create the top layer of the world
@@ -463,6 +459,7 @@ module Scumbag
     {
       for (let i = 0;i < StateOfGame.parameters.actors.length;i++)
       {
+        console.log(StateOfGame.parameters.actors[i].name);
         let dude = this.getActorByName(StateOfGame.parameters.actors[i].name);
         dude.x = StateOfGame.parameters.actors[i].x;
         dude.y = StateOfGame.parameters.actors[i].y;

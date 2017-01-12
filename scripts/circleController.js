@@ -116,7 +116,7 @@ yield* speak("n","I am going to kill you");
 caller.fighting = true;
 while (caller.health > 80)
 {
-  var elapsed = yield(null);
+  var elapsed = yield;
   angle += elapsed / 110;
   thinCircle.update(elapsed);
 }

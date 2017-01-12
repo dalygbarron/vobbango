@@ -1,6 +1,6 @@
-const creditMessage = "Greetings, I am the CREATOR of this nice game\n"+
-                      "I hope you enjoy it 8)\n"+
-                      "If not, seek help from a mental health professional immeadiately"
+const creditMessage = "Hello and welcome to my new game, I hope you have fun.\n"+
+                      "Feel free to send me email about aspects of this game or my\n"+
+                      "personality that you hate. marineorganism@gmail.com"
 function *load()
 {
   ctx.state.buildSlot();
@@ -13,7 +13,7 @@ function *load()
       ctx.setSlot(slot);
       ctx.addCharacter("John Fogle");
       ctx.setPlayerKey("chad")
-      ctx.transport("agara","start");
+      ctx.transport("next","start");
     }
     ctx.toOverworld();
   }
@@ -37,14 +37,13 @@ function *deleting()
 }
 while (true)
 {
-  ctx.state.buildQA("League of Scumbags",null,"Play",
+  ctx.state.buildQA("Vobangora Gorad Dortsars",null,"Play",
                                               "A game by Dany Burton",
                                               "Delete Saves");
   var value = yield;
   if (value == 1)
   {
     yield* load();
-    return;
   }
   else if (value == 2)
   {

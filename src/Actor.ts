@@ -2,20 +2,23 @@
 
 module Scumbag
 {
-  export function createActor(game:Phaser.Game,data:any):Actor
+  const BODY_SIZE = 24;
+
+
+  export function createActor(game:Phaser.Game,nam:string,data:any):Actor
   {
     /* generic enemy */
     if (data.properties.hasOwnProperty("type"))
     {
       let enemyData = Enemies.getEnemyData(data.properties.type,game);
-      let actor = new Actor(game,data.x,data.y,name,enemyData.key,enemyData.controller,enemyData.health,enemyData.directional || enemyData.directional === undefined);
+      let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,nam,enemyData.key,enemyData.controller,enemyData.health,enemyData.directional || enemyData.directional === undefined);
       actor.properties = enemyData;
       actor.script = game.cache.getText(enemyData.script);
       return actor;
     }
 
     /* bespoke artisanal enemy */
-    let actor = new Actor(game,data.x,data.y,name,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional || true);
+    let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,nam,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional || true);
     actor.properties = data.properties;
     actor.script = data.properties.script;
     return actor;
@@ -31,10 +34,10 @@ module Scumbag
     fighting:   boolean   = false;
     heart:      Phaser.Sprite;
     halo:       Phaser.Sprite;
-    moveOnSpot: boolean;
     controller: Controller;
     script:     string;
     properties: any;
+    dead:       boolean   = false;
 
     /** like a sprite, but also with tile width and height */
     constructor
@@ -58,10 +61,10 @@ module Scumbag
       if (directional)
       {
         //set it's dimensions
-        this.body.width = this.width / 5 * 4;
-        this.body.height = this.height / 12 * 5;
-        this.body.offset.x = this.width / 10;
-        this.body.offset.y = this.height / 12 * 7;
+        this.body.width = BODY_SIZE;
+        this.body.height = BODY_SIZE;
+        this.body.offset.x = this.width / 2 - BODY_SIZE / 2;
+        this.body.offset.y = this.height - BODY_SIZE;
 
         //do animation type crap
         this.anchor.setTo(0.5,0.5);
@@ -83,7 +86,7 @@ module Scumbag
       this.heart = new Phaser.Sprite(game,0,0,"heart");
       this.game.physics.arcade.enable(this.heart);
       this.heart.anchor.setTo(0.5,0.5);
-      this.heart.body.setCircle(this.heart.width / 9,this.heart.width / 9 * 4,this.heart.height / 9 * 4);
+      this.heart.body.setCircle(this.heart.width / 9,0,this.heart.height / 9 * 4);
 
       this.addChild(this.heart);
       this.heart.alpha = 0;
@@ -103,7 +106,7 @@ module Scumbag
       {
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
-        if (!this.moveOnSpot) this.animations.stop();
+        if (!this.properties.moveOnSpot) this.animations.stop();
         return;
       }
 
@@ -118,13 +121,13 @@ module Scumbag
       let angle = Math.atan2(this.body.velocity.y,this.body.velocity.x);
       if
       (
-        this.body.velocity.x != 0 || this.body.velocity.y != 0 || this.moveOnSpot
+        this.body.velocity.x != 0 || this.body.velocity.y != 0 || this.properties.moveOnSpot
       )
       {
         if (!this.strafing) this.angle = angle;
 
-        if ((this.animations.currentAnim.name == "front" ||
-             this.animations.currentAnim.name == "back") ||
+        if (this.animations.currentAnim.name == "front" ||
+            this.animations.currentAnim.name == "back" ||
             this.animations.currentAnim.isFinished)
         {
           if (angle < 0) this.animations.play("back");

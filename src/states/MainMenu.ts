@@ -24,7 +24,7 @@ module Scumbag
 
       //chuck on a sweet beat
       MusicManager.stopSong(MusicChannel.Ambience);
-      MusicManager.playSong("scumtime",MusicChannel.Music);
+      MusicManager.playSong("menu",MusicChannel.Music);
 
       //initialise the controls
       InputManager.init(this.game);

@@ -34,6 +34,8 @@ class Periodic
     }
   }
 }
+function getX() {return caller.body.x + caller.body.width / 2}
+function getY() {return caller.y}
 function close(value,target,margin)
 {
   return (value >= target - margin && value <= target + margin);
@@ -61,11 +63,11 @@ function* waitMove(x,y)
 {
   while (true)
   {
-    var angle = Math.atan2(y - caller.y,x - caller.x);
+    var angle = Math.atan2(y - getY(),x - getX());
     caller.body.velocity.x = Math.cos(angle) * caller.properties.moveSpeed;
     caller.body.velocity.y = Math.sin(angle) * caller.properties.moveSpeed;
     yield* wait(50);
-    if (close(caller.x,x,5) && close(caller.y,y,5)) return;
+    if (close(getX(),x,5) && close(getY(),y,5)) return;
   }
 }
 function* waitRandomMove(time)
@@ -77,8 +79,7 @@ function* waitRandomMove(time)
 }
 function* waitMoveNearPosition(time,x,y,maxDistance)
 {
-  var distance = Math.cos(Math.atan2(caller.y - y,caller.x - x)) * (caller.x - x);
-  console.log(distance);
+  var distance = Math.cos(Math.atan2(getY() - y,getX() - x)) * (getX() - x);
   if (distance < maxDistance)
   {
     var angle = Math.random() * Math.PI * 2 - Math.PI;
@@ -88,7 +89,6 @@ function* waitMoveNearPosition(time,x,y,maxDistance)
   }
   else
   {
-    console.log(x,y);
     yield* waitMove(x,y);
   }
 }
@@ -114,10 +114,9 @@ function compareArrays(a,b)
   return true;
 }
 var bullets = state.createBulletGroup(caller,500,40,'bullet2',"shot");
-var xOffset = caller.body.width / 2;
 var shooting = new Periodic(60,function()
 {
-  bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,caller.angle + (Math.random() / 3 - 1 / 6));
+  bullets.fire(getX(),getY(),0,0,caller.angle + (Math.random() / 3 - 1 / 6));
 });
 while (true)
 {

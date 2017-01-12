@@ -107,7 +107,6 @@ module Scumbag
     /** builds a window that contains all the save slots with some info */
     buildSlot(cancelFirst:boolean=false):void
     {
-      console.error("build");
       let children:GuiElement[] = [];
       for (let i = 0;i < N_SAVES;i++)
       {

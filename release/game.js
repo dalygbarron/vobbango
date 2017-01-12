@@ -1,14 +1,15 @@
 var Scumbag;
 (function (Scumbag) {
-    function createActor(game, data) {
+    const BODY_SIZE = 24;
+    function createActor(game, nam, data) {
         if (data.properties.hasOwnProperty("type")) {
             let enemyData = Scumbag.Enemies.getEnemyData(data.properties.type, game);
-            let actor = new Actor(game, data.x, data.y, name, enemyData.key, enemyData.controller, enemyData.health, enemyData.directional || enemyData.directional === undefined);
+            let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, nam, enemyData.key, enemyData.controller, enemyData.health, enemyData.directional || enemyData.directional === undefined);
             actor.properties = enemyData;
             actor.script = game.cache.getText(enemyData.script);
             return actor;
         }
-        let actor = new Actor(game, data.x, data.y, name, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional || true);
+        let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, nam, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional || true);
         actor.properties = data.properties;
         actor.script = data.properties.script;
         return actor;
@@ -20,16 +21,17 @@ var Scumbag;
             this.updating = true;
             this.strafing = false;
             this.fighting = false;
+            this.dead = false;
             this.name = name;
             this.health = health;
             this.game.physics.arcade.enable(this);
             this.body.collideWorldBounds = true;
             this.body.immovable = true;
             if (directional) {
-                this.body.width = this.width / 5 * 4;
-                this.body.height = this.height / 12 * 5;
-                this.body.offset.x = this.width / 10;
-                this.body.offset.y = this.height / 12 * 7;
+                this.body.width = BODY_SIZE;
+                this.body.height = BODY_SIZE;
+                this.body.offset.x = this.width / 2 - BODY_SIZE / 2;
+                this.body.offset.y = this.height - BODY_SIZE;
                 this.anchor.setTo(0.5, 0.5);
                 this.animations.add('front', [0, 1, 2, 3], 10, true);
                 this.animations.add('back', [4, 5, 6, 7], 10, true);
@@ -43,7 +45,7 @@ var Scumbag;
             this.heart = new Phaser.Sprite(game, 0, 0, "heart");
             this.game.physics.arcade.enable(this.heart);
             this.heart.anchor.setTo(0.5, 0.5);
-            this.heart.body.setCircle(this.heart.width / 9, this.heart.width / 9 * 4, this.heart.height / 9 * 4);
+            this.heart.body.setCircle(this.heart.width / 9, 0, this.heart.height / 9 * 4);
             this.addChild(this.heart);
             this.heart.alpha = 0;
             this.controller = new Scumbag.Controller(game, controllerName, this);
@@ -53,7 +55,7 @@ var Scumbag;
             if (!(this.updating && this.alive)) {
                 this.body.velocity.x = 0;
                 this.body.velocity.y = 0;
-                if (!this.moveOnSpot)
+                if (!this.properties.moveOnSpot)
                     this.animations.stop();
                 return;
             }
@@ -64,11 +66,11 @@ var Scumbag;
             else
                 this.heart.alpha = 0;
             let angle = Math.atan2(this.body.velocity.y, this.body.velocity.x);
-            if (this.body.velocity.x != 0 || this.body.velocity.y != 0 || this.moveOnSpot) {
+            if (this.body.velocity.x != 0 || this.body.velocity.y != 0 || this.properties.moveOnSpot) {
                 if (!this.strafing)
                     this.angle = angle;
-                if ((this.animations.currentAnim.name == "front" ||
-                    this.animations.currentAnim.name == "back") ||
+                if (this.animations.currentAnim.name == "front" ||
+                    this.animations.currentAnim.name == "back" ||
                     this.animations.currentAnim.isFinished) {
                     if (angle < 0)
                         this.animations.play("back");
@@ -160,10 +162,10 @@ var Scumbag;
             this.body.gravity.set(gx, gy);
         }
         update() {
-            if (this.x < this.game.camera.x ||
-                this.x > this.game.camera.x + this.game.camera.width ||
-                this.y < this.game.camera.y ||
-                this.y > this.game.camera.y + this.game.camera.height) {
+            if (this.x < this.game.camera.x - this.game.camera.width / 2 ||
+                this.x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
+                this.y < this.game.camera.y - this.game.camera.height / 2 ||
+                this.y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2) {
                 this.kill();
             }
         }
@@ -186,8 +188,10 @@ var Scumbag;
             }
         }
         fire(x, y, gx, gy, angle) {
-            if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
-                y < this.game.camera.y || y > this.game.camera.y + this.game.height) {
+            if (x < this.game.camera.x - this.game.camera.width / 2 ||
+                x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
+                y < this.game.camera.y - this.game.camera.height / 2 ||
+                y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2) {
                 return null;
             }
             if (this.sound != null)
@@ -198,8 +202,10 @@ var Scumbag;
             return bullet;
         }
         fireAtSpeed(x, y, angle, speed) {
-            if (x < this.game.camera.x || x > this.game.camera.x + this.game.width ||
-                y < this.game.camera.y || y > this.game.camera.y + this.game.height) {
+            if (x < this.game.camera.x - this.game.camera.width / 2 ||
+                x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
+                y < this.game.camera.y - this.game.camera.height / 2 ||
+                y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2) {
                 return null;
             }
             if (this.sound != null)
@@ -1329,7 +1335,6 @@ var Scumbag;
             this.setGui(new Scumbag.Window(this.game, "window", new Array(head, shelf)));
         }
         buildSlot(cancelFirst = false) {
-            console.error("build");
             let children = [];
             for (let i = 0; i < N_SAVES; i++) {
                 let head = new Scumbag.TextElement(this.game, "Slot " + (i + 1), headingFont);
@@ -1460,7 +1465,7 @@ var Scumbag;
             this.add.tween(this.background).to({ alpha: 1 }, 500, Phaser.Easing.Default, true);
             this.add.tween(this.logo).to({ alpha: 1 }, 800, Phaser.Easing.Default, true, 500);
             Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
-            Scumbag.MusicManager.playSong("scumtime", Scumbag.MusicChannel.Music);
+            Scumbag.MusicManager.playSong("menu", Scumbag.MusicChannel.Music);
             Scumbag.InputManager.init(this.game);
             Scumbag.StateOfGame.flush();
             Scumbag.StateOfGame.stopTimer();
@@ -1477,6 +1482,8 @@ var Scumbag;
 var Scumbag;
 (function (Scumbag) {
     function touches(a, b) {
+        if (a.dead || b.dead)
+            return false;
         if (a == this.player) {
             if (b.fighting) {
                 this.hurtPlayer();
@@ -1508,9 +1515,9 @@ var Scumbag;
     }
     function addPlayerAtRegion(game, region, key) {
         let playerData = {
-            x: region.x + region.width / 2, y: region.y + region.height / 2, properties: { type: "player" }
+            x: region.x, y: region.y, width: region.width, height: region.height, properties: { type: "player" }
         };
-        return Scumbag.createActor(game, playerData);
+        return Scumbag.createActor(game, "player", playerData);
     }
     class Overworld extends Scumbag.GuiState {
         constructor(...args) {
@@ -1553,6 +1560,8 @@ var Scumbag;
             this.tilemap.createLayer("things");
             this.regions = Scumbag.createRegions(this.tilemap.objects["regions"]);
             if (this.playerRegion == null) {
+                this.player = Scumbag.createActor(this.game, "player", { x: 0, y: 0, width: 1, height: 1, properties: { type: "player" } });
+                this.player.body.immovable = false;
             }
             else {
                 this.player = addPlayerAtRegion(this.game, this.regions[this.playerRegion], Scumbag.StateOfGame.parameters.playerKey);
@@ -1561,15 +1570,11 @@ var Scumbag;
             this.actors.add(this.player);
             let actors = this.tilemap.objects["actors"];
             for (let i in actors) {
-                let x = actors[i].x + actors[i].width / 2;
-                let y = actors[i].y + this.tilemap.tileHeight - actors[i].height / 2;
-                let name = actors[i].name;
-                let actor = Scumbag.createActor(this.game, actors[i]);
+                let actor = Scumbag.createActor(this.game, actors[i].name, actors[i]);
                 this.actors.add(actor);
             }
-            if (this.returning) {
+            if (this.returning)
                 this.restoreActors();
-            }
             this.tilemap.forEach(function (tile) {
                 tile.blendeMode = PIXI.blendModes.MULTIPLY;
                 if (tile.hasOwnProperty("properties")) {
@@ -1588,6 +1593,7 @@ var Scumbag;
                     }
                 }
             }, this, 0, 0, this.tilemap.width, this.tilemap.height, 0);
+            console.log('bullets');
             this.bullets = this.game.add.group();
             this.tilemap.createLayer("overhead");
             this.game.camera.follow(this.player);
@@ -1722,6 +1728,7 @@ var Scumbag;
         }
         restoreActors() {
             for (let i = 0; i < Scumbag.StateOfGame.parameters.actors.length; i++) {
+                console.log(Scumbag.StateOfGame.parameters.actors[i].name);
                 let dude = this.getActorByName(Scumbag.StateOfGame.parameters.actors[i].name);
                 dude.x = Scumbag.StateOfGame.parameters.actors[i].x;
                 dude.y = Scumbag.StateOfGame.parameters.actors[i].y;
