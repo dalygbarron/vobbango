@@ -7,8 +7,9 @@ module Scumbag
   let blocks:Iterator<any>;
 
 
-  function storeActor(actor:Actor):void
+  function storeActor(actor:Phaser.Sprite):void
   {
+    if (!(actor instanceof Actor)) return;
     StateOfGame.parameters.actors.push({name:actor.name,x:actor.x,y:actor.y});
   }
 

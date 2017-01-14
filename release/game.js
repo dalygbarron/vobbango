@@ -1,15 +1,15 @@
 var Scumbag;
 (function (Scumbag) {
     const BODY_SIZE = 24;
-    function createActor(game, nam, data) {
+    function createActor(game, name, data) {
         if (data.properties.hasOwnProperty("type")) {
             let enemyData = Scumbag.Enemies.getEnemyData(data.properties.type, game);
-            let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, nam, enemyData.key, enemyData.controller, enemyData.health, enemyData.directional || enemyData.directional === undefined);
+            let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, enemyData.key, enemyData.controller, enemyData.health, enemyData.directional || enemyData.directional === undefined);
             actor.properties = enemyData;
             actor.script = game.cache.getText(enemyData.script);
             return actor;
         }
-        let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, nam, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional || true);
+        let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional || true);
         actor.properties = data.properties;
         actor.script = data.properties.script;
         return actor;
@@ -45,7 +45,7 @@ var Scumbag;
             this.heart = new Phaser.Sprite(game, 0, 0, "heart");
             this.game.physics.arcade.enable(this.heart);
             this.heart.anchor.setTo(0.5, 0.5);
-            this.heart.body.setCircle(this.heart.width / 9, 0, this.heart.height / 9 * 4);
+            this.heart.body.setCircle(this.heart.width / 9, this.heart.height / 9 * 4, this.heart.height / 9 * 4);
             this.addChild(this.heart);
             this.heart.alpha = 0;
             this.controller = new Scumbag.Controller(game, controllerName, this);
@@ -224,11 +224,28 @@ var Scumbag;
     const generatorConstructor = Object.getPrototypeOf(function* () { }).constructor;
     class Controller {
         constructor(game, scriptName, caller) {
+            this.states = new Array();
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", "controller", game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, this);
+            this.caller = caller;
+            this.game = game;
         }
         run(elapsed) {
+            if (this.states.length > 0) {
+                var state = { minHealth: 99999999, script: null };
+                for (var i = 0; i < this.states.length; i++) {
+                    if (this.states[i].minHealth < state.minHealth &&
+                        this.states[i].minHealth <= this.caller.health) {
+                        state = this.states[i];
+                    }
+                }
+                console.log(state.script);
+                return state.script.next(elapsed).done;
+            }
             return this.script.next(elapsed).done;
+        }
+        addState(minHealth, script) {
+            this.states.push({ minHealth, script });
         }
     }
     Scumbag.Controller = Controller;
@@ -334,32 +351,6 @@ var Scumbag;
 ;
 var Scumbag;
 (function (Scumbag) {
-    var SaveManager;
-    (function (SaveManager) {
-        function saveGame(slot, data) {
-            if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("save" + slot, data);
-            }
-            else {
-                console.log("I'm afraid saving won't be possible in this browser, but" +
-                    " here's what it was going to save:");
-                console.log(data);
-            }
-        }
-        SaveManager.saveGame = saveGame;
-        function loadGame(slot) {
-            if (typeof (Storage) !== "undefined") {
-                return localStorage.getItem("save" + slot);
-            }
-            else {
-                console.log("I'm afraid loading won't be possible in this browser");
-            }
-        }
-        SaveManager.loadGame = loadGame;
-    })(SaveManager = Scumbag.SaveManager || (Scumbag.SaveManager = {}));
-})(Scumbag || (Scumbag = {}));
-var Scumbag;
-(function (Scumbag) {
     var StateOfGame;
     (function (StateOfGame) {
         function flush() {
@@ -425,6 +416,8 @@ var Scumbag;
     let game;
     let blocks;
     function storeActor(actor) {
+        if (!(actor instanceof Scumbag.Actor))
+            return;
         Scumbag.StateOfGame.parameters.actors.push({ name: actor.name, x: actor.x, y: actor.y });
     }
     function storeActors() {

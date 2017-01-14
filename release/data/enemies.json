@@ -6,6 +6,10 @@
       "health":100,"directional":false,"moveSpeed":100
     },
     {
+      "name":"millipede","key":"millipede","controller":"millipedeController.js",
+      "health":500,"directional":false,"moveOnSpot":true
+    },
+    {
       "name":"beetle","key":"beetle","controller":"kubusController.js",
       "health":15,"directional":false,"moveSpeed":110,"deathFrames":[4,5,6]
     },
@@ -20,6 +24,14 @@
     {
       "name":"spider","key":"spider","controller":"spiderController.js",
       "health":1,"directional":true,"moveSpeed":200,"period":350
+    },
+    {
+      "name":"chaser","key":"chaser","controller":"chaserController.js",
+      "health":2,"directional":true,"moveSpeed":350,"period":1000
+    },
+    {
+      "name":"bomb","key":"bomb","controller":"bombController.js",
+      "health":1,"directional":false,"moveOnSpot":true
     },
     {
       "name":"player","key":"chad","controller":"playerController.js",

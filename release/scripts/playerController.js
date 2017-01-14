@@ -36,6 +36,10 @@ class Periodic
 }
 function getX() {return caller.body.x + caller.body.width / 2}
 function getY() {return caller.y}
+function getAngleToPlayer()
+{
+  return Math.atan2(state.player.y - getY(),state.player.x - getX());
+}
 function close(value,target,margin)
 {
   return (value >= target - margin && value <= target + margin);
@@ -67,7 +71,7 @@ function* waitMove(x,y)
     caller.body.velocity.x = Math.cos(angle) * caller.properties.moveSpeed;
     caller.body.velocity.y = Math.sin(angle) * caller.properties.moveSpeed;
     yield* wait(50);
-    if (close(getX(),x,5) && close(getY(),y,5)) return;
+    if (close(getX(),x,caller.body.velocity.x) && close(getY(),y,caller.body.velocity.y)) return;
   }
 }
 function* waitRandomMove(time)

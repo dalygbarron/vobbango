@@ -5,20 +5,20 @@ module Scumbag
   const BODY_SIZE = 24;
 
 
-  export function createActor(game:Phaser.Game,nam:string,data:any):Actor
+  export function createActor(game:Phaser.Game,name:string,data:any):Actor
   {
     /* generic enemy */
     if (data.properties.hasOwnProperty("type"))
     {
       let enemyData = Enemies.getEnemyData(data.properties.type,game);
-      let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,nam,enemyData.key,enemyData.controller,enemyData.health,enemyData.directional || enemyData.directional === undefined);
+      let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,enemyData.key,enemyData.controller,enemyData.health,enemyData.directional || enemyData.directional === undefined);
       actor.properties = enemyData;
       actor.script = game.cache.getText(enemyData.script);
       return actor;
     }
 
     /* bespoke artisanal enemy */
-    let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,nam,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional || true);
+    let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional || true);
     actor.properties = data.properties;
     actor.script = data.properties.script;
     return actor;
@@ -86,7 +86,7 @@ module Scumbag
       this.heart = new Phaser.Sprite(game,0,0,"heart");
       this.game.physics.arcade.enable(this.heart);
       this.heart.anchor.setTo(0.5,0.5);
-      this.heart.body.setCircle(this.heart.width / 9,0,this.heart.height / 9 * 4);
+      this.heart.body.setCircle(this.heart.width / 9,this.heart.height / 9 * 4,this.heart.height / 9 * 4);
 
       this.addChild(this.heart);
       this.heart.alpha = 0;

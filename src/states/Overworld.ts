@@ -271,6 +271,7 @@ module Scumbag
     /** overrides Phaser.State.render() */
     render()
     {
+
       /*
       this.actors.forEach(function(actor)
       {
@@ -278,9 +279,9 @@ module Scumbag
         //this.game.debug.spriteBounds(actor);
       },this);
 
-      this.game.debug.body(this.player.heart);
+      
+      this.game.debug.body(this.player.heart,"#ff00ff");
 
-      /*
       this.bullets.forEach(function(bulletGroup)
       {
         bulletGroup.forEach(function(bullet)
@@ -288,7 +289,7 @@ module Scumbag
           this.game.debug.body(bullet);
         },this);
       },this);
-      */
+      /**/
     }
 
     shutdown()
