@@ -17,8 +17,8 @@ module Scumbag
       this.pad = pad;
 
       this.buttons = new Array(Button.nButtons);
-      this.buttons[Button.Shoot] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
-      this.buttons[Button.Strafe] = this.pad.getButton(Phaser.Gamepad.XBOX360_B);
+      this.buttons[Button.Shoot] = this.pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
+      this.buttons[Button.Strafe] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
       this.buttons[Button.Bomb] = this.pad.getButton(Phaser.Gamepad.XBOX360_X);
       this.buttons[Button.Pause] = this.pad.getButton(Phaser.Gamepad.XBOX360_START);
 

@@ -42,11 +42,13 @@
     {"type":"spritesheet","key":"beetle","url":"images/kubus.png","frameWidth":64,"frameHeight":64},
     {"type":"spritesheet","key":"chaser","url":"images/chaser.png","frameWidth":48,"frameHeight":32},
     {"type":"spritesheet","key":"chad","url":"images/stasbangoraKebabom.png","frameWidth":48,"frameHeight":64},
+    {"type":"spritesheet","key":"dotbangoraKebabom","url":"images/dotbangoraKebabom.png","frameWidth":48,"frameHeight":64},
     {"type":"spritesheet","key":"stasbango","url":"images/stasbango.png","frameWidth":48,"frameHeight":64},
     {"type":"spritesheet","key":"dotbango","url":"images/dotbango.png","frameWidth":48,"frameHeight":64},
     {"type":"spritesheet","key":"chad2","url":"images/chad2.png","frameWidth":24,"frameHeight":48},
     {"type":"spritesheet","key":"spider","url":"images/spider.png","frameWidth":24,"frameHeight":24},
     {"type":"spritesheet","key":"bomb","url":"images/bomb.png","frameWidth":24,"frameHeight":24},
+    {"type":"spritesheet","key":"gun","url":"images/gun.png","frameWidth":48,"frameHeight":32},
 
     {"type":"spritesheet","key":"save","url":"images/save.png","frameWidth":48,"frameHeight":32},
 
@@ -70,6 +72,7 @@
     {"type":"audio","key":"charge","urls":["audio/charge.ogg"],"autoDecode": true},
 
     {"type":"audio","key":"first","urls":["audio/first.ogg"],"autoDecode":true},
+    {"type":"audio","key":"firstBoss","urls":["audio/firstBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"menu","urls":["audio/menu.ogg"],"autoDecode":true}
   ]
 }

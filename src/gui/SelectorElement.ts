@@ -29,6 +29,7 @@ module Scumbag
       this.image = game.add.image(this.x,this.y,key);
       this.children = children;
       InputManager.getInputDevice(0).addOnButtonPress(Button.Shoot,click,this);
+      InputManager.getInputDevice(0).addOnButtonPress(Button.Strafe,click,this);
 
       this.oldVerticalStick = InputManager.getInputDevice(0).getAxisState(Axis.Vertical);
 

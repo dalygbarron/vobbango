@@ -226,26 +226,28 @@ var Scumbag;
         constructor(game, scriptName, caller) {
             this.states = new Array();
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", "controller", game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, this);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", "ctx", "controller", game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.ScriptContext, this);
             this.caller = caller;
             this.game = game;
         }
         run(elapsed) {
             if (this.states.length > 0) {
-                var state = { minHealth: 99999999, script: null };
+                var state = { minHealth: -99999999999999999, script: null };
                 for (var i = 0; i < this.states.length; i++) {
-                    if (this.states[i].minHealth < state.minHealth &&
+                    if (this.states[i].minHealth > state.minHealth &&
                         this.states[i].minHealth <= this.caller.health) {
                         state = this.states[i];
                     }
                 }
-                console.log(state.script);
-                return state.script.next(elapsed).done;
+                if (state.script != null)
+                    return state.script.next(elapsed).done;
+                else
+                    this.states = [];
             }
             return this.script.next(elapsed).done;
         }
         addState(minHealth, script) {
-            this.states.push({ minHealth, script });
+            this.states.push({ minHealth: minHealth, script: script() });
         }
     }
     Scumbag.Controller = Controller;
@@ -464,6 +466,7 @@ var Scumbag;
         }
         ScriptContext.getVarirable = getVarirable;
         function saveGame() {
+            Scumbag.StateOfGame.parameters.lives = 3;
             storeActors();
             Scumbag.StateOfGame.save();
         }
@@ -504,7 +507,7 @@ var Scumbag;
         ScriptContext.getScore = getScore;
         function win() { game.state.start("Credits"); }
         ScriptContext.win = win;
-    })(ScriptContext || (ScriptContext = {}));
+    })(ScriptContext = Scumbag.ScriptContext || (Scumbag.ScriptContext = {}));
     var Script;
     (function (Script) {
         function init(pGame) {
@@ -605,6 +608,7 @@ var Scumbag;
             this.go = false;
             this.image = game.add.image(0, 0, key);
             Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Shoot, click, this);
+            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Strafe, click, this);
         }
         bringToFront() {
             this.image.bringToTop();
@@ -678,6 +682,7 @@ var Scumbag;
             this.image = game.add.image(this.x, this.y, key);
             this.children = children;
             Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Shoot, click, this);
+            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Strafe, click, this);
             this.oldVerticalStick = Scumbag.InputManager.getInputDevice(0).getAxisState(Scumbag.Axis.Vertical);
             let yPadding = 0;
             for (let i = 0; i < this.children.length; i++) {
@@ -828,6 +833,7 @@ var Scumbag;
             this.image = game.add.image(this.x, this.y, key);
             this.children = children;
             Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Shoot, click, this);
+            Scumbag.InputManager.getInputDevice(0).addOnButtonPress(Scumbag.Button.Strafe, click, this);
             this.oldHorizontalStick = Scumbag.InputManager.getInputDevice(0).getAxisState(Scumbag.Axis.Horizontal);
             let xPadding = 0;
             for (let i = 0; i < this.children.length; i++) {
@@ -1134,8 +1140,8 @@ var Scumbag;
             super();
             this.pad = pad;
             this.buttons = new Array(Scumbag.Button.nButtons);
-            this.buttons[Scumbag.Button.Shoot] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
-            this.buttons[Scumbag.Button.Strafe] = this.pad.getButton(Phaser.Gamepad.XBOX360_B);
+            this.buttons[Scumbag.Button.Shoot] = this.pad.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
+            this.buttons[Scumbag.Button.Strafe] = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
             this.buttons[Scumbag.Button.Bomb] = this.pad.getButton(Phaser.Gamepad.XBOX360_X);
             this.buttons[Scumbag.Button.Pause] = this.pad.getButton(Phaser.Gamepad.XBOX360_START);
             this.axes = new Array(Scumbag.Axis.nAxes);
@@ -1764,6 +1770,13 @@ var Scumbag;
                 return;
             let tween = this.add.tween(this.overlay).to({ alpha: 0 }, time, Phaser.Easing.Default, true);
             tween.onComplete.add(function () { this.overlay.destroy(); }, this);
+        }
+        addActor(x, y, name, data) {
+            let actor = Scumbag.createActor(this.game, name, data);
+            actor.x = x;
+            actor.y = y;
+            this.actors.add(actor);
+            return actor;
         }
     }
     Scumbag.Overworld = Overworld;

@@ -279,7 +279,7 @@ module Scumbag
         //this.game.debug.spriteBounds(actor);
       },this);
 
-      
+
       this.game.debug.body(this.player.heart,"#ff00ff");
 
       this.bullets.forEach(function(bulletGroup)
@@ -514,6 +514,15 @@ module Scumbag
       if (this.overlay == null) return;
       let tween = this.add.tween(this.overlay).to({alpha:0},time,Phaser.Easing.Default,true);
       tween.onComplete.add(function(){this.overlay.destroy()},this);
+    }
+
+    addActor(x:number,y:number,name:string,data:any):Actor
+    {
+      let actor = createActor(this.game,name,data);
+      actor.x = x;
+      actor.y = y;
+      this.actors.add(actor);
+      return actor;
     }
   }
 };

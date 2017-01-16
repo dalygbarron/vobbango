@@ -10,6 +10,10 @@
       "health":500,"directional":false,"moveOnSpot":true
     },
     {
+      "name":"dotbangoraKebabom","key":"dotbangoraKebabom","controller":"dotbangoraKebabomController.js",
+      "health":700,"directional":true
+    },
+    {
       "name":"beetle","key":"beetle","controller":"kubusController.js",
       "health":15,"directional":false,"moveSpeed":110,"deathFrames":[4,5,6]
     },

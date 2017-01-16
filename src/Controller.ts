@@ -16,12 +16,12 @@ namespace Scumbag
       let input = InputManager.getInputDevice(0);
       this.script = generatorConstructor
       (
-        "state","caller","input","Axis","Button","sound","music","Channel","controller",
+        "state","caller","input","Axis","Button","sound","music","Channel","ctx","controller",
         game.cache.getText(scriptName)
       )
       (
         <Overworld>game.state.getCurrentState(),caller,input,Axis,Button,game.sound,
-        MusicManager,MusicChannel,this
+        MusicManager,MusicChannel,ScriptContext,this
       );
       this.caller = caller;
       this.game = game;
@@ -34,17 +34,18 @@ namespace Scumbag
     {
       if (this.states.length > 0)
       {
-        var state = {minHealth:99999999,script:null};
+        var state = {minHealth:-99999999999999999,script:null};
         for (var i = 0;i < this.states.length;i++)
         {
-          if (this.states[i].minHealth < state.minHealth &&
+          if (this.states[i].minHealth > state.minHealth &&
               this.states[i].minHealth <= this.caller.health)
           {
             state = this.states[i];
           }
         }
-        console.log(state.script);
-        return state.script.next(elapsed).done;
+
+        if (state.script != null) return state.script.next(elapsed).done;
+        else this.states = [];
       }
 
       return this.script.next(elapsed).done;
@@ -54,9 +55,9 @@ namespace Scumbag
     /** add's a state to the controller that is run when the caller is on a certain level
      * of health. If minHealth is an integer then it's a value, if 0 < it < 1, then it is
      * a portion */
-    addState(minHealth:number,script:Iterator<any>)
+    addState(minHealth:number,script:GeneratorFunction)
     {
-      this.states.push({minHealth,script});
+      this.states.push({minHealth:minHealth,script:script()});
     }
   }
 };

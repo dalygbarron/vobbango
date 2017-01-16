@@ -22,6 +22,7 @@ module Scumbag
       super();
       this.image = game.add.image(0,0,key);
       InputManager.getInputDevice(0).addOnButtonPress(Button.Shoot,click,this);
+      InputManager.getInputDevice(0).addOnButtonPress(Button.Strafe,click,this);
     }
 
 

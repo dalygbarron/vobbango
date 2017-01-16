@@ -26,7 +26,7 @@ module Scumbag
 
 
   /** this is the context in scripts are run */
-  namespace ScriptContext
+  export namespace ScriptContext
   {
     export let args:          string;
     export let state:         GuiState;
@@ -80,6 +80,7 @@ module Scumbag
 
     export function saveGame()
     {
+      StateOfGame.parameters.lives = 3;
       storeActors();
       StateOfGame.save();
     }
