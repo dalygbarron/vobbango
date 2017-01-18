@@ -92,7 +92,7 @@ function* gridAttack()
 {
   const X_GUNS = 9;
   const Y_GUNS = 4;
-  const N_BULLETS = 5;
+  const N_BULLETS = 3;
   const BULLET_SPREAD = 0.3;
   const BULLET_PERIOD = 3000;
 
@@ -152,8 +152,8 @@ function* gridAttack()
 
 
 caller.mode = Mode.FIGHTING;
-//controller.addState(600,traditionAttack);
-//controller.addState(450,prongAttack);
+controller.addState(600,traditionAttack);
+controller.addState(450,prongAttack);
 controller.addState(350,gridAttack);
 yield;
 
