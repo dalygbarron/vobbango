@@ -18,10 +18,23 @@ module Scumbag
     }
 
     /* bespoke artisanal enemy */
-    let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional || true);
+    let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional);
     actor.properties = data.properties;
     actor.script = data.properties.script;
     return actor;
+  }
+
+
+  /** This is what mode the actor is in cos then different stuff happens YEAH!
+   * in normal mode everything is normal
+   * in fighting mode it can be hit by enemy bullets
+   * in dead mode it can be hit by bullets, but doesn't collide with actors
+   * in ghost mode it collides with nothing */
+  export enum Mode
+  {
+    NORMAL,
+    FIGHTING,
+    DEAD
   }
 
 
@@ -31,13 +44,12 @@ module Scumbag
     name:       string;
     updating:   boolean   = true;
     strafing:   boolean   = false;
-    fighting:   boolean   = false;
     heart:      Phaser.Sprite;
     halo:       Phaser.Sprite;
     controller: Controller;
     script:     string;
     properties: any;
-    dead:       boolean   = false;
+    mode:       Mode      = Mode.NORMAL;
 
     /** like a sprite, but also with tile width and height */
     constructor

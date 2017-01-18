@@ -52,7 +52,7 @@
                 {
                  "height":64,
                  "id":156,
-                 "name":"millipede",
+                 "name":"dotbangorakebabom",
                  "properties":
                     {
                      "type":"dotbangoraKebabom"
@@ -65,27 +65,8 @@
                  "type":"actor",
                  "visible":true,
                  "width":48,
-                 "x":367,
-                 "y":69
-                }, 
-                {
-                 "height":24,
-                 "id":166,
-                 "name":"savePoint",
-                 "properties":
-                    {
-                     "type":"savePoint"
-                    },
-                 "propertytypes":
-                    {
-                     "type":"string"
-                    },
-                 "rotation":0,
-                 "type":"actor",
-                 "visible":true,
-                 "width":32,
-                 "x":126,
-                 "y":295
+                 "x":371,
+                 "y":53
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -107,8 +88,8 @@
                  "type":"region",
                  "visible":true,
                  "width":61.3333333333333,
-                 "x":112,
-                 "y":240
+                 "x":361,
+                 "y":393
                 }, 
                 {
                  "height":38,
@@ -128,6 +109,17 @@
                  "width":362,
                  "x":219,
                  "y":-1
+                }, 
+                {
+                 "height":28,
+                 "id":167,
+                 "name":"bossCentre",
+                 "rotation":0,
+                 "type":"region",
+                 "visible":true,
+                 "width":33,
+                 "x":376,
+                 "y":89
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -136,7 +128,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":167,
+ "nextobjectid":168,
  "orientation":"orthogonal",
  "properties":
     {

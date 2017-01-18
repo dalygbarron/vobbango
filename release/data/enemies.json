@@ -11,7 +11,7 @@
     },
     {
       "name":"dotbangoraKebabom","key":"dotbangoraKebabom","controller":"dotbangoraKebabomController.js",
-      "health":700,"directional":true
+      "health":700,"directional":true, "moveSpeed": 50
     },
     {
       "name":"beetle","key":"beetle","controller":"kubusController.js",

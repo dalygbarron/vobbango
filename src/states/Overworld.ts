@@ -7,11 +7,11 @@ module Scumbag
   /** detects if it's time to run a script or yeah or nah or whatever and that */
   function touches(a:Actor,b:Actor)
   {
-    if (a.dead || b.dead) return false;
+    if (!(a.mode == Mode.NORMAL && b.mode == Mode.NORMAL)) return false;
 
     if (a == this.player)
     {
-      if (b.fighting)
+      if (b.mode == Mode.FIGHTING)
       {
         this.hurtPlayer();
         return false;
@@ -25,7 +25,7 @@ module Scumbag
     }
     else if (b == this.player)
     {
-      if (a.fighting)
+      if (a.mode == Mode.FIGHTING)
       {
         this.hurtPlayer();
         return false;
@@ -199,7 +199,6 @@ module Scumbag
       );
 
       //create the bullets group
-      console.log('bullets');
       this.bullets = this.game.add.group();
 
       //create the top layer of the world
@@ -343,7 +342,7 @@ module Scumbag
             function(bullet,actor)
             {
               if (actor == (<BulletGroup>child).master ||
-                            actor == this.player)
+                            actor == this.player || actor.mode != Mode.FIGHTING)
               {
                 return false;
               }
@@ -522,6 +521,14 @@ module Scumbag
       actor.x = x;
       actor.y = y;
       this.actors.add(actor);
+      return actor;
+    }
+
+    addDrone(x:number,y:number,name:string,data:any):Actor
+    {
+      let actor = createActor(this.game,name,data);
+      actor.x = x;
+      actor.y = y;
       return actor;
     }
   }

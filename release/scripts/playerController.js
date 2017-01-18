@@ -16,24 +16,6 @@ function* read(book,bookName,bookChip)
     yield* say(bookName,bookChip,content[i].trim());
   }
 }
-class Periodic
-{
-  constructor(period,callback)
-  {
-    this.period = period;
-    this.callback = callback;
-    this.time = this.period;
-  }
-  update(elapsed)
-  {
-    this.time += elapsed;
-    if (this.time >= this.period)
-    {
-      while (this.time >= this.period) this.time -= this.period;
-      this.callback();
-    }
-  }
-}
 function getX() {return caller.body.x + caller.body.width / 2}
 function getY() {return caller.y}
 function getAngleToPlayer()
@@ -42,7 +24,20 @@ function getAngleToPlayer()
 }
 function close(value,target,margin)
 {
-  return (value >= target - margin && value <= target + margin);
+  margin = Math.abs(margin);
+  return ((value >= target - margin) && (value <= target + margin));
+}
+function* periodicSpray(bulletGroup,nBullets,spread,period,delay=0)
+{
+  while(true)
+  {
+    for (var i = 0;i < nBullets;i++)
+    {
+      poisonBullets.fire(getX(),getY(),0,0,getAngleToPlayer() + i * spread / nBullets - spread / 2);
+      yield* wait(delay);
+    }
+    yield* wait(period);
+  }
 }
 function* wait(time)
 {
@@ -67,11 +62,17 @@ function* waitMove(x,y)
 {
   while (true)
   {
+    var elapsed = yield;
+    if (close(getX(),x,caller.body.velocity.x * elapsed / 1000) &&
+        close(getY(),y,caller.body.velocity.y * elapsed / 1000))
+    {
+      caller.x = x - caller.body.width / 2;
+      caller.y = y;
+      return;
+    }
     var angle = Math.atan2(y - getY(),x - getX());
     caller.body.velocity.x = Math.cos(angle) * caller.properties.moveSpeed;
     caller.body.velocity.y = Math.sin(angle) * caller.properties.moveSpeed;
-    yield* wait(50);
-    if (close(getX(),x,caller.body.velocity.x) && close(getY(),y,caller.body.velocity.y)) return;
   }
 }
 function* waitRandomMove(time)
@@ -102,6 +103,7 @@ function* waitMoveToRegion(region)
   var x = region.x + region.width / 2;
   var y = region.y + region.height / 2;
   yield* waitMove(x,y);
+  caller.body.velocity.set(0);
 }
 function setSelfSwitch(name,value)
 {
@@ -117,11 +119,16 @@ function compareArrays(a,b)
   for (var i = 0 ;i < a.length;i++) if (a[i] != b[i]) return false;
   return true;
 }
-var bullets = state.createBulletGroup(caller,500,40,'bullet2',"shot");
-var shooting = new Periodic(60,function()
+function* shooting(period)
 {
-  bullets.fire(getX(),getY(),0,0,caller.angle + (Math.random() / 3 - 1 / 6));
-});
+  var bullets = state.createBulletGroup(caller,500,40,'bullet2',"shot");
+  while (true)
+  {
+    bullets.fire(getX(),getY(),0,0,caller.angle + (Math.random() / 3 - 1 / 6));
+    yield* wait(period);
+  }
+}
+var shootingInstance = shooting(60);
 while (true)
 {
   var elapsed = yield;
@@ -139,6 +146,6 @@ while (true)
   }
   if (input.getButtonState(Button.Shoot))
   {
-    shooting.update(elapsed);
+    shootingInstance.next(elapsed);
   }
 }

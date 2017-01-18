@@ -4,7 +4,8 @@
 
 
 /* definitions and that */
-var legBullets = state.createBulletGroup(caller,200,300,'legBullet','drip');
+var legBullets = state.createBulletGroup(caller,130,300,'legBullet','drip');
+var autismoBullets = state.createBulletGroup(caller,30,1000,'legBullet','drip');
 var poisonBullets = state.createBulletGroup(caller,200,30,'poison','drip');
 var mud = state.createBulletGroup(caller,30,500,'mud','drip');
 caller.animations.add("dead",[5,6,7,8,9,10,11,12,13],7,false);
@@ -41,7 +42,7 @@ function* legs()
   }
 }
 
-
+/*
 function* poison()
 {
   var legList = [];
@@ -62,7 +63,30 @@ function* poison()
   }
 
 }
+*/
 
+
+
+function* poison()
+{
+  var legList = [];
+  for (var i = 0;i < N_LEGS;i++) legList.push(Math.random() * Math.PI * 2 - Math.PI);
+  while (true)
+  {
+    for (var i = 0;i < LEG_LENGTH;i++)
+    {
+      legBullets.fire(getX(),getY(),0,0,getAngleToPlayer() + Math.PI *0.1);
+      legBullets.fire(getX(),getY(),0,0,getAngleToPlayer() - Math.PI *0.1);
+      for (leg in legList) autismoBullets.fire(getX(),getY(),0,0,legList[leg]);
+      yield* wait(LEG_PERIOD);
+    }
+	  legBullets.fire(getX(),getY(),0,0,getAngleToPlayer() + Math.PI *0.1);
+	  legBullets.fire(getX(),getY(),0,0,getAngleToPlayer() - Math.PI *0.1);
+    poisonBullets.fire(getX(),getY(),0,0,getAngleToPlayer());
+    legList.shift();
+    legList.push(Math.random() * Math.PI * 2 - Math.PI);
+  }
+}
 
 function* burrow()
 {
@@ -76,6 +100,7 @@ function* burrow()
 }
 
 
+caller.mode = Mode.FIGHTING;
 controller.addState(350,legs);
 controller.addState(200,poison);
 controller.addState(-100,burrow);

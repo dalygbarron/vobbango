@@ -9,19 +9,24 @@ var Scumbag;
             actor.script = game.cache.getText(enemyData.script);
             return actor;
         }
-        let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional || true);
+        let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional);
         actor.properties = data.properties;
         actor.script = data.properties.script;
         return actor;
     }
     Scumbag.createActor = createActor;
+    (function (Mode) {
+        Mode[Mode["NORMAL"] = 0] = "NORMAL";
+        Mode[Mode["FIGHTING"] = 1] = "FIGHTING";
+        Mode[Mode["DEAD"] = 2] = "DEAD";
+    })(Scumbag.Mode || (Scumbag.Mode = {}));
+    var Mode = Scumbag.Mode;
     class Actor extends Phaser.Sprite {
         constructor(game, x, y, name, key, controllerName, health, directional) {
             super(game, x, y, key);
             this.updating = true;
             this.strafing = false;
-            this.fighting = false;
-            this.dead = false;
+            this.mode = Mode.NORMAL;
             this.name = name;
             this.health = health;
             this.game.physics.arcade.enable(this);
@@ -226,7 +231,7 @@ var Scumbag;
         constructor(game, scriptName, caller) {
             this.states = new Array();
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", "ctx", "controller", game.cache.getText(scriptName))(game.state.getCurrentState(), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.ScriptContext, this);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "Mode", "sound", "music", "Channel", "ctx", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, Scumbag.Mode, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.ScriptContext, this);
             this.caller = caller;
             this.game = game;
         }
@@ -1481,10 +1486,10 @@ var Scumbag;
 var Scumbag;
 (function (Scumbag) {
     function touches(a, b) {
-        if (a.dead || b.dead)
+        if (!(a.mode == Scumbag.Mode.NORMAL && b.mode == Scumbag.Mode.NORMAL))
             return false;
         if (a == this.player) {
-            if (b.fighting) {
+            if (b.mode == Scumbag.Mode.FIGHTING) {
                 this.hurtPlayer();
                 return false;
             }
@@ -1495,7 +1500,7 @@ var Scumbag;
             }
         }
         else if (b == this.player) {
-            if (a.fighting) {
+            if (a.mode == Scumbag.Mode.FIGHTING) {
                 this.hurtPlayer();
                 return false;
             }
@@ -1592,7 +1597,6 @@ var Scumbag;
                     }
                 }
             }, this, 0, 0, this.tilemap.width, this.tilemap.height, 0);
-            console.log('bullets');
             this.bullets = this.game.add.group();
             this.tilemap.createLayer("overhead");
             this.game.camera.follow(this.player);
@@ -1659,7 +1663,7 @@ var Scumbag;
                     this.game.physics.arcade.collide(child, this.collisionLayer, function (bullet) { bullet.kill(); });
                     this.game.physics.arcade.overlap(child, this.actors, function (bullet, actor) {
                         if (actor == child.master ||
-                            actor == this.player) {
+                            actor == this.player || actor.mode != Scumbag.Mode.FIGHTING) {
                             return false;
                         }
                         actor.damage(1);
@@ -1776,6 +1780,12 @@ var Scumbag;
             actor.x = x;
             actor.y = y;
             this.actors.add(actor);
+            return actor;
+        }
+        addDrone(x, y, name, data) {
+            let actor = Scumbag.createActor(this.game, name, data);
+            actor.x = x;
+            actor.y = y;
             return actor;
         }
     }

@@ -97,7 +97,7 @@
                  "name":"end",
                  "properties":
                     {
-                     "script":"if (ctx.getSwitch(\"centipedeDead\")) ctx.transport(\"secondBoss\",\"start\");"
+                     "script":"\/\/if (ctx.getSwitch(\"centipedeDead\")) \nctx.transport(\"secondBoss\",\"start\");"
                     },
                  "propertytypes":
                     {

@@ -1,13 +1,21 @@
 #include "std.js"
 
 
-var bullets = state.createBulletGroup(caller,500,40,'bullet2',"shot");
+
 
 /** the player's bullet firing periodical thing */
-var shooting = new Periodic(60,function()
+function* shooting(period)
 {
-  bullets.fire(getX(),getY(),0,0,caller.angle + (Math.random() / 3 - 1 / 6));
-});
+  var bullets = state.createBulletGroup(caller,500,40,'bullet2',"shot");
+  while (true)
+  {
+    bullets.fire(getX(),getY(),0,0,caller.angle + (Math.random() / 3 - 1 / 6));
+    yield* wait(period);
+  }
+}
+
+
+var shootingInstance = shooting(60);
 
 /* the loop */
 while (true)
@@ -33,6 +41,6 @@ while (true)
   /* shooting */
   if (input.getButtonState(Button.Shoot))
   {
-    shooting.update(elapsed);
+    shootingInstance.next(elapsed);
   }
 }
