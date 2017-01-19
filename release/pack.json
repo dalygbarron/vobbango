@@ -73,6 +73,7 @@
 
     {"type":"audio","key":"first","urls":["audio/first.ogg"],"autoDecode":true},
     {"type":"audio","key":"firstBoss","urls":["audio/firstBoss.ogg"],"autoDecode":true},
+    {"type":"audio","key":"secondBoss","urls":["audio/secondBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"menu","urls":["audio/menu.ogg"],"autoDecode":true}
   ]
 }

@@ -5,8 +5,9 @@
 
 
 /* definitions and that */
-var poisonBullets = state.createBulletGroup(caller,200,200,'poison','shot');
+var poisonBullets = state.createBulletGroup(caller,200,1600,'poison','shot');
 var cBullets = state.createBulletGroup(caller,120,300,'cBulletSmall','shot');
+var guns = [];
 caller.animations.add("death",[8,9,10,11],4,false);
 caller.animations.add("loseSpear",[12,13,14],3,false);
 caller.animations.add("startPhone",[15,16,17],5,false);
@@ -55,7 +56,6 @@ function* prongAttack()
   yield* wait(300);
   yield* waitAnimation("endPhone");
 
-  var guns = [];
   for (var i = 0;i < N_GUNS;i++)
   {
     guns[i] = createGun(getX(),getY(),"gun");
@@ -64,7 +64,7 @@ function* prongAttack()
   }
 
   caller.mode = Mode.FIGHTING;
-  music.playSong("firstBoss",Channel.Music);
+  music.playSong("secondBoss",Channel.Music);
 
   while (true)
   {
@@ -94,18 +94,16 @@ function* gridAttack()
   const Y_GUNS = 4;
   const N_BULLETS = 3;
   const BULLET_SPREAD = 0.3;
-  const BULLET_PERIOD = 3000;
+  const BULLET_PERIOD = 2000;
 
-  var guns = [];
+  clearGuns(guns);
 
   // go back to spot
   yield* waitMoveToRegion("bossCentre");
 
   //top to bottom guns
-  for (var i = 0;i < X_GUNS;i++)
+  for (var i = 2;i < X_GUNS - 2;i++)
   {
-    if (i <= 1 || i >= X_GUNS - 2) continue;
-
     var gun = createGun(getX(),getY(),"gun");
     guns.push(gun);
     if (i % 2)
@@ -122,7 +120,7 @@ function* gridAttack()
   }
 
   //side guns
-  for (var i = 0;i < Y_GUNS;i++)
+  for (var i = 0;i < Y_GUNS - 1;i++)
   {
     var gun = createGun(getX(),getY(),"gun");
     guns.push(gun);
@@ -139,6 +137,8 @@ function* gridAttack()
     addTarget(gun,side,state.game.height / Y_GUNS * (i + 1));
   }
 
+  yield* waitGuns(guns);
+
   fireGunsPeriodic = fireGunsAtAngle(guns);
   firePoisonPeriodic = periodicSpray(poisonBullets,N_BULLETS,BULLET_SPREAD,BULLET_PERIOD);
 
@@ -151,15 +151,89 @@ function* gridAttack()
 }
 
 
+function* coneAttack()
+{
+  const N_GUNS = 12;
+  const GUN_RADIUS = 200;
+  const PERIOD = 1500;
+
+  var guns = [];
+  for (var i = 0;i < N_GUNS;i++)
+  {
+    guns[i] = createGun(getX(),getY(),"gun");
+    var angle = Math.PI * 2 / N_GUNS * i;
+    addTarget(guns[i],getX() + Math.cos(angle) * GUN_RADIUS,getY() + Math.sin(angle) * GUN_RADIUS);
+  }
+
+  while (true)
+  {
+    for (var i = 0;i < N_GUNS;i++)
+    {
+      var angle = Math.atan2(state.player.y - guns[i].y,state.player.x - guns[i].x);
+      cBullets.fire(guns[i].x,guns[i].y,0,0,angle);
+    }
+    yield* wait(PERIOD);
+  }
+}
+
+
+
+function* mazeAttack()
+{
+  const CIRCUMFERENCE = 14;
+  const GAP = 8;
+  const N_GAPS = 8;
+  const ROWS = 7;
+  const PERIOD = 200;
+  const BULLET_SPEED = 25;
+  var increment = (Math.PI * 2) / N_GAPS / (CIRCUMFERENCE + GAP);
+
+  clearGuns(guns);
+  yield* speak("n","Even if you should defeat me, the order of the world cannot be changed.\nNot by any man.");
+  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Where did all this weaponry come from?");
+  yield* speak("n","Susbangom.\nValom gamars dar testmem.");
+  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","No");
+  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Valom mor dotbangoars.\nGamom mor stasbangoars\nCunt");
+
+  while (true)
+  {
+    var gapAngle = Math.random() * Math.PI * 2;
+
+    // the dividers
+    for (var i = 0;i < N_GAPS;i++)
+    {
+      for (var u = 0;u < CIRCUMFERENCE;u++)
+      {
+        poisonBullets.fireAtSpeed(getX(),getY(),gapAngle + (Math.PI * 2) / N_GAPS * i + increment * u,BULLET_SPEED);
+      }
+    }
+    yield* wait(PERIOD);
+
+    //the walls
+    var wallAngle = Math.random() * Math.PI * 2;
+    for (var i = 0;i < ROWS;i++)
+    {
+      for (var u = 0;u < N_GAPS;u++)
+      {
+        poisonBullets.fireAtSpeed(getX(),getY(),wallAngle + (Math.PI * 2) / N_GAPS * u,BULLET_SPEED);
+      }
+      yield* wait(PERIOD);
+    }
+  }
+}
+
+
 caller.mode = Mode.FIGHTING;
 controller.addState(600,traditionAttack);
 controller.addState(450,prongAttack);
 controller.addState(350,gridAttack);
+//controller.addState(200,coneAttack);
+controller.addState(150,mazeAttack);
 yield;
 
 
 
-yield* waitAnimation("dead");
+yield* waitAnimation("death");
 caller.dead = true
 caller.properties.moveOnSpot = false;
 ctx.setSwitch("centipedeDead",true);

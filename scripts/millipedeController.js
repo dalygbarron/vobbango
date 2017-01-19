@@ -42,7 +42,7 @@ function* legs()
   }
 }
 
-/*
+
 function* poison()
 {
   var legList = [];
@@ -63,10 +63,9 @@ function* poison()
   }
 
 }
-*/
 
 
-
+/*
 function* poison()
 {
   var legList = [];
@@ -87,6 +86,7 @@ function* poison()
     legList.push(Math.random() * Math.PI * 2 - Math.PI);
   }
 }
+*/
 
 function* burrow()
 {

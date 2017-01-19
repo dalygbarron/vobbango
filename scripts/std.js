@@ -57,7 +57,7 @@ function* periodicSpray(bulletGroup,nBullets,spread,period,delay=0)
   {
     for (var i = 0;i < nBullets;i++)
     {
-      poisonBullets.fire(getX(),getY(),0,0,getAngleToPlayer() + i * spread / nBullets - spread / 2);
+      poisonBullets.fire(getX(),getY(),0,0,getAngleToPlayer() + i * spread / (nBullets - 1) - spread / 2);
       yield* wait(delay);
     }
     yield* wait(period);

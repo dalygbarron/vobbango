@@ -1,14 +1,8 @@
 #include "std.js"
 
 
-/*
- * TODO: remember, things don't have to use movespeed, that is just a thing I set up.
- * What if instead I made it that you just give this thing some kind of function to
- * control their current velocity. */
-
-
 var elapsed = 0;
-while (true)
+while (caller.health > 0)
 {
   if (caller.targets.length > 0)
   {

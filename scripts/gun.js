@@ -20,6 +20,34 @@ function addTarget(gun,x,y)
 }
 
 
+function* waitGuns(guns)
+{
+  yield* wait(50);
+  while (true)
+  {
+    var clean = true;
+    for (var i in guns)
+    {
+      var speed = guns[i].body.speed;
+      if (speed > 1 || speed < -1)
+      {
+        clean = false;
+      }
+    }
+    if (clean) return;
+    yield;
+  }
+}
+
+
+function clearGuns(guns)
+{
+  //TODO: add explosions and shit like that
+  for (var i in guns) guns[i].kill();
+  guns.length = 0;
+}
+
+
 
 
 #endif
