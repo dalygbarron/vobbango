@@ -1,13 +1,15 @@
 #include "std.js"
+#include "wait.js"
+#include "theatre.js"
+#include "periodic.js"
 #include "gun.js"
-
-
 
 
 /* definitions and that */
 var poisonBullets = state.createBulletGroup(caller,200,1600,'poison','shot');
 var cBullets = state.createBulletGroup(caller,120,300,'cBulletSmall','shot');
 var guns = [];
+caller.animations.add("dying",[1,2,6,9],20,true);
 caller.animations.add("death",[8,9,10,11],4,false);
 caller.animations.add("loseSpear",[12,13,14],3,false);
 caller.animations.add("startPhone",[15,16,17],5,false);
@@ -43,7 +45,7 @@ function* prongAttack()
   const GAP = 400;
 
   caller.mode = Mode.NORMAL;
-  yield* wait(1000);
+  yield* waitBullets(poisonBullets);
   yield* speak("n","haha, wait until you see this");
   yield* waitAnimation("loseSpear");
   music.fadeOut(1000,Channel.Music);
@@ -55,6 +57,8 @@ function* prongAttack()
   yield* speak("n","Send in the guns.");
   yield* wait(300);
   yield* waitAnimation("endPhone");
+  caller.animations.add("front",[22,23,24,25],10,false);
+  caller.animations.add("back",[26,27,28,29],10,false);
 
   for (var i = 0;i < N_GUNS;i++)
   {
@@ -92,8 +96,10 @@ function* gridAttack()
 {
   const X_GUNS = 9;
   const Y_GUNS = 4;
-  const N_BULLETS = 3;
-  const BULLET_SPREAD = 0.3;
+  const N_BULLETS = 11;
+  const BULLET_DAMP = 0.25;
+  const BULLET_MAX_SPEED = 80
+  const BULLET_SPREAD = 0.6;
   const BULLET_PERIOD = 2000;
 
   clearGuns(guns);
@@ -140,7 +146,7 @@ function* gridAttack()
   yield* waitGuns(guns);
 
   fireGunsPeriodic = fireGunsAtAngle(guns);
-  firePoisonPeriodic = periodicSpray(poisonBullets,N_BULLETS,BULLET_SPREAD,BULLET_PERIOD);
+  firePoisonPeriodic = periodicWave(poisonBullets,N_BULLETS,BULLET_DAMP,BULLET_MAX_SPEED,BULLET_SPREAD,BULLET_PERIOD);
 
   while (true)
   {
@@ -156,6 +162,8 @@ function* coneAttack()
   const N_GUNS = 12;
   const GUN_RADIUS = 200;
   const PERIOD = 1500;
+
+
 
   var guns = [];
   for (var i = 0;i < N_GUNS;i++)
@@ -189,11 +197,14 @@ function* mazeAttack()
   var increment = (Math.PI * 2) / N_GAPS / (CIRCUMFERENCE + GAP);
 
   clearGuns(guns);
+  yield* waitBullets(poisonBullets);
   yield* speak("n","Even if you should defeat me, the order of the world cannot be changed.\nNot by any man.");
   yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Where did all this weaponry come from?");
   yield* speak("n","Susbangom.\nValom gamars dar testmem.");
   yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","No");
   yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Valom mor dotbangoars.\nGamom mor stasbangoars\nCunt");
+
+  yield* goSpooky(1000);
 
   while (true)
   {
@@ -233,8 +244,14 @@ yield;
 
 
 
+music.playSong("scream",Channel.Ambience);
+caller.animations.play("dying");
+yield* waitBullets(poisonBullets);
+music.stopSong(Channel.Music);
+music.stopSong(Channel.Ambience);
+sound.play("fiendDeath");
 yield* waitAnimation("death");
-caller.dead = true
-caller.properties.moveOnSpot = false;
+caller.mode = Mode.DEAD;
 ctx.setSwitch("centipedeDead",true);
+yield* endSpooky(1000);
 while (true) yield;

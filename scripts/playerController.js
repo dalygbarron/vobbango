@@ -1,4 +1,5 @@
 #include "std.js"
+#include "wait.js"
 
 
 
@@ -22,20 +23,23 @@ while (true)
 {
   var elapsed = yield;
 
+  if (state.hitCooldown > 0) var speedDamp = 0.4;
+  else var speedDamp = 1;
+
   /* if the player is strafing */
   if (input.getButtonState(Button.Strafe))
   {
     caller.strafing = true;
-    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.strafeSpeed;
-    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.strafeSpeed;
+    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.strafeSpeed * speedDamp;
+    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.strafeSpeed * speedDamp;
   }
 
   /* otherwise */
   else
   {
     caller.strafing = false;
-    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.moveSpeed;
-    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.moveSpeed;
+    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.moveSpeed * speedDamp;
+    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.moveSpeed * speedDamp;
   }
 
   /* shooting */

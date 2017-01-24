@@ -41,10 +41,10 @@ module Scumbag
     update()
     {
       /** if it's out of the camera, end it */
-      if (this.x < this.game.camera.x - this.game.camera.width / 2 ||
-          this.x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
-          this.y < this.game.camera.y - this.game.camera.height / 2 ||
-          this.y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2)
+      if (this.x < this.game.camera.x ||
+          this.x > this.game.camera.x + this.game.camera.width ||
+          this.y < this.game.camera.y ||
+          this.y > this.game.camera.y + this.game.camera.height)
       {
         this.kill();
       }

@@ -11,6 +11,8 @@ module Scumbag
         if (data[i].name == type) return data[i];
       }
 
+      console.log(data);
+
       console.error("Couldn't find an enemy called "+type);
       return null;
     }

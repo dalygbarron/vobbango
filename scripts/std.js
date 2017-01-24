@@ -1,153 +1,17 @@
 #ifndef STD_H
 #define STD_H
-/** the standard library that all other scripts are appended to before they are
- * run */
 
+/** get the horizontal position of caller */
+#define getX() (caller.body.x + caller.body.width / 2)
 
-/** builds a textbox where name is the speaker's name, chip is the chip graphic,
- * and text is the text in the textbox */
-function* say(name,chip,text)
-{
-  state.buildTextbox(name,text,chip);
-  yield;
-}
+/** get the vertical position of caller */
+#define getY() (caller.y)
 
-
-/** like say, but uses info from the caller to guess the name and chip and stuff */
-function* speak(mood,text)
-{
-  state.buildTextbox(caller.properties.name,text,caller.properties.name+"_"+mood);
-  yield;
-}
-
-
-/** reads out the contents of the book property belonging to the actor denoted
- * by name */
-function* read(book,bookName,bookChip)
-{
-  var content = ctx.state.tilemap.properties[book].split("-");
-  for (var i = 0;i < content.length;i++)
-  {
-    yield* say(bookName,bookChip,content[i].trim());
-  }
-}
-
-
-function getX() {return caller.body.x + caller.body.width / 2}
-
-function getY() {return caller.y}
-
+/** gets the angle from caller to the player */
 function getAngleToPlayer()
 {
   return Math.atan2(state.player.y - getY(),state.player.x - getX());
 }
-
-
-/** tells you if a value is close to a target, within the margin */
-function close(value,target,margin)
-{
-  margin = Math.abs(margin);
-  return ((value >= target - margin) && (value <= target + margin));
-}
-
-
-function* periodicSpray(bulletGroup,nBullets,spread,period,delay=0)
-{
-  while(true)
-  {
-    for (var i = 0;i < nBullets;i++)
-    {
-      poisonBullets.fire(getX(),getY(),0,0,getAngleToPlayer() + i * spread / (nBullets - 1) - spread / 2);
-      yield* wait(delay);
-    }
-    yield* wait(period);
-  }
-}
-
-
-
-
-/** makes the actor wait until a certain amount of time has passed */
-function* wait(time)
-{
-  var elapsed = 0;
-  while (elapsed < time)
-  {
-    elapsed += yield;
-  }
-  return elapsed - time;
-}
-
-
-/** makes the actor wait until an animation has played to continue */
-function* waitAnimation(name)
-{
-  caller.animations.play(name);
-  while (!caller.animations.currentAnim.isFinished) yield;
-}
-
-function* waitEffect(x,y,name,nFrames,framerate)
-{
-  var effect = state.addEffect(x,y,name,nFrames,framerate);
-  while (effect.alive) yield;
-}
-
-
-
-function* waitMove(x,y)
-{
-  while (true)
-  {
-    var elapsed = yield;
-    if (close(getX(),x,caller.body.velocity.x * elapsed / 1000) &&
-        close(getY(),y,caller.body.velocity.y * elapsed / 1000))
-    {
-      caller.x = x - caller.body.width / 2;
-      caller.y = y;
-      return;
-    }
-    var angle = Math.atan2(y - getY(),x - getX());
-    caller.body.velocity.x = Math.cos(angle) * caller.properties.moveSpeed;
-    caller.body.velocity.y = Math.sin(angle) * caller.properties.moveSpeed;
-  }
-}
-
-
-function* waitRandomMove(time)
-{
-  var angle = Math.random() * Math.PI * 2 - Math.PI;
-  caller.body.velocity.x = Math.sin(angle) * caller.properties.moveSpeed;
-  caller.body.velocity.y = Math.cos(angle) * caller.properties.moveSpeed;
-  yield* wait(time);
-}
-
-
-function* waitMoveNearPosition(time,x,y,maxDistance)
-{
-  var distance = Math.cos(Math.atan2(getY() - y,getX() - x)) * (getX() - x);
-  if (distance < maxDistance)
-  {
-    var angle = Math.random() * Math.PI * 2 - Math.PI;
-    caller.body.velocity.x = Math.sin(angle) * caller.properties.moveSpeed;
-    caller.body.velocity.y = Math.cos(angle) * caller.properties.moveSpeed;
-    yield* wait(time);
-  }
-  else
-  {
-    yield* waitMove(x,y);
-  }
-}
-
-
-function* waitMoveToRegion(region)
-{
-  var region = state.regions[region];
-  var x = region.x + region.width / 2;
-  var y = region.y + region.height / 2;
-  yield* waitMove(x,y);
-  caller.body.velocity.set(0);
-}
-
 
 /** sets a unique switch for this actor that can hopefully not collide with
  * any other switch in the game */

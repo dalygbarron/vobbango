@@ -1,4 +1,5 @@
 #include "std.js"
+#include "wait.js"
 
 
 var elapsed = 0;

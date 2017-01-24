@@ -55,11 +55,11 @@
                  "name":"millipede",
                  "properties":
                     {
-                     "type":"millipede"
+                     "kind":"millipede"
                     },
                  "propertytypes":
                     {
-                     "type":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",

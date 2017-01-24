@@ -22,7 +22,7 @@
 
     {"type":"image","key":"fog","url":"images/fog.png"},
 
-    {"type":"image","key":"blood1","url":"images/blood1.png"},
+    {"type":"image","key":"bugBullet","url":"images/bugBullet.png"},
     {"type":"image","key":"blood2","url":"images/blood2.png"},
     {"type":"image","key":"poison","url":"images/poison.png"},
     {"type":"image","key":"legBullet","url":"images/legBullet.png"},
@@ -70,6 +70,9 @@
     {"type":"audio","key":"die","urls":["audio/die.ogg"],"autoDecode": true},
     {"type":"audio","key":"fiendDeath","urls":["audio/fiendDeath.ogg"],"autoDecode": true},
     {"type":"audio","key":"charge","urls":["audio/charge.ogg"],"autoDecode": true},
+    {"type":"audio","key":"scream","urls":["audio/scream.ogg"],"autoDecode": true},
+    {"type":"audio","key":"bugNoise","urls":["audio/bugNoise.ogg"],"autoDecode": true},
+    {"type":"audio","key":"bugDeath","urls":["audio/bugDeath.ogg"],"autoDecode": true},
 
     {"type":"audio","key":"first","urls":["audio/first.ogg"],"autoDecode":true},
     {"type":"audio","key":"firstBoss","urls":["audio/firstBoss.ogg"],"autoDecode":true},

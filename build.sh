@@ -9,9 +9,9 @@ for file in *.js
 do
   rm -rf ../release/scripts/$file
   cp $file $file.c
-  gcc $file.c -P -E >> $file.max
-  java -jar ~/bin/closure-compiler.jar --js $file.max --js_output_file ../release/scripts/$file
-  rm $file.c $file.max
+  gcc $file.c -P -E >> ../release/scripts/$file #$file.max.js
+  #uglifyjs# -o ../release/scripts/$file $file.max.js
+  rm $file.c #$file.max.js
 done
 
 #build the list

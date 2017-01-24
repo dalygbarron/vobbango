@@ -53,7 +53,7 @@ module Scumbag
   {
     let playerData =
     {
-      x:region.x,y:region.y,width:region.width,height:region.height,properties:{type:"player"}
+      x:region.x,y:region.y,width:region.width,height:region.height,properties:{kind:"player"}
     }
     return createActor(game,"player",playerData);
   }
@@ -133,6 +133,7 @@ module Scumbag
       this.collisionLayer.resizeWorld();
       this.collisionLayer.visible = false;
 
+      this.tilemap.createLayer("below");
       let bottomLayer = this.tilemap.createLayer("background");
       this.tilemap.createLayer("things");
 
@@ -142,7 +143,7 @@ module Scumbag
       //add player and stuff
       if (this.playerRegion == null)
       {
-        this.player = createActor(this.game,"player",{x:0,y:0,width:1,height:1,properties:{type:"player"}});
+        this.player = createActor(this.game,"player",{x:0,y:0,width:1,height:1,properties:{kind:"player"}});
         this.player.body.immovable = false;
       }
       else
@@ -161,7 +162,6 @@ module Scumbag
         this.actors.add(actor);
       }
 
-
       //load actors
       if (this.returning) this.restoreActors();
 
@@ -170,7 +170,6 @@ module Scumbag
       (
         function(tile)
         {
-          tile.blendeMode = PIXI.blendModes.MULTIPLY;
           if (tile.hasOwnProperty("properties"))
           {
             if (tile.properties.hasOwnProperty("spawn"))
@@ -195,7 +194,7 @@ module Scumbag
             }
           }
         },
-        this,0,0,this.tilemap.width,this.tilemap.height,0
+        this,0,0,this.tilemap.width,this.tilemap.height,"background"
       );
 
       //create the bullets group

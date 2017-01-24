@@ -29,6 +29,7 @@ module Scumbag
         let bullet = new Bullet(game,key);
         this.add(bullet,true);
         bullet.body.setCircle(bullet.width / 4,bullet.width / 4,bullet.height / 4);
+        bullet.alive = false;
       }
     }
 

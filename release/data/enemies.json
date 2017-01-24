@@ -31,7 +31,7 @@
     },
     {
       "name":"chaser","key":"chaser","controller":"chaserController.js",
-      "health":2,"directional":true,"moveSpeed":350,"period":1000
+      "health":10,"directional":true,"xSpeed":150,"ySpeed":50,"xPeriod":800,"yPeriod":50
     },
     {
       "name":"bomb","key":"bomb","controller":"bombController.js",

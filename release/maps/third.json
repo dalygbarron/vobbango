@@ -428,7 +428,7 @@
                  "name":"exit",
                  "properties":
                     {
-                     "script":"ctx.transport(\"agara\",\"start\");"
+                     "script":"ctx.transport(\"theBody\",\"start\");"
                     },
                  "propertytypes":
                     {

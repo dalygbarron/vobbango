@@ -5,21 +5,33 @@ module Scumbag
   const BODY_SIZE = 24;
 
 
+  /** moves shiet from a to b like propertesy haha */
+  function moveProperties(a:any,b:any)
+  {
+    var keys = Object.getOwnPropertyNames(a);
+    for (var i in keys)
+    {
+      b[keys[i]] = a[keys[i]];
+    }
+  }
+
+
   export function createActor(game:Phaser.Game,name:string,data:any):Actor
   {
     /* generic enemy */
-    if (data.properties.hasOwnProperty("type"))
+    if (data.properties.hasOwnProperty("kind"))
     {
-      let enemyData = Enemies.getEnemyData(data.properties.type,game);
+      let enemyData = Enemies.getEnemyData(data.properties.kind,game);
       let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,enemyData.key,enemyData.controller,enemyData.health,enemyData.directional || enemyData.directional === undefined);
-      actor.properties = enemyData;
+      moveProperties(enemyData,actor.properties);
+      moveProperties(data.properties,actor.properties);
       actor.script = game.cache.getText(enemyData.script);
       return actor;
     }
 
     /* bespoke artisanal enemy */
     let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional);
-    actor.properties = data.properties;
+    moveProperties(data.properties,actor.properties);
     actor.script = data.properties.script;
     return actor;
   }
@@ -48,7 +60,7 @@ module Scumbag
     halo:       Phaser.Sprite;
     controller: Controller;
     script:     string;
-    properties: any;
+    properties: any       = {};
     mode:       Mode      = Mode.NORMAL;
 
     /** like a sprite, but also with tile width and height */

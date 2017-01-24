@@ -4,12 +4,12 @@
 /* make constants */
 const BIG_BULLETS = 40;
 const SMALL_BULLETS = 49;
-const RANGE = 300;
+const RANGE = 170;
 var distance = RANGE + 1;
 
 
 /* make the two bullet groups */
-var fastBullets = state.createBulletGroup(caller,60,SMALL_BULLETS,'cBulletSmall','shot');
+var fastBullets = state.createBulletGroup(caller,100,SMALL_BULLETS,'cBulletSmall','shot');
 var slowBullets = state.createBulletGroup(caller,14,BIG_BULLETS,'cBullet','shot');
 
 
