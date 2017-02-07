@@ -1,0 +1,13 @@
+{
+  "backgrounds":
+  [
+    {
+      "name":"junk",
+      "content":
+      [
+        {"image":"titlepage","x":0,"y":32},
+        {"image":"dotbango","x":0,"y":128,"speed":10}
+      ]
+    }
+  ]
+}

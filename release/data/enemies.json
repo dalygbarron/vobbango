@@ -30,6 +30,10 @@
       "health":1,"directional":true,"moveSpeed":200,"period":350
     },
     {
+      "name":"nightweird","key":"nightweird","controller":"nightweirdController.js",
+      "health":10,"directional":false,"moveSpeed":150
+    },
+    {
       "name":"chaser","key":"chaser","controller":"chaserController.js",
       "health":10,"directional":true,"xSpeed":150,"ySpeed":50,"xPeriod":800,"yPeriod":50
     },

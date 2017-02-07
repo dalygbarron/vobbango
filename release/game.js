@@ -13,7 +13,8 @@ var Scumbag;
             let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, enemyData.key, enemyData.controller, enemyData.health, enemyData.directional || enemyData.directional === undefined);
             moveProperties(enemyData, actor.properties);
             moveProperties(data.properties, actor.properties);
-            actor.script = game.cache.getText(enemyData.script);
+            if (enemyData.hasOwnProperty("script"))
+                actor.script = game.cache.getText(enemyData.script);
             return actor;
         }
         let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional);
@@ -33,6 +34,7 @@ var Scumbag;
             super(game, x, y, key);
             this.updating = true;
             this.strafing = false;
+            this.script = "";
             this.properties = {};
             this.mode = Mode.NORMAL;
             this.name = name;
@@ -131,24 +133,34 @@ var Scumbag;
 ;
 var Scumbag;
 (function (Scumbag) {
-    class Background {
-        constructor(imageKey, width, height, game) {
-            this.image = game.add.image(0, 0, imageKey);
-            this.image.sendToBack();
-            this.width = width;
-            this.height = height;
-            this.cameraWidth = game.width;
-            this.cameraHeight = game.height;
+    function getBackgroundData(key, data) {
+        for (let i = 0; i < data.backgrounds.length; i++) {
+            if (data.backgrounds[i].name == key)
+                return data.backgrounds[i];
         }
-        update(cameraX, cameraY) {
-            let x = cameraX / (this.width - this.cameraWidth) *
-                (this.width - this.image.width);
-            let y = cameraY / (this.height - this.cameraHeight) *
-                (this.height - this.image.height);
-            if (isFinite(x))
-                this.image.x = x;
-            if (isFinite(y))
-                this.image.y = y;
+        console.error("couldn't find background with name " + key);
+    }
+    class Background {
+        constructor(key, game) {
+            this.images = [];
+            this.game = game;
+            this.data = getBackgroundData(key, this.game.cache.getJSON("backgrounds"));
+            for (let i = 0; i < this.data.content.length; i++) {
+                let image = game.add.tileSprite(0, 0, this.game.width, this.game.height, this.data.content[i].image);
+                image.fixedToCamera = true;
+                if (this.data.content[i].hasOwnProperty("speed")) {
+                    image.animations.add("move");
+                    image.animations.play("move", this.data.content[i].speed, true);
+                }
+                this.images.push(image);
+            }
+        }
+        update() {
+            for (let i = 0; i < this.data.content.length; i++) {
+                let elapsed = this.game.time.elapsedMS / 1000;
+                this.images[i].tilePosition.x += elapsed * this.data.content[i].x;
+                this.images[i].tilePosition.y += elapsed * this.data.content[i].y;
+            }
         }
     }
     Scumbag.Background = Background;
@@ -166,7 +178,11 @@ var Scumbag;
             this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
             this.angle = angle;
             this.rotation = angle;
+            this.alpha = 1;
             this.body.gravity.set(gx, gy);
+            this.body.collideWorldBounds = true;
+            this.body.onWorldBounds = new Phaser.Signal();
+            this.body.onWorldBounds.add(this.kill, this);
         }
         redirect(angle, speed, gx = 0, gy = 0) {
             this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
@@ -175,12 +191,6 @@ var Scumbag;
             this.body.gravity.set(gx, gy);
         }
         update() {
-            if (this.x < this.game.camera.x ||
-                this.x > this.game.camera.x + this.game.camera.width ||
-                this.y < this.game.camera.y ||
-                this.y > this.game.camera.y + this.game.camera.height) {
-                this.kill();
-            }
         }
     }
     Scumbag.Bullet = Bullet;
@@ -202,12 +212,8 @@ var Scumbag;
             }
         }
         fire(x, y, gx, gy, angle) {
-            if (x < this.game.camera.x - this.game.camera.width / 2 ||
-                x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
-                y < this.game.camera.y - this.game.camera.height / 2 ||
-                y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2) {
+            if (!Scumbag.Util.onScreen(x, y, this.game))
                 return null;
-            }
             if (this.sound != null)
                 this.game.sound.play(this.sound);
             let bullet = this.getFirstExists(false);
@@ -228,6 +234,12 @@ var Scumbag;
             if (bullet != null)
                 bullet.fire(x, y, angle, speed, 0, 0);
             return bullet;
+        }
+        clear() {
+            this.forEachAlive(function (bullet) {
+                let tween = this.game.add.tween(bullet).to({ alpha: 0 }, 300, Phaser.Easing.Default, true);
+                tween.onComplete.add(function () { this.kill(); }, bullet);
+            }, this);
         }
     }
     Scumbag.BulletGroup = BulletGroup;
@@ -451,7 +463,11 @@ var Scumbag;
         }
         ScriptContext.changeState = changeState;
         function transport(level, playerRegion) {
-            game.state.start("Overworld", true, false, level, playerRegion);
+            if (!(this.state instanceof Scumbag.Overworld)) {
+                game.state.start("Overworld", true, false, level, playerRegion);
+            }
+            else if (this.state.enemies.length == 0)
+                game.state.start("Overworld", true, false, level, playerRegion);
         }
         ScriptContext.transport = transport;
         function toOverworld() {
@@ -575,6 +591,11 @@ var Scumbag;
                 return parseInt(direction);
         }
         Util.evaluateDirection = evaluateDirection;
+        function onScreen(x, y, game) {
+            return (x >= game.camera.x && x <= game.camera.x + game.camera.width &&
+                y >= game.camera.y && y <= game.camera.y + game.camera.height);
+        }
+        Util.onScreen = onScreen;
     })(Util = Scumbag.Util || (Scumbag.Util = {}));
     ;
 })(Scumbag || (Scumbag = {}));
@@ -1496,10 +1517,12 @@ var Scumbag;
 var Scumbag;
 (function (Scumbag) {
     function touches(a, b) {
-        if (!(a.mode == Scumbag.Mode.NORMAL && b.mode == Scumbag.Mode.NORMAL))
+        var aEnemy = this.enemies.indexOf(a);
+        var bEnemy = this.enemies.indexOf(b);
+        if (aEnemy >= 0 && bEnemy >= 0)
             return false;
         if (a == this.player) {
-            if (b.mode == Scumbag.Mode.FIGHTING) {
+            if (bEnemy >= 0) {
                 this.hurtPlayer();
                 return false;
             }
@@ -1507,10 +1530,13 @@ var Scumbag;
                 this.player.body.immovable = false;
                 this.collideCooldown = 1.0;
                 Scumbag.Script.setScript(b.script, b);
+                return true;
             }
+            else
+                return false;
         }
-        else if (b == this.player) {
-            if (a.mode == Scumbag.Mode.FIGHTING) {
+        if (b == this.player) {
+            if (aEnemy >= 0) {
                 this.hurtPlayer();
                 return false;
             }
@@ -1518,9 +1544,11 @@ var Scumbag;
                 this.player.body.immovable = false;
                 this.collideCooldown = 1.0;
                 Scumbag.Script.setScript(a.script, a);
+                return true;
             }
+            else
+                return false;
         }
-        return true;
     }
     function pause() {
         if (this.gui != null)
@@ -1537,6 +1565,7 @@ var Scumbag;
         constructor(...args) {
             super(...args);
             this.background = null;
+            this.enemies = [];
             this.overlay = null;
             this.collideCooldown = 0.0;
             this.hitCooldown = 0.0;
@@ -1561,6 +1590,13 @@ var Scumbag;
             super.create();
             Scumbag.StateOfGame.parameters.map = this.map;
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            this.tilemap = new Phaser.Tilemap(this.game, this.map);
+            if (this.tilemap.properties.hasOwnProperty("background") && this.tilemap.properties.background != "") {
+                this.background = new Scumbag.Background(this.tilemap.properties.background, this.game);
+            }
+            else
+                this.background = null;
+            this.tilemap.destroy();
             this.tilemap = this.add.tilemap(this.map);
             for (let i in this.tilemap.tilesets) {
                 this.tilemap.addTilesetImage(this.tilemap.tilesets[i].name, this.tilemap.tilesets[i].name);
@@ -1608,6 +1644,7 @@ var Scumbag;
                 }
             }, this, 0, 0, this.tilemap.width, this.tilemap.height, "background");
             this.bullets = this.game.add.group();
+            this.enemies = [];
             this.tilemap.createLayer("overhead");
             this.game.camera.follow(this.player);
             this.game.camera.deadzone = new Phaser.Rectangle(150, 150, this.game.width - 300, this.game.height - 300);
@@ -1627,12 +1664,6 @@ var Scumbag;
                 else {
                     Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
                 }
-                if (this.tilemap.properties.hasOwnProperty("background")) {
-                    if (this.tilemap.properties.background != "") {
-                        this.background = new Scumbag.Background(this.tilemap.properties.background, this.tilemap.width * this.tilemap.tileWidth, this.tilemap.height * this.tilemap.tileHeight, this.game);
-                        this.background.update(this.camera.x, this.camera.y);
-                    }
-                }
                 if (this.tilemap.properties.hasOwnProperty("overlay")) {
                     let overlayData = this.tilemap.properties.overlay.split(",");
                     this.overlayDriftX = overlayData[1];
@@ -1642,6 +1673,11 @@ var Scumbag;
                     this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
                 }
             }
+            this.lock = this.game.add.image(0, 0, "lock");
+            this.lock.height = this.game.height;
+            this.lock.width = this.game.width;
+            this.lock.fixedToCamera = true;
+            this.lock.alpha = 0;
             this.lives = this.game.add.tileSprite(0, 0, 60, 20, "life");
             this.lives.fixedToCamera = true;
             let device = Scumbag.InputManager.getInputDevice(0);
@@ -1657,7 +1693,7 @@ var Scumbag;
         postGuiUpdate() {
             this.actors.sort('y', Phaser.Group.SORT_ASCENDING);
             if (this.background != null) {
-                this.background.update(this.camera.x, this.camera.y);
+                this.background.update();
             }
             if (this.overlay != null && this.overlay.tilePosition != null) {
                 this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS;
@@ -1671,14 +1707,17 @@ var Scumbag;
             for (let child of this.bullets.children) {
                 if (child instanceof Scumbag.BulletGroup) {
                     this.game.physics.arcade.collide(child, this.collisionLayer, function (bullet) { bullet.kill(); });
-                    this.game.physics.arcade.overlap(child, this.actors, function (bullet, actor) {
-                        if (actor == child.master ||
-                            actor == this.player || actor.mode != Scumbag.Mode.FIGHTING) {
-                            return false;
+                    for (let e = 0; e < this.enemies.length; e++) {
+                        let enemy = this.enemies[e];
+                        if (enemy == child.master || enemy == this.player ||
+                            !Scumbag.Util.onScreen(enemy.x, enemy.y, this.game)) {
+                            continue;
                         }
-                        actor.damage(1);
-                        bullet.kill();
-                    }, null, this);
+                        this.game.physics.arcade.overlap(this.enemies[e], child, null, function (actor, bullet) {
+                            actor.damage(1);
+                            bullet.kill();
+                        }, this);
+                    }
                     if (child.master != this.player) {
                         this.game.physics.arcade.overlap(child, this.player.heart, function (a, b) {
                             if (a instanceof Scumbag.Bullet)
@@ -1785,6 +1824,19 @@ var Scumbag;
             let tween = this.add.tween(this.overlay).to({ alpha: 0 }, time, Phaser.Easing.Default, true);
             tween.onComplete.add(function () { this.overlay.destroy(); }, this);
         }
+        addEnemy(enemy) {
+            this.enemies.push(enemy);
+            if (this.enemies.length == 1)
+                this.game.add.tween(this.lock).to({ alpha: 1.0 }, 200, Phaser.Easing.Default, true);
+        }
+        removeEnemy(enemy) {
+            let enemyIndex = this.enemies.indexOf(enemy);
+            if (enemyIndex < 0)
+                return;
+            this.enemies.splice(enemyIndex, 1);
+            if (this.enemies.length == 0)
+                this.game.add.tween(this.lock).to({ alpha: 0.0 }, 500, Phaser.Easing.Default, true);
+        }
         addActor(x, y, name, data) {
             let actor = Scumbag.createActor(this.game, name, data);
             actor.x = x;
@@ -1810,6 +1862,9 @@ var Scumbag;
             this.load.setPreloadSprite(this.preloadBar);
             this.game.load.pack("main", "pack.json");
             this.game.load.pack("scripts", "scriptPack.json");
+            this.game.load.json("enemies", "data/enemies.json");
+            this.game.load.json("credits", "data/credits.json");
+            this.game.load.json("backgrounds", "data/backgrounds.json");
         }
         create() {
             var tween = this.add.tween(this.preloadBar).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);

@@ -1,17 +1,20 @@
-#include "std.js"
-
+tt#include "std.js"
+#include "wait.js"
+#include "theatre.js"
 
 /* make constants */
-const BIG_BULLETS = 40;
-const SMALL_BULLETS = 49;
-const RANGE = 170;
+const BIG_BULLETS = 50;
+const SMALL_BULLETS = 50;
+const RANGE = 90;
+const GRAVITY = 20;
 var distance = RANGE + 1;
 
 
 /* make the two bullet groups */
-var fastBullets = state.createBulletGroup(caller,100,SMALL_BULLETS,'cBulletSmall','shot');
-var slowBullets = state.createBulletGroup(caller,14,BIG_BULLETS,'cBullet','shot');
+var fastBullets = state.createBulletGroup(caller,120,SMALL_BULLETS,'cBulletSmall','shot');
+var slowBullets = state.createBulletGroup(caller,70,BIG_BULLETS,'cBullet','shot');
 
+state.addEnemy(caller);
 
 /* the process */
 while (distance > RANGE)
@@ -22,10 +25,12 @@ while (distance > RANGE)
 
 for (var i = 0;i < BIG_BULLETS;i++)
 {
-  slowBullets.fire(getX(),getY(),0,0,(i * (Math.PI * 2) / BIG_BULLETS) - Math.PI);
+  slowBullets.fire(getX(),getY(),Math.random() * GRAVITY - GRAVITY / 2,Math.random() * GRAVITY - GRAVITY / 2,(i * (Math.PI * 2) / BIG_BULLETS) - Math.PI);
 }
 
 for (var i = 0;i < SMALL_BULLETS;i++)
 {
-  fastBullets.fire(getX(),getY(),0,0,(i * (Math.PI * 2) / SMALL_BULLETS) - Math.PI);
+  fastBullets.fire(getX(),getY(),Math.random() * GRAVITY - GRAVITY / 2,Math.random() * GRAVITY - GRAVITY / 2,(i * (Math.PI * 2) / SMALL_BULLETS) - Math.PI);
 }
+
+state.removeEnemy(caller);

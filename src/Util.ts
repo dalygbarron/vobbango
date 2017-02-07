@@ -25,6 +25,13 @@ module Scumbag
       else return parseInt(direction);
     }
 
+    /** tells you if a given point is now onscreen */
+    export function onScreen(x,y,game)
+    {
+      return (x >= game.camera.x && x <= game.camera.x + game.camera.width &&
+              y >= game.camera.y && y <= game.camera.y + game.camera.height);
+    }
+
   };
 
 };

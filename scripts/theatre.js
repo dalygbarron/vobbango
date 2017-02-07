@@ -38,7 +38,7 @@ function* goSpooky(time)
     totalTime += yield;
     var alpha = 1 - totalTime / time;
     if (alpha < 0) alpha = 0;
-    for (var i = 1;i < state.tilemap.layers.length;i++)
+    for (var i = 1;i < state.tilemap.layers.length - 1;i++)
     {
       state.tilemap.forEach
       (

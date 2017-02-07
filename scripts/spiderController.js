@@ -1,4 +1,5 @@
 #include "wait.js"
 
-caller.mode = Mode.FIGHTING;
+state.addEnemy(caller);
 while (caller.health > 0) yield* waitRandomMove(caller.properties.period);
+state.removeEnemy(caller);

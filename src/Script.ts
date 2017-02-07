@@ -45,7 +45,11 @@ module Scumbag
 
     export function transport(level:string,playerRegion:string)
     {
-      game.state.start("Overworld",true,false,level,playerRegion);
+      if (!(this.state instanceof Overworld))
+      {
+        game.state.start("Overworld",true,false,level,playerRegion);
+      }
+      else if (this.state.enemies.length == 0) game.state.start("Overworld",true,false,level,playerRegion);
     }
 
 

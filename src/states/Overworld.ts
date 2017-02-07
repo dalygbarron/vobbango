@@ -7,11 +7,14 @@ module Scumbag
   /** detects if it's time to run a script or yeah or nah or whatever and that */
   function touches(a:Actor,b:Actor)
   {
-    if (!(a.mode == Mode.NORMAL && b.mode == Mode.NORMAL)) return false;
+    var aEnemy = this.enemies.indexOf(a);
+    var bEnemy = this.enemies.indexOf(b);
+
+    if (aEnemy >= 0 && bEnemy >= 0) return false;
 
     if (a == this.player)
     {
-      if (b.mode == Mode.FIGHTING)
+      if (bEnemy >= 0)
       {
         this.hurtPlayer();
         return false;
@@ -21,11 +24,14 @@ module Scumbag
         this.player.body.immovable = false;
         this.collideCooldown = 1.0;
         Script.setScript(b.script,b);
+        return true;
       }
+      else return false;
     }
-    else if (b == this.player)
+
+    if (b == this.player)
     {
-      if (a.mode == Mode.FIGHTING)
+      if (aEnemy >= 0)
       {
         this.hurtPlayer();
         return false;
@@ -35,9 +41,10 @@ module Scumbag
         this.player.body.immovable = false;
         this.collideCooldown = 1.0;
         Script.setScript(a.script,a);
+        return true;
       }
+      else return false;
     }
-    return true;
   }
 
 
@@ -63,15 +70,17 @@ module Scumbag
    * place */
   export class Overworld extends GuiState
   {
-    background:       Background    = null;
+    background:       Background              = null;
     tilemap:          Phaser.Tilemap;
     collisionLayer:   Phaser.TilemapLayer;
     actors:           Phaser.Group;
+    enemies:          Array<Actor>            = [];
     bullets:          Phaser.Group;
     regions:          {[name:string]:Region};
     player:           Actor;
     lives:            Phaser.TileSprite;
-    overlay:          Phaser.TileSprite   = null;
+    overlay:          Phaser.TileSprite       = null;
+    lock:             Phaser.Image;
     overlayDriftX:    number;
     overlayDriftY:    number;
     map:              string;
@@ -120,6 +129,17 @@ module Scumbag
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
       //create the tilemap
+      this.tilemap = new Phaser.Tilemap(this.game,this.map);
+
+      //create the background
+      if (this.tilemap.properties.hasOwnProperty("background") && this.tilemap.properties.background != "")
+      {
+        this.background = new Background(this.tilemap.properties.background,this.game);
+      }
+      else this.background = null;
+
+      //actually put the tilemap in
+      this.tilemap.destroy();
       this.tilemap = this.add.tilemap(this.map);
 
       for (let i in this.tilemap.tilesets)
@@ -136,6 +156,8 @@ module Scumbag
       this.tilemap.createLayer("below");
       let bottomLayer = this.tilemap.createLayer("background");
       this.tilemap.createLayer("things");
+
+
 
       //create the regions
       this.regions = createRegions(this.tilemap.objects["regions"]);
@@ -200,6 +222,9 @@ module Scumbag
       //create the bullets group
       this.bullets = this.game.add.group();
 
+      //create the enemies list
+      this.enemies = [];
+
       //create the top layer of the world
       this.tilemap.createLayer("overhead");
 
@@ -227,20 +252,6 @@ module Scumbag
           MusicManager.stopSong(MusicChannel.Ambience);
         }
 
-        //create the background
-        if (this.tilemap.properties.hasOwnProperty("background"))
-        {
-          if (this.tilemap.properties.background != "")
-          {
-            this.background = new Background(this.tilemap.properties.background,
-                                             this.tilemap.width * this.tilemap.tileWidth,
-                                             this.tilemap.height * this.tilemap.tileHeight,
-                                             this.game);
-            this.background.update(this.camera.x,this.camera.y);
-
-          }
-        }
-
         //create the overlay
         if (this.tilemap.properties.hasOwnProperty("overlay"))
         {
@@ -252,6 +263,13 @@ module Scumbag
           this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
         }
       }
+
+      //create the lock image thing
+      this.lock = this.game.add.image(0,0,"lock");
+      this.lock.height = this.game.height;
+      this.lock.width = this.game.width;
+      this.lock.fixedToCamera = true;
+      this.lock.alpha = 0;
 
       //create the lives display
       this.lives = this.game.add.tileSprite(0,0,60,20,"life");
@@ -269,6 +287,8 @@ module Scumbag
     /** overrides Phaser.State.render() */
     render()
     {
+
+
 
       /*
       this.actors.forEach(function(actor)
@@ -306,7 +326,7 @@ module Scumbag
       //fix up the background image if there is one
       if (this.background != null)
       {
-        this.background.update(this.camera.x,this.camera.y);
+        this.background.update();
       }
 
       //drift the overlay
@@ -335,24 +355,23 @@ module Scumbag
           );
 
           //bullets and enemies
-          this.game.physics.arcade.overlap
-          (
-            child,this.actors,
-            function(bullet,actor)
+          for (let e = 0;e < this.enemies.length;e++)
+          {
+            let enemy = this.enemies[e];
+            if (enemy == child.master || enemy == this.player ||
+                !Util.onScreen(enemy.x,enemy.y,this.game))
             {
-              if (actor == (<BulletGroup>child).master ||
-                            actor == this.player || actor.mode != Mode.FIGHTING)
+              continue;
+            }
+            this.game.physics.arcade.overlap
+            (
+              this.enemies[e],child,null,function(actor,bullet)
               {
-                return false;
-              }
-
-              actor.damage(1);
-              bullet.kill();
-            },
-            null,
-            this
-          );
-
+                actor.damage(1);
+                bullet.kill();
+              },this
+            )
+          }
 
           //bullets and the player's heart
           if ((<BulletGroup>child).master != this.player)
@@ -512,6 +531,23 @@ module Scumbag
       if (this.overlay == null) return;
       let tween = this.add.tween(this.overlay).to({alpha:0},time,Phaser.Easing.Default,true);
       tween.onComplete.add(function(){this.overlay.destroy()},this);
+    }
+
+    /** Adds an actor to the list of enemies meaning that it can be shot and collided with,
+     * and the level can not be exited */
+    addEnemy(enemy:Actor)
+    {
+      this.enemies.push(enemy);
+      if (this.enemies.length == 1) this.game.add.tween(this.lock).to({alpha:1.0},200,Phaser.Easing.Default,true);
+    }
+
+    /** removes an enemy from the list of enemies */
+    removeEnemy(enemy:Actor)
+    {
+      let enemyIndex = this.enemies.indexOf(enemy);
+      if (enemyIndex < 0) return;
+      this.enemies.splice(enemyIndex,1);
+      if (this.enemies.length == 0) this.game.add.tween(this.lock).to({alpha:0.0},500,Phaser.Easing.Default,true);
     }
 
     addActor(x:number,y:number,name:string,data:any):Actor

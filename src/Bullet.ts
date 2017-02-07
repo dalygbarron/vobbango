@@ -24,7 +24,11 @@ module Scumbag
       this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
       this.angle = angle;
       this.rotation = angle;
+      this.alpha = 1;
       this.body.gravity.set(gx,gy);
+      this.body.collideWorldBounds = true;
+      this.body.onWorldBounds = new Phaser.Signal();
+      this.body.onWorldBounds.add(this.kill,this);
     }
 
     /** changes the direction of the bullet
@@ -40,14 +44,6 @@ module Scumbag
 
     update()
     {
-      /** if it's out of the camera, end it */
-      if (this.x < this.game.camera.x ||
-          this.x > this.game.camera.x + this.game.camera.width ||
-          this.y < this.game.camera.y ||
-          this.y > this.game.camera.y + this.game.camera.height)
-      {
-        this.kill();
-      }
     }
   }
 }

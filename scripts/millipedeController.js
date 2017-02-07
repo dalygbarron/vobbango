@@ -102,7 +102,7 @@ function* burrow()
 }
 
 
-caller.mode = Mode.FIGHTING;
+state.addEnemy(caller);
 controller.addState(350,legs);
 controller.addState(200,poison);
 controller.addState(-100,burrow);
@@ -111,7 +111,6 @@ yield;
 
 
 yield* waitAnimation("dead");
-caller.dead = true
+state.removeEnemy(caller);
 caller.properties.moveOnSpot = false;
-ctx.setSwitch("centipedeDead",true);
 while (true) yield;

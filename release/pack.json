@@ -1,10 +1,6 @@
 {
   "main":
   [
-    {"type":"json","key":"enemies","url":"data/enemies.json"},
-    {"type":"json","key":"weapons","url":"data/weapons.json"},
-    {"type":"json","key":"credits","url":"data/credits.json"},
-
     {"type":"image","key":"titlepage","url":"images/menu.jpg"},
     {"type":"image","key":"logo","url":"images/logo.png"},
     {"type":"image","key":"dead","url":"images/dead.png"},
@@ -18,6 +14,7 @@
     {"type": "image","key": "clicker","url": "images/clicker.png"},
     {"type": "image","key": "heart","url": "images/heart.png"},
     {"type": "image","key": "life","url": "images/life.png"},
+    {"type":"image","key":"lock","url":"images/lock.png"},
     {"type": "image","key": "power","url": "images/power.png"},
 
     {"type":"image","key":"fog","url":"images/fog.png"},
@@ -32,6 +29,7 @@
     {"type":"image","key":"hammerBullet","url":"images/hammerBullet.png"},
     {"type":"image","key":"cBullet","url":"images/cBullet.png"},
     {"type":"image","key":"cBulletSmall","url":"images/cBulletSmall.png"},
+    {"type":"image","key":"nightweirdBullet","url":"images/nightweirdBullet.png"},
 
     {"type":"image","key":"dany_n","url":"chips/dany_n.png"},
     {"type": "image","key": "ast_n","url": "chips/ast_n.png"},
@@ -41,6 +39,7 @@
     {"type":"spritesheet","key":"millipede","url":"images/millipede.png","frameWidth":128,"frameHeight":128},
     {"type":"spritesheet","key":"beetle","url":"images/kubus.png","frameWidth":64,"frameHeight":64},
     {"type":"spritesheet","key":"chaser","url":"images/chaser.png","frameWidth":48,"frameHeight":32},
+    {"type":"spritesheet","key":"nightweird","url":"images/nightweird.png","frameWidth":32,"frameHeight":32},
     {"type":"spritesheet","key":"chad","url":"images/stasbangoraKebabom.png","frameWidth":48,"frameHeight":64},
     {"type":"spritesheet","key":"dotbangoraKebabom","url":"images/dotbangoraKebabom.png","frameWidth":48,"frameHeight":64},
     {"type":"spritesheet","key":"stasbango","url":"images/stasbango.png","frameWidth":48,"frameHeight":64},
