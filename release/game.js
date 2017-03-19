@@ -3,9 +3,8 @@ var Scumbag;
     const BODY_SIZE = 24;
     function moveProperties(a, b) {
         var keys = Object.getOwnPropertyNames(a);
-        for (var i in keys) {
+        for (var i in keys)
             b[keys[i]] = a[keys[i]];
-        }
     }
     function createActor(game, name, data) {
         if (data.properties.hasOwnProperty("kind")) {
@@ -37,25 +36,22 @@ var Scumbag;
             this.script = "";
             this.properties = {};
             this.mode = Mode.NORMAL;
+            this.loadAnimations();
+            this.animations.play("front");
             this.name = name;
             this.health = health;
             this.game.physics.arcade.enable(this);
             this.body.collideWorldBounds = true;
             this.body.immovable = true;
+            this.anchor.setTo(0.5, 0.5);
             if (directional) {
                 this.body.width = BODY_SIZE;
                 this.body.height = BODY_SIZE;
                 this.body.offset.x = this.width / 2 - BODY_SIZE / 2;
                 this.body.offset.y = this.height - BODY_SIZE;
-                this.anchor.setTo(0.5, 0.5);
-                this.animations.add('front', [0, 1, 2, 3], 10, true);
-                this.animations.add('back', [4, 5, 6, 7], 10, true);
             }
             else {
                 this.body.setCircle(this.width / 2);
-                this.anchor.setTo(0.5);
-                this.animations.add('front', [0, 1, 2, 3], 10, true);
-                this.animations.add('back', [0, 1, 2, 3], 10, true);
             }
             this.heart = new Phaser.Sprite(game, 0, 0, "heart");
             this.game.physics.arcade.enable(this.heart);
@@ -126,6 +122,12 @@ var Scumbag;
             this.halo.alpha = 0;
             this.game.add.tween(this.halo).to({ alpha: 1 }, duration, Phaser.Easing.Default, true);
             this.halo.blendMode = PIXI.blendModes.MULTIPLY;
+        }
+        loadAnimations() {
+            let animations = this.game.cache.getJSON("animations").animations[this.key];
+            for (let animation of animations) {
+                this.animations.add(animation.name, Scumbag.Util.range(animation.frames[0] - 1, animation.frames[1] - 1), animation.fps, animation.loop);
+            }
         }
     }
     Scumbag.Actor = Actor;
@@ -596,6 +598,13 @@ var Scumbag;
                 y >= game.camera.y && y <= game.camera.y + game.camera.height);
         }
         Util.onScreen = onScreen;
+        function range(min, max) {
+            let list = [];
+            for (let i = min; i <= max; i++)
+                list.push(i);
+            return list;
+        }
+        Util.range = range;
     })(Util = Scumbag.Util || (Scumbag.Util = {}));
     ;
 })(Scumbag || (Scumbag = {}));
@@ -1591,8 +1600,12 @@ var Scumbag;
             Scumbag.StateOfGame.parameters.map = this.map;
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
             this.tilemap = new Phaser.Tilemap(this.game, this.map);
-            if (this.tilemap.properties.hasOwnProperty("background") && this.tilemap.properties.background != "") {
-                this.background = new Scumbag.Background(this.tilemap.properties.background, this.game);
+            if (this.tilemap.properties !== undefined) {
+                if (this.tilemap.properties.hasOwnProperty("background")) {
+                    if (this.tilemap.properties.background != "") {
+                        this.background = new Scumbag.Background(this.tilemap.properties.background, this.game);
+                    }
+                }
             }
             else
                 this.background = null;
@@ -1861,7 +1874,9 @@ var Scumbag;
             this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
             this.game.load.pack("main", "pack.json");
+            this.game.load.pack("sprites", "spritePack.json");
             this.game.load.pack("scripts", "scriptPack.json");
+            this.game.load.json("animations", "animations.json");
             this.game.load.json("enemies", "data/enemies.json");
             this.game.load.json("credits", "data/credits.json");
             this.game.load.json("backgrounds", "data/backgrounds.json");

@@ -132,10 +132,17 @@ module Scumbag
       this.tilemap = new Phaser.Tilemap(this.game,this.map);
 
       //create the background
-      if (this.tilemap.properties.hasOwnProperty("background") && this.tilemap.properties.background != "")
+      if (this.tilemap.properties !== undefined)
       {
-        this.background = new Background(this.tilemap.properties.background,this.game);
+        if (this.tilemap.properties.hasOwnProperty("background"))
+        {
+          if (this.tilemap.properties.background != "")
+          {
+            this.background = new Background(this.tilemap.properties.background,this.game);
+          }
+        }
       }
+
       else this.background = null;
 
       //actually put the tilemap in

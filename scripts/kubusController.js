@@ -8,9 +8,6 @@ var yOffset = caller.body.height / 2;
 var bullets = state.createBulletGroup(caller,100,60,'blood1','shot');
 var hammerBullets = state.createBulletGroup(caller,100,60,'hammerBullet','shot');
 
-caller.animations.add("die",caller.properties.deathFrames,4,false);
-caller.animations.play("front");
-
 
 
 function* spearBit()

@@ -9,10 +9,7 @@ module Scumbag
   function moveProperties(a:any,b:any)
   {
     var keys = Object.getOwnPropertyNames(a);
-    for (var i in keys)
-    {
-      b[keys[i]] = a[keys[i]];
-    }
+    for (var i in keys) b[keys[i]] = a[keys[i]];
   }
 
 
@@ -73,6 +70,9 @@ module Scumbag
       //run superconstructor
       super(game,x,y,key);
 
+      this.loadAnimations();
+      this.animations.play("front");
+
       //set it's parameters
       this.name = name;
       this.health = health;
@@ -82,6 +82,9 @@ module Scumbag
       this.body.collideWorldBounds = true;
       this.body.immovable = true;
 
+      //do animation type crap
+      this.anchor.setTo(0.5,0.5);
+
       if (directional)
       {
         //set it's dimensions
@@ -89,21 +92,11 @@ module Scumbag
         this.body.height = BODY_SIZE;
         this.body.offset.x = this.width / 2 - BODY_SIZE / 2;
         this.body.offset.y = this.height - BODY_SIZE;
-
-        //do animation type crap
-        this.anchor.setTo(0.5,0.5);
-        this.animations.add('front',[0,1,2,3],10,true);
-        this.animations.add('back',[4,5,6,7],10,true);
       }
       else
       {
         //set it's dimensions
         this.body.setCircle(this.width / 2);
-
-        //do animation type crap
-        this.anchor.setTo(0.5);
-        this.animations.add('front',[0,1,2,3],10,true);
-        this.animations.add('back',[0,1,2,3],10,true);
       }
 
       //create it's heart
@@ -194,6 +187,17 @@ module Scumbag
       this.halo.alpha = 0;
       this.game.add.tween(this.halo).to({alpha:1},duration,Phaser.Easing.Default,true);
       this.halo.blendMode = PIXI.blendModes.MULTIPLY;
+    }
+
+    private loadAnimations():void
+    {
+      let animations = this.game.cache.getJSON("animations").animations[<string>this.key];
+      for (let animation of animations)
+      {
+        this.animations.add(animation.name,
+                            Util.range(animation.frames[0] - 1,animation.frames[1] - 1),
+                            animation.fps,animation.loop);
+      }
     }
   }
 };

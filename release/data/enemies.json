@@ -10,8 +10,8 @@
       "health":500,"directional":false,"moveOnSpot":true
     },
     {
-      "name":"dotbangoraKebabom","key":"dotbangoraKebabom","controller":"dotbangoraKebabomController.js",
-      "health":700,"directional":true, "moveSpeed": 50
+      "name":"dotbangoraKebabom","key":"dotbangoraKebabom","directional":false,
+      "controller":"dotbangoraKebabomController.js","health":700,"moveSpeed": 50
     },
     {
       "name":"beetle","key":"beetle","controller":"kubusController.js",
@@ -42,7 +42,7 @@
       "health":1,"directional":false,"moveOnSpot":true
     },
     {
-      "name":"player","key":"chad","controller":"playerController.js",
+      "name":"player","key":"stasbangoraKebabom","controller":"playerController.js",
       "health":1,"moveSpeed":180,"strafeSpeed":90
     },
     {

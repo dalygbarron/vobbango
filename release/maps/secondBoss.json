@@ -143,7 +143,7 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "background":"titlepage",
+     "background":"junk",
      "music":"first"
     },
  "propertytypes":

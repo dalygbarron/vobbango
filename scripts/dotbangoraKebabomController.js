@@ -9,12 +9,6 @@
 var poisonBullets = state.createBulletGroup(caller,200,1600,'poison','shot');
 var cBullets = state.createBulletGroup(caller,120,300,'cBulletSmall','shot');
 var guns = [];
-caller.animations.add("dying",[1,2,6,9],20,true);
-caller.animations.add("death",[8,9,10,11],4,false);
-caller.animations.add("loseSpear",[12,13,14],3,false);
-caller.animations.add("startPhone",[15,16,17],5,false);
-caller.animations.add("onPhone",[18],4,true);
-caller.animations.add("endPhone",[19,20,21],5,false);
 
 
 /* attacks */
@@ -49,16 +43,8 @@ function* prongAttack()
   yield* speak("n","haha, wait until you see this");
   yield* waitAnimation("loseSpear");
   music.fadeOut(1000,Channel.Music);
-  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Huh? Your traditional spear?\nit's gone!");
-  yield* wait(500);
-  yield* waitAnimation("startPhone");
-  caller.animations.play("onPhone");
-  yield* wait(300);
+  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Your Spear??");
   yield* speak("n","Send in the guns.");
-  yield* wait(300);
-  yield* waitAnimation("endPhone");
-  caller.animations.add("front",[22,23,24,25],10,false);
-  caller.animations.add("back",[26,27,28,29],10,false);
 
   for (var i = 0;i < N_GUNS;i++)
   {
@@ -234,7 +220,7 @@ function* mazeAttack()
 }
 
 
-caller.mode = Mode.FIGHTING;
+state.addEnemy(caller);
 controller.addState(600,traditionAttack);
 controller.addState(450,prongAttack);
 controller.addState(350,gridAttack);
@@ -251,7 +237,6 @@ music.stopSong(Channel.Music);
 music.stopSong(Channel.Ambience);
 sound.play("fiendDeath");
 yield* waitAnimation("death");
-caller.mode = Mode.DEAD;
-ctx.setSwitch("centipedeDead",true);
+state.removeEnemy(caller);
 yield* endSpooky(1000);
 while (true) yield;

@@ -1,4 +1,4 @@
-tt#include "std.js"
+#include "std.js"
 #include "wait.js"
 #include "theatre.js"
 

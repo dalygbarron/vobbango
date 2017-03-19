@@ -2,9 +2,6 @@
 
 var bullets = state.createBulletGroup(caller,65,15,'spear');
 
-caller.animations.add("die",caller.properties.deathFrames,4,false);
-caller.animations.play("front");
-
 
 
 caller.fighting = true;

@@ -7,7 +7,6 @@ var hammerBullets = state.createBulletGroup(caller,100,60,'hammerBullet','shot')
 var player = state.player;
 var xOffset = caller.body.width / 2;
 var yOffset = caller.body.height / 2;
-caller.animations.add("red",[8,9,8,9,10,9,10,11],4,false);
 
 
 function* waveBit()

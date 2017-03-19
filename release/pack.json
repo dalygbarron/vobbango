@@ -36,21 +36,6 @@
     {"type": "image","key": "sharret_n","url": "chips/sharret_n.png"},
     {"type": "image","key": "chad_n","url": "chips/dirk_n.png"},
 
-    {"type":"spritesheet","key":"millipede","url":"images/millipede.png","frameWidth":128,"frameHeight":128},
-    {"type":"spritesheet","key":"beetle","url":"images/kubus.png","frameWidth":64,"frameHeight":64},
-    {"type":"spritesheet","key":"chaser","url":"images/chaser.png","frameWidth":48,"frameHeight":32},
-    {"type":"spritesheet","key":"nightweird","url":"images/nightweird.png","frameWidth":32,"frameHeight":32},
-    {"type":"spritesheet","key":"chad","url":"images/stasbangoraKebabom.png","frameWidth":48,"frameHeight":64},
-    {"type":"spritesheet","key":"dotbangoraKebabom","url":"images/dotbangoraKebabom.png","frameWidth":48,"frameHeight":64},
-    {"type":"spritesheet","key":"stasbango","url":"images/stasbango.png","frameWidth":48,"frameHeight":64},
-    {"type":"spritesheet","key":"dotbango","url":"images/dotbango.png","frameWidth":48,"frameHeight":64},
-    {"type":"spritesheet","key":"chad2","url":"images/chad2.png","frameWidth":24,"frameHeight":48},
-    {"type":"spritesheet","key":"spider","url":"images/spider.png","frameWidth":24,"frameHeight":24},
-    {"type":"spritesheet","key":"bomb","url":"images/bomb.png","frameWidth":24,"frameHeight":24},
-    {"type":"spritesheet","key":"gun","url":"images/gun.png","frameWidth":48,"frameHeight":32},
-
-    {"type":"spritesheet","key":"save","url":"images/save.png","frameWidth":48,"frameHeight":32},
-
     {"type":"spritesheet","key":"grass","url":"images/grass.png","frameWidth":48,"frameHeight":88},
     {"type":"spritesheet","key":"thistle","url":"images/thistle.png","frameWidth":160,"frameHeight":64},
     {"type":"spritesheet","key":"waves","url":"images/waves.png","frameWidth":100,"frameHeight":50},

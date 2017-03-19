@@ -32,6 +32,13 @@ module Scumbag
               y >= game.camera.y && y <= game.camera.y + game.camera.height);
     }
 
+    export function range(min:number,max:number)
+    {
+      let list = [];
+      for (let i = min;i <= max;i++) list.push(i);
+      return list;
+    }
+
   };
 
 };

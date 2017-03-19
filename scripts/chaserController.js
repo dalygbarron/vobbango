@@ -3,10 +3,8 @@
 #include "periodic.js"
 
 
-var bullets = state.createBulletGroup(caller,140,30,'bugBullet','bugNoise');
+var bullets = state.createBulletGroup(caller,100,30,'bugBullet','bugNoise');
 var shooting = periodicSpray(bullets,3,0.5,500);
-caller.animations.add("death",[8,9,10,11],4,false);
-caller.animations.play("front");
 
 
 state.addEnemy(caller);

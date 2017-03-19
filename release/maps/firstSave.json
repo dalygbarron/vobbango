@@ -94,7 +94,7 @@
                 {
                  "height":275.213675213675,
                  "id":142,
-                 "name":"end",
+                 "name":"ende",
                  "properties":
                     {
                      "script":"ctx.transport(\"filthy\",\"start\");"
@@ -106,9 +106,28 @@
                  "rotation":0,
                  "type":"region",
                  "visible":true,
-                 "width":34.021770191983,
-                 "x":800.166263996051,
+                 "width":39.021770191983,
+                 "x":795.166263996051,
                  "y":82.0512820512821
+                }, 
+                {
+                 "height":38,
+                 "id":143,
+                 "name":"end",
+                 "properties":
+                    {
+                     "script":"ctx.transport(\"secondBoss\",\"start\");"
+                    },
+                 "propertytypes":
+                    {
+                     "script":"string"
+                    },
+                 "rotation":0,
+                 "type":"region",
+                 "visible":true,
+                 "width":48,
+                 "x":439,
+                 "y":60
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -117,7 +136,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":143,
+ "nextobjectid":144,
  "orientation":"orthogonal",
  "properties":
     {

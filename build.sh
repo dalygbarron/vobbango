@@ -14,9 +14,15 @@ do
   rm $file.c #$file.max.js
 done
 
-#build the list
+#build the scripts list
 cd ../release
 ../buildTextList.py scriptPack.json scripts scripts/*
+
+#build the sprite list
+../buildSpriteList.py ../sprites.json spritePack.json animations.json sprites
+
+
 cd ..
+
 
 #get that damn minifier working again mate
