@@ -11,7 +11,7 @@
     },
     {
       "name":"dotbangoraKebabom","key":"dotbangoraKebabom","directional":false,
-      "controller":"dotbangoraKebabomController.js","health":700,"moveSpeed": 50
+      "controller":"dotbangoraKebabomController.js","health":900,"moveSpeed": 50
     },
     {
       "name":"beetle","key":"beetle","controller":"kubusController.js",
@@ -30,8 +30,20 @@
       "health":1,"directional":true,"moveSpeed":200,"period":350
     },
     {
+      "name":"blueback","key":"blueback","controller":"bluebackController.js",
+      "health":1,"directional":false,"moveOnSpot":true
+    },
+    {
+      "name":"skimmer","key":"skimmer","controller":"skimmerController.js",
+      "health":1,"directional":false,"moveOnSpot":true,"target":false
+    },
+    {
       "name":"nightweird","key":"nightweird","controller":"nightweirdController.js",
       "health":10,"directional":false,"moveSpeed":150
+    },
+    {
+      "name":"worm","key":"worm","controller":"wormController.js",
+      "health":30,"directional":false,"moveOnSpot":true
     },
     {
       "name":"chaser","key":"chaser","controller":"chaserController.js",

@@ -24,7 +24,7 @@ function* legs()
 
   yield* wait(500);
   music.fadeOut(1000,Channel.Music);
-  yield* speak("n","BWSEEEEEEEEEEEEEKKKKKKKAAAAAAA");
+  yield* speak("BWSEEEEEEEEEEEEEKKKKKKKAAAAAAA");
   music.playSong("firstBoss",Channel.Music);
   while (true)
   {
@@ -91,7 +91,7 @@ function* poison()
 function* burrow()
 {
   yield* wait(1000);
-  yield* speak("n","BWSEEEEEEEEEEEEEEEEEEEEEEEEEEEKKKKKKKAAAAAAAAAAAAAAAAAAAA");
+  yield* speak("BWSEEEEEEEEEEEEEEEEEEEEEEEEEEEKKKKKKKAAAAAAAAAAAAAAAAAAAA");
   while (true)
   {
     mud.fire(getX(),getY(),0,10,Math.random() * Math.PI * 2 - Math.PI);

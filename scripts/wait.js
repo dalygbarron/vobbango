@@ -89,18 +89,6 @@ function* waitMoveToRegion(region)
 }
 
 
-/** waits for some bullet groups to have all their bullets gone */
-function* waitBullets()
-{
-  while (true)
-  {
-    var clean = true;
-    for (var i in arguments) if (arguments[i].countLiving() > 0) clean = false;
-    if (clean) return;
-    yield;
-  }
-}
-
 
 /** tells you if a value is close to a target, within the margin */
 function close(value,target,margin)

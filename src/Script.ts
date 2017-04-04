@@ -39,17 +39,14 @@ module Scumbag
      * the overworld when they are done */
     export function changeState(newState:string,...args):void
     {
+      console.log("uhoh, I'm using that function");
       game.state.start(newState,true,false,args);
     }
 
 
     export function transport(level:string,playerRegion:string)
     {
-      if (!(this.state instanceof Overworld))
-      {
-        game.state.start("Overworld",true,false,level,playerRegion);
-      }
-      else if (this.state.enemies.length == 0) game.state.start("Overworld",true,false,level,playerRegion);
+      game.state.start("Overworld",true,false,level,playerRegion);
     }
 
 

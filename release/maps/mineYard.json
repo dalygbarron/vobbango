@@ -65,16 +65,16 @@
                  "type":"actor",
                  "visible":true,
                  "width":24,
-                 "x":517,
-                 "y":217
+                 "x":543,
+                 "y":122
                 }, 
                 {
-                 "height":32,
+                 "height":100,
                  "id":151,
-                 "name":"nightweird",
+                 "name":"worm",
                  "properties":
                     {
-                     "kind":"nightweird"
+                     "kind":"worm"
                     },
                  "propertytypes":
                     {
@@ -83,9 +83,9 @@
                  "rotation":0,
                  "type":"actor",
                  "visible":true,
-                 "width":32,
-                 "x":260,
-                 "y":307
+                 "width":100,
+                 "x":341,
+                 "y":125
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -153,7 +153,7 @@
          "columns":10,
          "firstgid":1,
          "image":"..\/images\/outside.png",
-         "imageheight":1184,
+         "imageheight":1248,
          "imagewidth":320,
          "margin":0,
          "name":"outsideTiles",
@@ -183,7 +183,7 @@
                  "name":"water",
                  "tile":-1
                 }],
-         "tilecount":370,
+         "tilecount":390,
          "tileheight":32,
          "tileproperties":
             {

@@ -11,9 +11,9 @@ function* say(name,chip,text)
 
 
 /** like say, but uses info from the caller to guess the name and chip and stuff */
-function* speak(mood,text)
+function* speak(text)
 {
-  state.buildTextbox(caller.properties.name,text,caller.properties.name+"_"+mood);
+  state.buildTextbox(caller.properties.name,text);
   yield;
 }
 

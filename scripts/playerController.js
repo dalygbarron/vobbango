@@ -18,25 +18,37 @@ function* shooting(period)
 
 var shootingInstance = shooting(60);
 
+
+var oldCameraPos = state.game.camera.position.clone();
+
 /* the loop */
 while (true)
 {
   var elapsed = yield;
+  var elapsedSeconds = elapsed / 1000;
+
+  var cameraPos = state.game.camera.position.clone();
+
+  caller.body.velocity.x = (cameraPos.x - oldCameraPos.x) / elapsedSeconds;
+  caller.body.velocity.y = (cameraPos.y - oldCameraPos.y) / elapsedSeconds;
+
+
+
 
   /* if the player is strafing */
   if (input.getButtonState(Button.Strafe))
   {
     caller.strafing = true;
-    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.strafeSpeed;
-    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.strafeSpeed;
+    caller.body.velocity.x += input.getAxisState(Axis.Horizontal) * caller.properties.strafeSpeed;
+    caller.body.velocity.y += input.getAxisState(Axis.Vertical) * caller.properties.strafeSpeed;
   }
 
   /* otherwise */
   else
   {
     caller.strafing = false;
-    caller.body.velocity.x = input.getAxisState(Axis.Horizontal) * caller.properties.moveSpeed;
-    caller.body.velocity.y = input.getAxisState(Axis.Vertical) * caller.properties.moveSpeed;
+    caller.body.velocity.x += input.getAxisState(Axis.Horizontal) * caller.properties.moveSpeed;
+    caller.body.velocity.y += input.getAxisState(Axis.Vertical) * caller.properties.moveSpeed;
   }
 
   /* shooting */
@@ -44,4 +56,6 @@ while (true)
   {
     shootingInstance.next(elapsed);
   }
+
+  var oldCameraPos = cameraPos;
 }

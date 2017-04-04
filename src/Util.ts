@@ -39,6 +39,14 @@ module Scumbag
       return list;
     }
 
-  };
 
+    /**
+     * a 2d point
+     */
+    export interface Point
+    {
+      x:number;
+      y:number;
+    }
+  };
 };

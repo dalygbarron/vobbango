@@ -80,14 +80,13 @@ module Scumbag
     player:           Actor;
     lives:            Phaser.TileSprite;
     overlay:          Phaser.TileSprite       = null;
-    lock:             Phaser.Image;
-    overlayDriftX:    number;
-    overlayDriftY:    number;
+    overlayDrift:     Util.Point;
     map:              string;
     playerRegion:     string;
     returning:        boolean;
     collideCooldown:  number = 0.0;
     hitCooldown:      number = 0.0;
+    scroll:           Util.Point = {x:0,y:0};
 
 
     /** overrides Phaser.State.init() */
@@ -165,6 +164,10 @@ module Scumbag
       this.tilemap.createLayer("things");
 
 
+      // Make the camera follow properly.
+      this.game.camera.roundPx = false;
+
+
 
       //create the regions
       this.regions = createRegions(this.tilemap.objects["regions"]);
@@ -236,8 +239,7 @@ module Scumbag
       this.tilemap.createLayer("overhead");
 
 
-      this.game.camera.follow(this.player);
-      this.game.camera.deadzone = new Phaser.Rectangle(150,150,this.game.width - 300,this.game.height - 300);
+      this.game.camera.focusOn(this.player);
 
       //if there ain't no things then don't go there
       if (this.tilemap.properties != null)
@@ -254,29 +256,23 @@ module Scumbag
           if (this.tilemap.properties.ambience == "none") MusicManager.stopSong(MusicChannel.Ambience);
           else MusicManager.playSong(this.tilemap.properties.ambience,MusicChannel.Ambience);
         }
-        else
-        {
-          MusicManager.stopSong(MusicChannel.Ambience);
-        }
+        else MusicManager.stopSong(MusicChannel.Ambience);
 
         //create the overlay
         if (this.tilemap.properties.hasOwnProperty("overlay"))
         {
           let overlayData = this.tilemap.properties.overlay.split(",");
-          this.overlayDriftX = overlayData[1];
-          this.overlayDriftY = overlayData[2];
+          this.overlayDrift = {x:overlayData[1],y:overlayData[2]};
           this.overlay = this.game.add.tileSprite(0,0,this.game.width,this.game.height,overlayData[0]);
           this.overlay.fixedToCamera = true;
           this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
         }
-      }
 
-      //create the lock image thing
-      this.lock = this.game.add.image(0,0,"lock");
-      this.lock.height = this.game.height;
-      this.lock.width = this.game.width;
-      this.lock.fixedToCamera = true;
-      this.lock.alpha = 0;
+        // create the scroll
+        if (this.tilemap.properties.hasOwnProperty("scrollX")) this.scroll.x = this.tilemap.properties.scrollX;
+        if (this.tilemap.properties.hasOwnProperty("scrollY")) this.scroll.y = this.tilemap.properties.scrollY;
+        console.log(this.scroll);
+      }
 
       //create the lives display
       this.lives = this.game.add.tileSprite(0,0,60,20,"life");
@@ -330,17 +326,20 @@ module Scumbag
       //make it look right
       this.actors.sort('y', Phaser.Group.SORT_ASCENDING);
 
+      // move the camera
+      let deltaTime = this.game.time.elapsedMS / 1000;
+      this.camera.position.add(this.scroll.x * deltaTime,this.scroll.y * deltaTime);
+      this.camera.setPosition(this.camera.position.x + this.scroll.x * deltaTime,
+                              this.camera.position.y + this.scroll.y * deltaTime);
+
       //fix up the background image if there is one
-      if (this.background != null)
-      {
-        this.background.update();
-      }
+      if (this.background != null) this.background.update();
 
       //drift the overlay
       if (this.overlay != null && this.overlay.tilePosition != null)
       {
-        this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS;
-        this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS;
+        this.overlay.tilePosition.x += this.overlayDrift.x * this.game.time.elapsedMS;
+        this.overlay.tilePosition.y += this.overlayDrift.y * this.game.time.elapsedMS;
       }
 
       //update the invulnerability thing
@@ -520,14 +519,13 @@ module Scumbag
     }
 
 
-    setOverlay(key:string,driftX:number,driftY:number,time:number=1000)
+    setOverlay(key:string,drift:Util.Point,time:number=1000)
     {
       if (this.overlay != null) this.overlay.destroy();
       this.overlay = this.game.add.tileSprite(0,0,this.game.width,this.game.height,key);
       this.overlay.fixedToCamera = true;
       this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
-      this.overlayDriftX = driftX;
-      this.overlayDriftY = driftY;
+      this.overlayDrift = drift;
       this.overlay.alpha = 0;
       this.add.tween(this.overlay).to({alpha:1},time,Phaser.Easing.Default,true);
     }
@@ -545,7 +543,6 @@ module Scumbag
     addEnemy(enemy:Actor)
     {
       this.enemies.push(enemy);
-      if (this.enemies.length == 1) this.game.add.tween(this.lock).to({alpha:1.0},200,Phaser.Easing.Default,true);
     }
 
     /** removes an enemy from the list of enemies */
@@ -554,7 +551,6 @@ module Scumbag
       let enemyIndex = this.enemies.indexOf(enemy);
       if (enemyIndex < 0) return;
       this.enemies.splice(enemyIndex,1);
-      if (this.enemies.length == 0) this.game.add.tween(this.lock).to({alpha:0.0},500,Phaser.Easing.Default,true);
     }
 
     addActor(x:number,y:number,name:string,data:any):Actor

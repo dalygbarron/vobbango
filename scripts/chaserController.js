@@ -4,7 +4,7 @@
 
 
 var bullets = state.createBulletGroup(caller,100,30,'bugBullet','bugNoise');
-var shooting = periodicSpray(bullets,3,0.5,500);
+var shooting = periodicSpray(bullets,3,0.9,500);
 
 
 state.addEnemy(caller);
@@ -18,7 +18,7 @@ while (caller.health > 0)
   shooting.next(elapsed);
 }
 sound.play("bugDeath");
+state.removeEnemy(caller);
 caller.body.velocity.set(0);
 yield* waitAnimation("death");
-state.removeEnemy(caller);
 while (true) yield;

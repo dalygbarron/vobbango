@@ -33,12 +33,20 @@ module Scumbag
 
     /** changes the direction of the bullet
      * angle is the angle it changes to */
-    redirect(angle:number,speed:number,gx:number=0,gy:number=0)
+    redirectWithSpeed(angle:number,speed:number,gx:number=0,gy:number=0)
     {
       this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
       this.angle = angle;
       this.rotation = angle;
       this.body.gravity.set(gx,gy);
+    }
+
+    redirect(angle)
+    {
+      let speed = Math.hypot(this.body.velocity.x,this.body.velocity.y);
+      this.game.physics.arcade.velocityFromRotation(angle,speed,this.body.velocity);
+      this.angle = angle;
+      this.rotation = angle;
     }
 
 

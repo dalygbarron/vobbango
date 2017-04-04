@@ -186,11 +186,17 @@ var Scumbag;
             this.body.onWorldBounds = new Phaser.Signal();
             this.body.onWorldBounds.add(this.kill, this);
         }
-        redirect(angle, speed, gx = 0, gy = 0) {
+        redirectWithSpeed(angle, speed, gx = 0, gy = 0) {
             this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
             this.angle = angle;
             this.rotation = angle;
             this.body.gravity.set(gx, gy);
+        }
+        redirect(angle) {
+            let speed = Math.hypot(this.body.velocity.x, this.body.velocity.y);
+            this.game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
+            this.angle = angle;
+            this.rotation = angle;
         }
         update() {
         }
@@ -465,11 +471,7 @@ var Scumbag;
         }
         ScriptContext.changeState = changeState;
         function transport(level, playerRegion) {
-            if (!(this.state instanceof Scumbag.Overworld)) {
-                game.state.start("Overworld", true, false, level, playerRegion);
-            }
-            else if (this.state.enemies.length == 0)
-                game.state.start("Overworld", true, false, level, playerRegion);
+            game.state.start("Overworld", true, false, level, playerRegion);
         }
         ScriptContext.transport = transport;
         function toOverworld() {
@@ -1312,7 +1314,6 @@ var Scumbag;
     }
     Scumbag.Boot = Boot;
 })(Scumbag || (Scumbag = {}));
-``;
 var Scumbag;
 (function (Scumbag) {
     const headingFont = { font: "16px Serif", fontStyle: "bold", fill: "#ff0" };
@@ -1578,6 +1579,7 @@ var Scumbag;
             this.overlay = null;
             this.collideCooldown = 0.0;
             this.hitCooldown = 0.0;
+            this.scroll = { x: 0, y: 0 };
         }
         init(map = null, playerRegion) {
             this.playerRegion = playerRegion;
@@ -1622,6 +1624,7 @@ var Scumbag;
             this.tilemap.createLayer("below");
             let bottomLayer = this.tilemap.createLayer("background");
             this.tilemap.createLayer("things");
+            this.game.camera.roundPx = false;
             this.regions = Scumbag.createRegions(this.tilemap.objects["regions"]);
             if (this.playerRegion == null) {
                 this.player = Scumbag.createActor(this.game, "player", { x: 0, y: 0, width: 1, height: 1, properties: { kind: "player" } });
@@ -1659,8 +1662,7 @@ var Scumbag;
             this.bullets = this.game.add.group();
             this.enemies = [];
             this.tilemap.createLayer("overhead");
-            this.game.camera.follow(this.player);
-            this.game.camera.deadzone = new Phaser.Rectangle(150, 150, this.game.width - 300, this.game.height - 300);
+            this.game.camera.focusOn(this.player);
             if (this.tilemap.properties != null) {
                 if (this.tilemap.properties.hasOwnProperty("music")) {
                     if (this.tilemap.properties.music == "none")
@@ -1674,23 +1676,21 @@ var Scumbag;
                     else
                         Scumbag.MusicManager.playSong(this.tilemap.properties.ambience, Scumbag.MusicChannel.Ambience);
                 }
-                else {
+                else
                     Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
-                }
                 if (this.tilemap.properties.hasOwnProperty("overlay")) {
                     let overlayData = this.tilemap.properties.overlay.split(",");
-                    this.overlayDriftX = overlayData[1];
-                    this.overlayDriftY = overlayData[2];
+                    this.overlayDrift = { x: overlayData[1], y: overlayData[2] };
                     this.overlay = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, overlayData[0]);
                     this.overlay.fixedToCamera = true;
                     this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
                 }
+                if (this.tilemap.properties.hasOwnProperty("scrollX"))
+                    this.scroll.x = this.tilemap.properties.scrollX;
+                if (this.tilemap.properties.hasOwnProperty("scrollY"))
+                    this.scroll.y = this.tilemap.properties.scrollY;
+                console.log(this.scroll);
             }
-            this.lock = this.game.add.image(0, 0, "lock");
-            this.lock.height = this.game.height;
-            this.lock.width = this.game.width;
-            this.lock.fixedToCamera = true;
-            this.lock.alpha = 0;
             this.lives = this.game.add.tileSprite(0, 0, 60, 20, "life");
             this.lives.fixedToCamera = true;
             let device = Scumbag.InputManager.getInputDevice(0);
@@ -1705,12 +1705,14 @@ var Scumbag;
         }
         postGuiUpdate() {
             this.actors.sort('y', Phaser.Group.SORT_ASCENDING);
-            if (this.background != null) {
+            let deltaTime = this.game.time.elapsedMS / 1000;
+            this.camera.position.add(this.scroll.x * deltaTime, this.scroll.y * deltaTime);
+            this.camera.setPosition(this.camera.position.x + this.scroll.x * deltaTime, this.camera.position.y + this.scroll.y * deltaTime);
+            if (this.background != null)
                 this.background.update();
-            }
             if (this.overlay != null && this.overlay.tilePosition != null) {
-                this.overlay.tilePosition.x += this.overlayDriftX * this.game.time.elapsedMS;
-                this.overlay.tilePosition.y += this.overlayDriftY * this.game.time.elapsedMS;
+                this.overlay.tilePosition.x += this.overlayDrift.x * this.game.time.elapsedMS;
+                this.overlay.tilePosition.y += this.overlayDrift.y * this.game.time.elapsedMS;
             }
             if (this.hitCooldown > 0) {
                 this.hitCooldown -= this.game.time.elapsedMS;
@@ -1820,14 +1822,13 @@ var Scumbag;
             effect.animations.currentAnim.killOnComplete = true;
             return effect;
         }
-        setOverlay(key, driftX, driftY, time = 1000) {
+        setOverlay(key, drift, time = 1000) {
             if (this.overlay != null)
                 this.overlay.destroy();
             this.overlay = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, key);
             this.overlay.fixedToCamera = true;
             this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
-            this.overlayDriftX = driftX;
-            this.overlayDriftY = driftY;
+            this.overlayDrift = drift;
             this.overlay.alpha = 0;
             this.add.tween(this.overlay).to({ alpha: 1 }, time, Phaser.Easing.Default, true);
         }
@@ -1839,16 +1840,12 @@ var Scumbag;
         }
         addEnemy(enemy) {
             this.enemies.push(enemy);
-            if (this.enemies.length == 1)
-                this.game.add.tween(this.lock).to({ alpha: 1.0 }, 200, Phaser.Easing.Default, true);
         }
         removeEnemy(enemy) {
             let enemyIndex = this.enemies.indexOf(enemy);
             if (enemyIndex < 0)
                 return;
             this.enemies.splice(enemyIndex, 1);
-            if (this.enemies.length == 0)
-                this.game.add.tween(this.lock).to({ alpha: 0.0 }, 500, Phaser.Easing.Default, true);
         }
         addActor(x, y, name, data) {
             let actor = Scumbag.createActor(this.game, name, data);

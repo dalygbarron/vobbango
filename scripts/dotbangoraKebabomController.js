@@ -31,20 +31,16 @@ function* traditionAttack()
   }
 }
 
-
 function* prongAttack()
 {
   const N_GUNS = 2;
   const GUN_RADIUS = 300;
   const GAP = 400;
 
-  caller.mode = Mode.NORMAL;
-  yield* waitBullets(poisonBullets);
-  yield* speak("n","haha, wait until you see this");
-  yield* waitAnimation("loseSpear");
+  poisonBullets.clear();
+  yield* speak("haha, wait until you see this");
   music.fadeOut(1000,Channel.Music);
-  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Your Spear??");
-  yield* speak("n","Send in the guns.");
+  yield* speak("Send in the guns.");
 
   for (var i = 0;i < N_GUNS;i++)
   {
@@ -52,8 +48,6 @@ function* prongAttack()
     var angle = Math.PI * 2 / N_GUNS * i;
     addTarget(guns[i],getX() + Math.cos(angle) * GUN_RADIUS,getY() + Math.sin(angle) * GUN_RADIUS);
   }
-
-  caller.mode = Mode.FIGHTING;
   music.playSong("secondBoss",Channel.Music);
 
   while (true)
@@ -63,10 +57,9 @@ function* prongAttack()
       var angle = Math.atan2(state.player.y - guns[i].y,state.player.x - guns[i].x);
       cBullets.fire(guns[i].x,guns[i].y,0,0,angle);
     }
-    yield* waitRandomMove(GAP);
+    yield* wait(GAP);
   }
 }
-
 
 function* fireGunsAtAngle(guns)
 {
@@ -76,7 +69,6 @@ function* fireGunsAtAngle(guns)
     yield* wait(300);
   }
 }
-
 
 function* gridAttack()
 {
@@ -89,9 +81,7 @@ function* gridAttack()
   const BULLET_PERIOD = 2000;
 
   clearGuns(guns);
-
-  // go back to spot
-  yield* waitMoveToRegion("bossCentre");
+  cBullets.clear();
 
   //top to bottom guns
   for (var i = 2;i < X_GUNS - 2;i++)
@@ -129,8 +119,6 @@ function* gridAttack()
     addTarget(gun,side,state.game.height / Y_GUNS * (i + 1));
   }
 
-  yield* waitGuns(guns);
-
   fireGunsPeriodic = fireGunsAtAngle(guns);
   firePoisonPeriodic = periodicWave(poisonBullets,N_BULLETS,BULLET_DAMP,BULLET_MAX_SPEED,BULLET_SPREAD,BULLET_PERIOD);
 
@@ -141,36 +129,6 @@ function* gridAttack()
     firePoisonPeriodic.next(elapsed);
   }
 }
-
-
-function* coneAttack()
-{
-  const N_GUNS = 12;
-  const GUN_RADIUS = 200;
-  const PERIOD = 1500;
-
-
-
-  var guns = [];
-  for (var i = 0;i < N_GUNS;i++)
-  {
-    guns[i] = createGun(getX(),getY(),"gun");
-    var angle = Math.PI * 2 / N_GUNS * i;
-    addTarget(guns[i],getX() + Math.cos(angle) * GUN_RADIUS,getY() + Math.sin(angle) * GUN_RADIUS);
-  }
-
-  while (true)
-  {
-    for (var i = 0;i < N_GUNS;i++)
-    {
-      var angle = Math.atan2(state.player.y - guns[i].y,state.player.x - guns[i].x);
-      cBullets.fire(guns[i].x,guns[i].y,0,0,angle);
-    }
-    yield* wait(PERIOD);
-  }
-}
-
-
 
 function* mazeAttack()
 {
@@ -183,10 +141,11 @@ function* mazeAttack()
   var increment = (Math.PI * 2) / N_GAPS / (CIRCUMFERENCE + GAP);
 
   clearGuns(guns);
-  yield* waitBullets(poisonBullets);
-  yield* speak("n","Even if you should defeat me, the order of the world cannot be changed.\nNot by any man.");
+  cBullets.clear();
+  poisonBullets.clear();
+  yield* speak("Even if you should defeat me, the order of the world cannot be changed.\nNot by any man.");
   yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Where did all this weaponry come from?");
-  yield* speak("n","Susbangom.\nValom gamars dar testmem.");
+  yield* speak("Susbangom.\nValom gamars dar testmem.");
   yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","No");
   yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Valom mor dotbangoars.\nGamom mor stasbangoars\nCunt");
 
@@ -220,19 +179,20 @@ function* mazeAttack()
 }
 
 
+/* setting up stuff */
 state.addEnemy(caller);
-controller.addState(600,traditionAttack);
-controller.addState(450,prongAttack);
-controller.addState(350,gridAttack);
-//controller.addState(200,coneAttack);
-controller.addState(150,mazeAttack);
+controller.addState(800,traditionAttack);
+controller.addState(650,prongAttack);
+controller.addState(450,gridAttack);
+controller.addState(0,mazeAttack);
 yield;
 
 
-
+/* end stuff */
 music.playSong("scream",Channel.Ambience);
 caller.animations.play("dying");
-yield* waitBullets(poisonBullets);
+poisonBullets.clear();
+yield* wait(2000);
 music.stopSong(Channel.Music);
 music.stopSong(Channel.Ambience);
 sound.play("fiendDeath");

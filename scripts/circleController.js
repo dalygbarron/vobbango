@@ -107,7 +107,7 @@ var thinCircle = new Periodic(70,function()
 
 
 //logic starts hereW
-yield* speak("n","I am going to kill you");
+yield* speak("I am going to kill you");
 
 
 

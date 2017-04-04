@@ -13,6 +13,18 @@ function getAngleToPlayer()
   return Math.atan2(state.player.y - getY(),state.player.x - getX());
 }
 
+function getFutureAngleToPlayer(bulletSpeed)
+{
+  var time = Math.hypot(state.player.x - getX(),state.player.y - getY()) / bulletSpeed;
+  return Math.atan2((state.player.y + time * state.scroll.y) - getY(),(state.player.x + time * state.scroll.x) - getX());
+}
+
+/** gets the angle from a bullet to the player */
+function bulletAngleToPlayer(bullet)
+{
+  return Math.atan2(state.player.y - bullet.y,state.player.x - bullet.x);
+}
+
 /** sets a unique switch for this actor that can hopefully not collide with
  * any other switch in the game */
 function setSelfSwitch(name,value)

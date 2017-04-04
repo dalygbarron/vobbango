@@ -4,7 +4,7 @@
 #include "std.js"
 
 
-function createGun(x,y,key,moveSpeed=100,name="e")
+function createGun(x,y,key,moveSpeed=200,name="e")
 {
   var data = {"key":key,"directional":false,"moveOnSpot":true,"health":1,
               "moveSpeed":moveSpeed,"controller":"gunController.js"};
