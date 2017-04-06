@@ -39,7 +39,7 @@
          "name":"collisions",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":26,
          "x":0,
          "y":0
@@ -183,11 +183,13 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "music":"first"
+     "music":"first",
+     "scrollY":-20
     },
  "propertytypes":
     {
-     "music":"string"
+     "music":"string",
+     "scrollY":"int"
     },
  "renderorder":"right-down",
  "tileheight":32,
@@ -196,7 +198,7 @@
          "columns":10,
          "firstgid":1,
          "image":"..\/images\/outside.png",
-         "imageheight":1184,
+         "imageheight":1280,
          "imagewidth":320,
          "margin":0,
          "name":"outsideTiles",
@@ -226,7 +228,7 @@
                  "name":"water",
                  "tile":-1
                 }],
-         "tilecount":370,
+         "tilecount":400,
          "tileheight":32,
          "tileproperties":
             {

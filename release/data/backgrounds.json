@@ -8,6 +8,14 @@
         {"image":"titlepage","x":0,"y":32},
         {"image":"dotbango","x":0,"y":128,"speed":10}
       ]
+    },
+    {
+      "name":"sky",
+      "content":
+      [
+        {"image":"sky","x":5,"y":64},
+        {"image":"clouds","x":30,"y":30}
+      ]
     }
   ]
 }

@@ -52,7 +52,7 @@ module Scumbag
   function pause()
   {
     if (this.gui != null) return;
-    Script.setScript(this.game.cache.getText("saveScript"));
+    Script.setScript(this.game.cache.getText("pauseScript"));
   }
 
 
@@ -139,9 +139,10 @@ module Scumbag
           {
             this.background = new Background(this.tilemap.properties.background,this.game);
           }
+          else this.background = null;
         }
+        else this.background = null;
       }
-
       else this.background = null;
 
       //actually put the tilemap in
@@ -162,11 +163,6 @@ module Scumbag
       this.tilemap.createLayer("below");
       let bottomLayer = this.tilemap.createLayer("background");
       this.tilemap.createLayer("things");
-
-
-      // Make the camera follow properly.
-      this.game.camera.roundPx = false;
-
 
 
       //create the regions
@@ -219,7 +215,9 @@ module Scumbag
                 );
                 let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
                 object.anchor.set(0.5,verticalAnchor);
-                object.animations.add("stand",null,3 - Math.random() * 3,true);
+
+                let animationSpeed = this.game.cache.getJSON("animations").animations[type][0].fps;
+                object.animations.add("stand",null,Math.random() * animationSpeed,true);
                 object.animations.play("stand");
                 this.actors.add(object);
               }
@@ -270,9 +268,20 @@ module Scumbag
 
         // create the scroll
         if (this.tilemap.properties.hasOwnProperty("scrollX")) this.scroll.x = this.tilemap.properties.scrollX;
+        else this.scroll.x = 0;
         if (this.tilemap.properties.hasOwnProperty("scrollY")) this.scroll.y = this.tilemap.properties.scrollY;
-        console.log(this.scroll);
+        else this.scroll.y = 0;
       }
+
+      // if there are no properties
+      else
+      {
+        this.scroll = {x:0,y:0};
+      }
+
+      // Set how the camera will work.
+      if (this.scroll.x == 0 && this.scroll.y == 0) this.game.camera.follow(this.player);
+      else this.game.camera.roundPx = false;
 
       //create the lives display
       this.lives = this.game.add.tileSprite(0,0,60,20,"life");

@@ -135,7 +135,7 @@
                  "name":"next",
                  "properties":
                     {
-                     "script":"ctx.transport(\"maze\",\"start\");"
+                     "script":"ctx.transport(\"vine\/first\",\"start\");"
                     },
                  "propertytypes":
                     {
@@ -172,7 +172,7 @@
          "columns":10,
          "firstgid":1,
          "image":"..\/images\/outside.png",
-         "imageheight":1248,
+         "imageheight":1280,
          "imagewidth":320,
          "margin":0,
          "name":"outsideTiles",
@@ -202,7 +202,7 @@
                  "name":"water",
                  "tile":-1
                 }],
-         "tilecount":390,
+         "tilecount":400,
          "tileheight":32,
          "tileproperties":
             {

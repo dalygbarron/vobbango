@@ -150,6 +150,40 @@
         {"name":"front","frames":[1,2],"fps":1,"loop":true},
         {"name":"back","frames":[1,2],"fps":1,"loop":true}
       ]
+    },
+
+
+    {
+      "key":"grass",
+      "url":"images/grass.png",
+      "animations":
+      [
+        {"name":"stand","frames":[1,3],"fps":20,"loop":true}
+      ]
+    },
+    {
+      "key":"thistle",
+      "url":"images/thistle.png",
+      "animations":
+      [
+        {"name":"stand","frames":[1,3],"fps":5,"loop":true}
+      ]
+    },
+    {
+      "key":"moss",
+      "url":"images/moss.png",
+      "animations":
+      [
+        {"name":"stand","frames":[1,2],"fps":20,"loop":true}
+      ]
+    },
+    {
+      "key":"waves",
+      "url":"images/waves.png",
+      "animations":
+      [
+        {"name":"stand","frames":[1,3],"fps":4,"loop":true}
+      ]
     }
   ]
 }

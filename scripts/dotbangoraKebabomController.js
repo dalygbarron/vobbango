@@ -136,18 +136,18 @@ function* mazeAttack()
   const GAP = 8;
   const N_GAPS = 8;
   const ROWS = 7;
-  const PERIOD = 200;
-  const BULLET_SPEED = 25;
+  const PERIOD = 100;
+  const BULLET_SPEED = 100;
   var increment = (Math.PI * 2) / N_GAPS / (CIRCUMFERENCE + GAP);
 
   clearGuns(guns);
   cBullets.clear();
   poisonBullets.clear();
   yield* speak("Even if you should defeat me, the order of the world cannot be changed.\nNot by any man.");
-  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Where did all this weaponry come from?");
+  yield* say("Stasbangora Kebabom","Where did all this weaponry come from?");
   yield* speak("Susbangom.\nValom gamars dar testmem.");
   yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","No");
-  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","Valom mor dotbangoars.\nGamom mor stasbangoars\nCunt");
+  yield* say("Stasbangora Kebabom","Valom mor dotbangoars.\nGamom mor stasbangoars\nCunt");
 
   yield* goSpooky(1000);
 
@@ -192,7 +192,7 @@ yield;
 music.playSong("scream",Channel.Ambience);
 caller.animations.play("dying");
 poisonBullets.clear();
-yield* wait(2000);
+yield* wait(5000);
 music.stopSong(Channel.Music);
 music.stopSong(Channel.Ambience);
 sound.play("fiendDeath");

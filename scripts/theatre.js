@@ -3,9 +3,9 @@
 
 /** builds a textbox where name is the speaker's name, chip is the chip graphic,
  * and text is the text in the textbox */
-function* say(name,chip,text)
+function* say(name,text)
 {
-  state.buildTextbox(name,text,chip);
+  state.buildTextbox(name,text);
   yield;
 }
 

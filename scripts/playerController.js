@@ -29,8 +29,17 @@ while (true)
 
   var cameraPos = state.game.camera.position.clone();
 
-  caller.body.velocity.x = (cameraPos.x - oldCameraPos.x) / elapsedSeconds;
-  caller.body.velocity.y = (cameraPos.y - oldCameraPos.y) / elapsedSeconds;
+  if (state.scroll.x != 0 || state.scroll.y != 0)
+  {
+    caller.body.velocity.x = (cameraPos.x - oldCameraPos.x) / elapsedSeconds;
+    caller.body.velocity.y = (cameraPos.y - oldCameraPos.y) / elapsedSeconds;
+  }
+  else
+  {
+    caller.body.velocity.x = 0;
+    caller.body.velocity.y = 0;
+  }
+
 
 
 
@@ -57,5 +66,5 @@ while (true)
     shootingInstance.next(elapsed);
   }
 
-  var oldCameraPos = cameraPos;
+  oldCameraPos = cameraPos;
 }

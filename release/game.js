@@ -467,6 +467,7 @@ var Scumbag;
     var ScriptContext;
     (function (ScriptContext) {
         function changeState(newState, ...args) {
+            console.log("uhoh, I'm using that function");
             game.state.start(newState, true, false, args);
         }
         ScriptContext.changeState = changeState;
@@ -1563,7 +1564,7 @@ var Scumbag;
     function pause() {
         if (this.gui != null)
             return;
-        Scumbag.Script.setScript(this.game.cache.getText("saveScript"));
+        Scumbag.Script.setScript(this.game.cache.getText("pauseScript"));
     }
     function addPlayerAtRegion(game, region, key) {
         let playerData = {
@@ -1607,7 +1608,11 @@ var Scumbag;
                     if (this.tilemap.properties.background != "") {
                         this.background = new Scumbag.Background(this.tilemap.properties.background, this.game);
                     }
+                    else
+                        this.background = null;
                 }
+                else
+                    this.background = null;
             }
             else
                 this.background = null;
@@ -1624,7 +1629,6 @@ var Scumbag;
             this.tilemap.createLayer("below");
             let bottomLayer = this.tilemap.createLayer("background");
             this.tilemap.createLayer("things");
-            this.game.camera.roundPx = false;
             this.regions = Scumbag.createRegions(this.tilemap.objects["regions"]);
             if (this.playerRegion == null) {
                 this.player = Scumbag.createActor(this.game, "player", { x: 0, y: 0, width: 1, height: 1, properties: { kind: "player" } });
@@ -1652,7 +1656,8 @@ var Scumbag;
                             let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, (tile.y * tile.height - this.player.height) + Math.random() * tile.height, type);
                             let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
                             object.anchor.set(0.5, verticalAnchor);
-                            object.animations.add("stand", null, 3 - Math.random() * 3, true);
+                            let animationSpeed = this.game.cache.getJSON("animations").animations[type][0].fps;
+                            object.animations.add("stand", null, Math.random() * animationSpeed, true);
                             object.animations.play("stand");
                             this.actors.add(object);
                         }
@@ -1687,10 +1692,20 @@ var Scumbag;
                 }
                 if (this.tilemap.properties.hasOwnProperty("scrollX"))
                     this.scroll.x = this.tilemap.properties.scrollX;
+                else
+                    this.scroll.x = 0;
                 if (this.tilemap.properties.hasOwnProperty("scrollY"))
                     this.scroll.y = this.tilemap.properties.scrollY;
-                console.log(this.scroll);
+                else
+                    this.scroll.y = 0;
             }
+            else {
+                this.scroll = { x: 0, y: 0 };
+            }
+            if (this.scroll.x == 0 && this.scroll.y == 0)
+                this.game.camera.follow(this.player);
+            else
+                this.game.camera.roundPx = false;
             this.lives = this.game.add.tileSprite(0, 0, 60, 20, "life");
             this.lives.fixedToCamera = true;
             let device = Scumbag.InputManager.getInputDevice(0);
