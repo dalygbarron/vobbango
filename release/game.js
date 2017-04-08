@@ -145,6 +145,7 @@ var Scumbag;
     class Background {
         constructor(key, game) {
             this.images = [];
+            this.time = 0;
             this.game = game;
             this.data = getBackgroundData(key, this.game.cache.getJSON("backgrounds"));
             for (let i = 0; i < this.data.content.length; i++) {
@@ -159,9 +160,9 @@ var Scumbag;
         }
         update() {
             for (let i = 0; i < this.data.content.length; i++) {
-                let elapsed = this.game.time.elapsedMS / 1000;
-                this.images[i].tilePosition.x += elapsed * this.data.content[i].x;
-                this.images[i].tilePosition.y += elapsed * this.data.content[i].y;
+                this.time += this.game.time.elapsedMS / 1000;
+                this.images[i].tilePosition.x = (0 - this.game.camera.x) + this.time * this.data.content[i].x;
+                this.images[i].tilePosition.y = (0 - this.game.camera.y) + this.time * this.data.content[i].y;
             }
         }
     }
@@ -260,7 +261,7 @@ var Scumbag;
         constructor(game, scriptName, caller) {
             this.states = new Array();
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "Mode", "sound", "music", "Channel", "ctx", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, Scumbag.Mode, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.ScriptContext, this);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "Mode", "sound", "music", "Channel", "ctx", "StateOfGame", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, Scumbag.Mode, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.ScriptContext, Scumbag.StateOfGame, this);
             this.caller = caller;
             this.game = game;
         }
@@ -1654,8 +1655,7 @@ var Scumbag;
                         var chance = parseFloat(data[1]);
                         if (Math.random() < chance) {
                             let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, (tile.y * tile.height - this.player.height) + Math.random() * tile.height, type);
-                            let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
-                            object.anchor.set(0.5, verticalAnchor);
+                            object.anchor.set(0.5, 0);
                             let animationSpeed = this.game.cache.getJSON("animations").animations[type][0].fps;
                             object.animations.add("stand", null, Math.random() * animationSpeed, true);
                             object.animations.play("stand");

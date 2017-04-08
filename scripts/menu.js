@@ -1,4 +1,4 @@
-const creditMessage = "Hello and welcome to my new game, I hope you have fun.\n"+
+const CREDIT_MESSAGE = "Hello and welcome to my new game, I hope you have fun.\n"+
                       "Feel free to send me email about aspects of this game or my\n"+
                       "personality that you hate. marineorganism@gmail.com"
 
@@ -14,8 +14,7 @@ function *load()
     if (ctx.getCharacters().length == 0)
     {
       ctx.setSlot(slot);
-      ctx.addCharacter("John Fogle");
-      ctx.setPlayerKey("chad")
+      ctx.addCharacter("stasbangoraKebabom");
       ctx.transport("next","start");
     }
     ctx.toOverworld();
@@ -25,7 +24,7 @@ function *load()
 
 function *credits()
 {
-  ctx.state.buildTextbox("Dany Burton",creditMessage,"dany_n");
+  ctx.state.buildTextbox("Dany Burton",CREDIT_MESSAGE,"dany_n");
   yield;
 }
 

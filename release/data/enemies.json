@@ -10,6 +10,10 @@
       "health":500,"directional":false,"moveOnSpot":true
     },
     {
+      "name":"fly","key":"fly","controller":"flyController.js",
+      "health":500,"directional":false,"moveOnSpot":true
+    },
+    {
       "name":"dotbangoraKebabom","key":"dotbangoraKebabom","directional":false,
       "controller":"dotbangoraKebabomController.js","health":900,"moveSpeed": 50
     },
@@ -46,8 +50,20 @@
       "health":30,"directional":false,"moveOnSpot":true
     },
     {
+      "name":"smallFly","key":"smallFly","controller":"smallFlyController.js",
+      "health":30,"directional":false,"moveOnSpot":true
+    },
+    {
       "name":"chaser","key":"chaser","controller":"chaserController.js",
       "health":10,"directional":true,"xSpeed":150,"ySpeed":50,"xPeriod":800,"yPeriod":50
+    },
+    {
+      "name":"machineGunner","key":"machineGunner","controller":"machineGunnerController.js",
+      "health":10,"directional":false
+    },
+    {
+      "name":"wizard","key":"wizard","controller":"wizardController.js",
+      "health":100,"directional":false
     },
     {
       "name":"bomb","key":"bomb","controller":"bombController.js",
@@ -59,7 +75,7 @@
     },
     {
       "name":"savePoint","key":"save","controller":"staticController.js","health":1,
-      "script":"save.js","directional":true,"moveOnSpot":true
+      "script":"save.js","directional":false,"moveOnSpot":true
     }
   ]
 }

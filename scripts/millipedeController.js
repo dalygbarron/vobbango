@@ -24,6 +24,7 @@ function* legs()
 
   yield* wait(500);
   music.fadeOut(1000,Channel.Music);
+
   yield* speak("BWSEEEEEEEEEEEEEKKKKKKKAAAAAAA");
   music.playSong("firstBoss",Channel.Music);
   while (true)
@@ -45,6 +46,8 @@ function* legs()
 
 function* poison()
 {
+  sound.play("centipede");
+
   var legList = [];
   for (var i = 0;i < N_LEGS;i++) legList.push(Math.random() * Math.PI * 2 - Math.PI);
   while (true)

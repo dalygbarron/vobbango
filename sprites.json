@@ -11,13 +11,21 @@
       ]
     },
     {
+      "key":"fly",
+      "url":"images/fly.png",
+      "animations":
+      [
+        {"name":"front","frames":[1,1],"fps":10,"loop":true},
+        {"name":"back","frames":[1,1],"fps":10,"loop":true}
+      ]
+    },
+    {
       "key":"stasbangoraKebabom",
       "url":"images/stasbangoraKebabom.png",
       "animations":
       [
         {"name":"front","frames":[1,4],"fps":10,"loop":true},
-        {"name":"back","frames":[5,8],"fps":10,"loop":true},
-        {"name":"death","frames":[9,12],"fps":5,"loop":false}
+        {"name":"back","frames":[5,8],"fps":10,"loop":true}
       ]
     },
     {
@@ -35,17 +43,8 @@
       "url":"images/save.png",
       "animations":
       [
-        {"name":"front","frames":[1,8],"fps":10,"loop":true},
-        {"name":"back","frames":[1,8],"fps":10,"loop":true}
-      ]
-    },
-    {
-      "key":"save",
-      "url":"images/save.png",
-      "animations":
-      [
-        {"name":"front","frames":[1,8],"fps":10,"loop":true},
-        {"name":"back","frames":[1,8],"fps":10,"loop":true}
+        {"name":"front","frames":[1,2],"fps":20,"loop":true},
+        {"name":"back","frames":[1,2],"fps":20,"loop":true}
       ]
     },
     {
@@ -56,6 +55,15 @@
         {"name":"front","frames":[1,4],"fps":10,"loop":true},
         {"name":"back","frames":[1,4],"fps":10,"loop":true},
         {"name":"death","frames":[5,8],"fps":5,"loop":false}
+      ]
+    },
+    {
+      "key":"smallFly",
+      "url":"images/smallFly.png",
+      "animations":
+      [
+        {"name":"front","frames":[1,2],"fps":7,"loop":true},
+        {"name":"back","frames":[1,2],"fps":7,"loop":true}
       ]
     },
     {
@@ -83,7 +91,8 @@
       "animations":
       [
         {"name":"front","frames":[1,4],"fps":10,"loop":true},
-        {"name":"back","frames":[5,8],"fps":10,"loop":true}
+        {"name":"back","frames":[5,8],"fps":10,"loop":true},
+        {"name":"death","frames":[9,12],"fps":10,"loop":false}
       ]
     },
     {
@@ -151,6 +160,24 @@
         {"name":"back","frames":[1,2],"fps":1,"loop":true}
       ]
     },
+    {
+      "key":"machineGunner",
+      "url":"images/machineGunner.png",
+      "animations":
+      [
+        {"name":"front","frames":[1,1],"fps":1,"loop":true},
+        {"name":"back","frames":[1,1],"fps":1,"loop":true}
+      ]
+    },
+    {
+      "key":"wizard",
+      "url":"images/wizard.png",
+      "animations":
+      [
+        {"name":"front","frames":[1,1],"fps":1,"loop":true},
+        {"name":"back","frames":[1,1],"fps":1,"loop":true}
+      ]
+    },
 
 
     {
@@ -183,6 +210,34 @@
       "animations":
       [
         {"name":"stand","frames":[1,3],"fps":4,"loop":true}
+      ]
+    },
+    {
+      "key":"maggot",
+      "url":"images/maggot.png",
+      "animations":
+      [
+        {"name":"stand","frames":[1,3],"fps":4,"loop":true}
+      ]
+    },
+
+
+    {
+      "key":"bumps",
+      "url":"images/bumps.png",
+      "animations":
+      [
+        {"name":"move","frames":[1,2],"fps":3,"loop":true}
+      ]
+    },
+
+
+    {
+      "key":"splat",
+      "url":"images/splat.png",
+      "animations":
+      [
+        {"name":"play","frames":[1,3],"fps":6,"loop":true}
       ]
     }
   ]

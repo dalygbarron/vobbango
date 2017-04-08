@@ -16,12 +16,12 @@ namespace Scumbag
       let input = InputManager.getInputDevice(0);
       this.script = generatorConstructor
       (
-        "state","caller","input","Axis","Button","Mode","sound","music","Channel","ctx","controller",
-        game.cache.getText(scriptName)
+        "state","caller","input","Axis","Button","Mode","sound","music","Channel","ctx",
+        "StateOfGame","controller",game.cache.getText(scriptName)
       )
       (
         <Overworld>(game.state.getCurrentState()),caller,input,Axis,Button,Mode,game.sound,
-        MusicManager,MusicChannel,ScriptContext,this
+        MusicManager,MusicChannel,ScriptContext,StateOfGame,this
       );
       this.caller = caller;
       this.game = game;

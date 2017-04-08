@@ -40,10 +40,6 @@ while (true)
     caller.body.velocity.y = 0;
   }
 
-
-
-
-
   /* if the player is strafing */
   if (input.getButtonState(Button.Strafe))
   {

@@ -16,15 +16,21 @@
     {"type": "image","key": "heart","url": "images/heart.png"},
     {"type": "image","key": "life","url": "images/life.png"},
     {"type": "image","key": "power","url": "images/power.png"},
+    {"type": "image","key": "dany_n","url": "images/dany.png"},
 
     {"type":"image","key":"fog","url":"images/fog.png"},
 
     {"type":"image","key":"sky","url":"images/sky.png"},
+    {"type":"image","key":"storm","url":"images/storm.png"},
+    {"type":"image","key":"bloodSky","url":"images/bloodSky.png"},
     {"type":"image","key":"clouds","url":"images/clouds.png"},
 
     {"type":"image","key":"bugBullet","url":"images/bugBullet.png"},
     {"type":"image","key":"blood2","url":"images/blood2.png"},
     {"type":"image","key":"poison","url":"images/poison.png"},
+    {"type":"image","key":"otherPoison","url":"images/otherPoison.png"},
+    {"type":"image","key":"flyBullet","url":"images/flyBullet.png"},
+    {"type":"image","key":"otherFlyBullet","url":"images/otherFlyBullet.png"},
     {"type":"image","key":"bubble","url":"images/bubble.png"},
     {"type":"image","key":"legBullet","url":"images/legBullet.png"},
     {"type":"image","key":"mud","url":"images/mud.png"},
@@ -35,6 +41,7 @@
     {"type":"image","key":"cBullet","url":"images/cBullet.png"},
     {"type":"image","key":"cBulletSmall","url":"images/cBulletSmall.png"},
     {"type":"image","key":"nightweirdBullet","url":"images/nightweirdBullet.png"},
+    {"type":"image","key":"maggotBall","url":"images/maggotBall.png"},
 
     {"type":"text","key":"menuScript","url":"scripts/menu.js"},
     {"type":"text","key":"deadScript","url":"scripts/dead.js"},
@@ -52,6 +59,7 @@
     {"type":"audio","key":"scream","urls":["audio/scream.ogg"],"autoDecode": true},
     {"type":"audio","key":"bugNoise","urls":["audio/bugNoise.ogg"],"autoDecode": true},
     {"type":"audio","key":"bugDeath","urls":["audio/bugDeath.ogg"],"autoDecode": true},
+    {"type":"audio","key":"centipede","urls":["audio/centipede.ogg"],"autoDecode": true},
 
     {"type":"audio","key":"first","urls":["audio/first.ogg"],"autoDecode":true},
     {"type":"audio","key":"firstBoss","urls":["audio/firstBoss.ogg"],"autoDecode":true},

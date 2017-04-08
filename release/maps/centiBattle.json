@@ -97,7 +97,7 @@
                  "name":"end",
                  "properties":
                     {
-                     "script":"ctx.transport(\"secondBoss\",\"start\");"
+                     "script":"ctx.transport(\"toVine\",\"start\");"
                     },
                  "propertytypes":
                     {
@@ -134,7 +134,7 @@
          "columns":10,
          "firstgid":1,
          "image":"..\/images\/outside.png",
-         "imageheight":1184,
+         "imageheight":1280,
          "imagewidth":320,
          "margin":0,
          "name":"outsideTiles",
@@ -164,7 +164,7 @@
                  "name":"water",
                  "tile":-1
                 }],
-         "tilecount":370,
+         "tilecount":400,
          "tileheight":32,
          "tileproperties":
             {

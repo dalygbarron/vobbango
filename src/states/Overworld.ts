@@ -213,8 +213,7 @@ module Scumbag
                   (tile.y * tile.height - this.player.height) + Math.random() * tile.height,
                   type
                 );
-                let verticalAnchor = 1 - (object.height - this.player.height) / object.height;
-                object.anchor.set(0.5,verticalAnchor);
+                object.anchor.set(0.5,0);
 
                 let animationSpeed = this.game.cache.getJSON("animations").animations[type][0].fps;
                 object.animations.add("stand",null,Math.random() * animationSpeed,true);

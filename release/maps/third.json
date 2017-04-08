@@ -23,7 +23,7 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":26,
          "name":"overhead",
          "opacity":1,
@@ -55,16 +55,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -80,16 +80,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -105,16 +105,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -130,16 +130,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -155,16 +155,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -180,16 +180,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -205,16 +205,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -230,16 +230,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -255,16 +255,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -280,16 +280,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -305,16 +305,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -330,16 +330,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -355,16 +355,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -380,16 +380,16 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"staticController.js",
+                     "controller":"watcherController.js",
+                     "directional":true,
                      "key":"stasbango",
-                     "moveSpeed":"100",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\",\"stasbango_n\");\nyield;"
+                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
                     },
                  "propertytypes":
                     {
                      "controller":"string",
+                     "directional":"bool",
                      "key":"string",
-                     "moveSpeed":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -457,7 +457,7 @@
          "columns":10,
          "firstgid":1,
          "image":"..\/images\/outside.png",
-         "imageheight":1248,
+         "imageheight":1280,
          "imagewidth":320,
          "margin":0,
          "name":"outsideTiles",
@@ -487,7 +487,7 @@
                  "name":"water",
                  "tile":-1
                 }],
-         "tilecount":390,
+         "tilecount":400,
          "tileheight":32,
          "tileproperties":
             {

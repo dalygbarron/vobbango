@@ -19,8 +19,9 @@ module Scumbag
   export class Background
   {
     images:        Phaser.TileSprite[] = [];
-    data;
+    data:          any;
     game:          Phaser.Game;
+    time:          number = 0;
 
     /** yeah just the usual stuff
      * imageKey is the image to use
@@ -45,15 +46,6 @@ module Scumbag
       }
     }
 
-/*
-void main()
-{
-    float distance = (abs(uv.x - 0.5) + abs(uv.y - 0.5)) / 2.0;
-    gl_FragColor = vec4(sin((angle() + distance) * 50.0 - time * 40.0) + 0.5,0.0,0.0,1.0);
-	//gl_FragColor = vec4(sin(uv.x * 20.0 + time * 7.0),sin(uv.y * 20.0 + time * 7.0),1.0, 1.0);
-}
-*/
-
 
     /** updates the background's position
      * cameraX is the x position of the camera
@@ -62,9 +54,9 @@ void main()
     {
       for (let i = 0;i < this.data.content.length;i++)
       {
-        let elapsed = this.game.time.elapsedMS / 1000;
-        this.images[i].tilePosition.x += elapsed * this.data.content[i].x;
-        this.images[i].tilePosition.y += elapsed * this.data.content[i].y;
+        this.time += this.game.time.elapsedMS / 1000;
+        this.images[i].tilePosition.x = (0 - this.game.camera.x) + this.time * this.data.content[i].x;
+        this.images[i].tilePosition.y = (0 - this.game.camera.y)  + this.time * this.data.content[i].y;
       }
     }
   }

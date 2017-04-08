@@ -48,7 +48,102 @@
          "draworder":"topdown",
          "height":30,
          "name":"actors",
-         "objects":[],
+         "objects":[
+                {
+                 "height":64,
+                 "id":219,
+                 "name":"machineGunner",
+                 "properties":
+                    {
+                     "kind":"machineGunner"
+                    },
+                 "propertytypes":
+                    {
+                     "kind":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":64,
+                 "x":240.666666666667,
+                 "y":498.666666666667
+                }, 
+                {
+                 "height":64,
+                 "id":220,
+                 "name":"machineGunner",
+                 "properties":
+                    {
+                     "kind":"machineGunner"
+                    },
+                 "propertytypes":
+                    {
+                     "kind":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":64,
+                 "x":504,
+                 "y":353.333333333333
+                }, 
+                {
+                 "height":64,
+                 "id":221,
+                 "name":"machineGunner",
+                 "properties":
+                    {
+                     "kind":"machineGunner"
+                    },
+                 "propertytypes":
+                    {
+                     "kind":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":64,
+                 "x":365.333333333333,
+                 "y":65.3333333333334
+                }, 
+                {
+                 "height":64,
+                 "id":222,
+                 "name":"machineGunner",
+                 "properties":
+                    {
+                     "kind":"machineGunner"
+                    },
+                 "propertytypes":
+                    {
+                     "kind":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":64,
+                 "x":272,
+                 "y":197.333333333333
+                }, 
+                {
+                 "height":64,
+                 "id":223,
+                 "name":"machineGunner",
+                 "properties":
+                    {
+                     "kind":"machineGunner"
+                    },
+                 "propertytypes":
+                    {
+                     "kind":"string"
+                    },
+                 "rotation":0,
+                 "type":"actor",
+                 "visible":true,
+                 "width":64,
+                 "x":472,
+                 "y":148
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -78,7 +173,7 @@
                  "name":"next",
                  "properties":
                     {
-                     "script":"ctx.transport(\"centiBattle\",\"start\");"
+                     "script":"ctx.transport(\"vine\/second\",\"start\");"
                     },
                  "propertytypes":
                     {
@@ -98,7 +193,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":219,
+ "nextobjectid":224,
  "orientation":"orthogonal",
  "properties":
     {
