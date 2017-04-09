@@ -1,11 +1,47 @@
 {
   "items":
   [
-    {"type":"heading","content":"the End!"},
-    {"type":"score"},
+    {"type":"heading","content":"Victory"},
+    {"type":"image","content":"stasbangoraKebabom"},
+    {"type":"text","content":"gamra termom mor vobbangouars tol termatad mom"},
+    {"type":"text","content":"lasad vobbangoum tu lusad vobbangoum dur telomad telemem"},
+    {"type":"text","content":"bura dur randmem gor vaelaod redars"},
+    {"type":"text","content":"gokad kebab dur mongemem gor tovotra gortars tovet"},
+    {"type":"text","content":"lasad vobbangoum bungedotgerars dur vekemem"},
+    {"type":"text","content":"tu tovotom momtatertars dur samem"},
+    {"type":"text","content":"lusad vobbangoum gorad stastarars dur vekemem"},
+    {"type":"text","content":"tu tovotom buntterdars dur samem"},
+    {"type":"text","content":"bura dur randmem gor vaelaod redars"},
+    {"type":"text","content":"gokad kebab dur mongemem gor tovotra gortars tovet"},
+    {"type":"text","content":"dosad larmars dur vergmem demor lasad redars"},
+    {"type":"text","content":"stermdumtedom lusad redars bertarmem"},
+    {"type":"text","content":"sar dur sobmem emor lasad redars"},
+    {"type":"text","content":"sasastertaom dur lasad dasotmem emor lusad redars"},
 
-    {"type":"image","content":"fogle_n"},
-    {"type":"text","content":"The League of Scumbags head to the east!"},
+
+    {"type":"text","content":"mosad bura dur telemem gor tom"},
+    {"type":"text","content":"kot lasad kebabom tovotars dur vergmem"},
+    {"type":"text","content":"gamra gomodom mor valara mosadtears"},
+    {"type":"text","content":"gamom mor goradadad gor terkars"},
+    {"type":"text","content":"vobbangoum dur todmem"},
+    {"type":"text","content":"kot"},
+    {"type":"text","content":"vobbangoum vobbangouars dur rosmem"},
+    {"type":"text","content":"bura dur randmem gor vaelaod redars"},
+    {"type":"text","content":"gokad kebab dur mongemem gor tovotra gortars tovet"},
+
+    {"type":"text","content":"mosad susus stoars dor losemem demor gamars"},
+    {"type":"text","content":"tovotad susus soutsusus dor bontmem"},
+    {"type":"text","content":"vobbangoum soutbangouars dor gulomemlu"},
+    {"type":"text","content":"gamom mor stasbangouars"},
+    {"type":"text","content":"valom mor dotbangouars"},
+    {"type":"text","content":"sar dur sobmem emor lasad redars"},
+    {"type":"text","content":"sasastertaom dur lasad dasotmem emor lusad redars"},
+
+
+
+
+
+
     {"type":"text","content":"Thankyou for playing this game I hope you had a nice time, and also you did not play so much that your eyes hurt or something"},
 
     {"type":"image","content":"aini_n"},

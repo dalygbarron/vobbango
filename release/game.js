@@ -230,7 +230,7 @@ var Scumbag;
                 bullet.fire(x, y, angle, this.speed, gx, gy);
             return bullet;
         }
-        fireAtSpeed(x, y, angle, speed) {
+        fireAtSpeed(x, y, angle, speed, gx = 0, gy = 0) {
             if (x < this.game.camera.x - this.game.camera.width / 2 ||
                 x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
                 y < this.game.camera.y - this.game.camera.height / 2 ||
@@ -241,7 +241,7 @@ var Scumbag;
                 this.game.sound.play(this.sound);
             let bullet = this.getFirstExists(false);
             if (bullet != null)
-                bullet.fire(x, y, angle, speed, 0, 0);
+                bullet.fire(x, y, angle, speed, gx, gy);
             return bullet;
         }
         clear() {

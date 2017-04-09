@@ -44,7 +44,7 @@ module Scumbag
     }
 
 
-    fireAtSpeed(x,y,angle,speed):Bullet
+    fireAtSpeed(x,y,angle,speed,gx=0,gy=0):Bullet
     {
       if (x < this.game.camera.x - this.game.camera.width / 2 ||
           x > this.game.camera.x + this.game.camera.width + this.game.camera.width / 2 ||
@@ -56,7 +56,7 @@ module Scumbag
 
       if (this.sound != null) this.game.sound.play(this.sound);
       let bullet = this.getFirstExists(false);
-      if (bullet != null) bullet.fire(x,y,angle,speed,0,0);
+      if (bullet != null) bullet.fire(x,y,angle,speed,gx,gy);
       return bullet;
     }
 
