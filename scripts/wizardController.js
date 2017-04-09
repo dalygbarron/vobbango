@@ -38,7 +38,7 @@ while (true)
   var elapsedSeconds = elapsed / 1000;
   var cameraPos = state.game.camera.position.clone();
 
-  if (cameraPos.x == oldCameraPos.x && cameraPos.y == oldCameraPos.y) break;
+  if (cameraPos.y == 0) break;
 
   caller.body.velocity.x = (cameraPos.x - oldCameraPos.x) / elapsedSeconds;
   caller.body.velocity.y = (cameraPos.y - oldCameraPos.y) / elapsedSeconds;
