@@ -10,6 +10,13 @@
       ]
     },
     {
+      "name":"water",
+      "content":
+      [
+        {"image":"water","x":10,"y":32}
+      ]
+    },
+    {
       "name":"sky",
       "content":
       [

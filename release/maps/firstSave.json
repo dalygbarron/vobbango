@@ -109,44 +109,6 @@
                  "width":39.021770191983,
                  "x":795.166263996051,
                  "y":82.0512820512821
-                }, 
-                {
-                 "height":38,
-                 "id":143,
-                 "name":"end",
-                 "properties":
-                    {
-                     "script":"ctx.transport(\"secondBoss\",\"start\");"
-                    },
-                 "propertytypes":
-                    {
-                     "script":"string"
-                    },
-                 "rotation":0,
-                 "type":"region",
-                 "visible":true,
-                 "width":48,
-                 "x":439,
-                 "y":60
-                }, 
-                {
-                 "height":107,
-                 "id":144,
-                 "name":"next",
-                 "properties":
-                    {
-                     "script":"ctx.transport(\"vine\/first\",\"start\");"
-                    },
-                 "propertytypes":
-                    {
-                     "script":"string"
-                    },
-                 "rotation":0,
-                 "type":"region",
-                 "visible":true,
-                 "width":77,
-                 "x":362.5,
-                 "y":-8.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -159,10 +121,12 @@
  "orientation":"orthogonal",
  "properties":
     {
+     "background":"water",
      "music":"first"
     },
  "propertytypes":
     {
+     "background":"string",
      "music":"string"
     },
  "renderorder":"right-down",
@@ -206,10 +170,6 @@
          "tileheight":32,
          "tileproperties":
             {
-             "141":
-                {
-                 "spawn":"waves-0.1"
-                },
              "18":
                 {
                  "spawn":"grass-0.4"
@@ -221,10 +181,6 @@
             },
          "tilepropertytypes":
             {
-             "141":
-                {
-                 "spawn":"string"
-                },
              "18":
                 {
                  "spawn":"string"

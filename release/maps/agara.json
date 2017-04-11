@@ -330,7 +330,7 @@
          "columns":10,
          "firstgid":1,
          "image":"..\/images\/outside.png",
-         "imageheight":1248,
+         "imageheight":1280,
          "imagewidth":320,
          "margin":0,
          "name":"outsideTiles",
@@ -364,14 +364,10 @@
                  "name":"blood",
                  "tile":-1
                 }],
-         "tilecount":390,
+         "tilecount":400,
          "tileheight":32,
          "tileproperties":
             {
-             "141":
-                {
-                 "spawn":"waves-0.1"
-                },
              "18":
                 {
                  "spawn":"grass-0.4"
@@ -383,10 +379,6 @@
             },
          "tilepropertytypes":
             {
-             "141":
-                {
-                 "spawn":"string"
-                },
              "18":
                 {
                  "spawn":"string"

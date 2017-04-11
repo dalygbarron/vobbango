@@ -178,14 +178,14 @@
  "orientation":"orthogonal",
  "properties":
     {
+     "background":"water",
      "music":"first",
-     "scrollX":0,
      "scrollY":-25
     },
  "propertytypes":
     {
+     "background":"string",
      "music":"string",
-     "scrollX":"int",
      "scrollY":"int"
     },
  "renderorder":"right-down",
@@ -229,10 +229,6 @@
          "tileheight":32,
          "tileproperties":
             {
-             "141":
-                {
-                 "spawn":"waves-0.1"
-                },
              "18":
                 {
                  "spawn":"grass-0.4"
@@ -244,10 +240,6 @@
             },
          "tilepropertytypes":
             {
-             "141":
-                {
-                 "spawn":"string"
-                },
              "18":
                 {
                  "spawn":"string"

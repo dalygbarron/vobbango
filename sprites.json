@@ -48,6 +48,15 @@
       ]
     },
     {
+      "key":"ererom",
+      "url":"images/ererom.png",
+      "animations":
+      [
+        {"name":"front","frames":[1,1],"fps":1,"loop":true},
+        {"name":"back","frames":[5,1],"fps":1,"loop":true}
+      ]
+    },
+    {
       "key":"beetle",
       "url":"images/kubus.png",
       "animations":

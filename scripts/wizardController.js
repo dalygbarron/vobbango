@@ -38,13 +38,11 @@ while (true)
   var elapsedSeconds = elapsed / 1000;
   var cameraPos = state.game.camera.position.clone();
 
-  if (cameraPos.y == 0) break;
-
   caller.body.velocity.x = (cameraPos.x - oldCameraPos.x) / elapsedSeconds;
   caller.body.velocity.y = (cameraPos.y - oldCameraPos.y) / elapsedSeconds;
+  if (cameraPos.y < 1) break;
 
   shootingInstance.next(elapsed);
-
 
   oldCameraPos = cameraPos;
 }

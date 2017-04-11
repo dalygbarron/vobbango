@@ -103,14 +103,12 @@
  "properties":
     {
      "background":"flyStorm",
-     "music":"menu",
-     "scrollY":-50
+     "music":"thirdBoss"
     },
  "propertytypes":
     {
      "background":"string",
-     "music":"string",
-     "scrollY":"int"
+     "music":"string"
     },
  "renderorder":"right-down",
  "tileheight":32,

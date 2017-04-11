@@ -11,7 +11,7 @@
     },
     {
       "name":"fly","key":"fly","controller":"flyController.js",
-      "health":500,"directional":false,"moveOnSpot":true
+      "health":600,"directional":false,"moveOnSpot":true
     },
     {
       "name":"dotbangoraKebabom","key":"dotbangoraKebabom","directional":false,

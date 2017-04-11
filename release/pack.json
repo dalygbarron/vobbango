@@ -23,6 +23,7 @@
     {"type":"image","key":"sky","url":"images/sky.png"},
     {"type":"image","key":"storm","url":"images/storm.png"},
     {"type":"image","key":"bloodSky","url":"images/bloodSky.png"},
+    {"type":"image","key":"water","url":"images/water.png"},
     {"type":"image","key":"clouds","url":"images/clouds.png"},
 
     {"type":"image","key":"bugBullet","url":"images/bugBullet.png"},
@@ -60,10 +61,13 @@
     {"type":"audio","key":"bugNoise","urls":["audio/bugNoise.ogg"],"autoDecode": true},
     {"type":"audio","key":"bugDeath","urls":["audio/bugDeath.ogg"],"autoDecode": true},
     {"type":"audio","key":"centipede","urls":["audio/centipede.ogg"],"autoDecode": true},
+    {"type":"audio","key":"flyNoise","urls":["audio/flyNoise.ogg"],"autoDecode": true},
 
-    {"type":"audio","key":"first","urls":["audio/first.ogg"],"autoDecode":true},
+    {"type":"audio","key":"firs
+      t","urls":["audio/first.ogg"],"autoDecode":true},
     {"type":"audio","key":"firstBoss","urls":["audio/firstBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"secondBoss","urls":["audio/secondBoss.ogg"],"autoDecode":true},
+    {"type":"audio","key":"thirdBoss","urls":["audio/thirdBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"menu","urls":["audio/menu.ogg"],"autoDecode":true}
   ]
 }

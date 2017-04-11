@@ -8,7 +8,7 @@
 /* definitions and that */
 var whiteBullets = state.createBulletGroup(caller,250,300,'otherFlyBullet','drip');
 var blackBullets = state.createBulletGroup(caller,150,300,'flyBullet','drip');
-var largeBullets = state.createBulletGroup(caller,70,5,"maggotBall");
+var largeBullets = state.createBulletGroup(caller,70,5,"maggotBall","flyNoise");
 
 
 
@@ -149,12 +149,15 @@ function* swarm()
 
 function* maggot()
 {
-  const GAP = 2000;
+  const GAP = 1900;
   const RADIUS = 50;
   const SPACING = 15;
   const N_ROWS = 10;
   const N_BULLETS = 10;
-  const N_MESS = 60;
+  const N_MESS = 40;
+
+  blackBullets.clear();
+  whiteBullets.clear();
 
   yield* speak("You're going to regret doing this mate.");
 
@@ -162,6 +165,11 @@ function* maggot()
   {
     var x = state.player.x;
     var y = state.player.y;
+    sound.play("flyNoise");
+
+    yield* wait(300);
+
+
     for (var row = 0;row < N_ROWS;row++)
     {
       var offset = Math.random() * Math.PI * 2;
@@ -174,9 +182,10 @@ function* maggot()
       }
     }
 
-      state.addEffect(x,y,"charge",3);
+    state.addEffect(x,y,"charge",3);
     yield* wait(GAP);
-    for (var i = 0;i < N_MESS;i++) blackBullets.fire(x,y,0,0,Math.random() * Math.PI * 2);
+    var offset = Math.random() * Math.PI * 2;
+    for (var i = 0;i < N_MESS;i++) blackBullets.fire(x,y,0,0,(Math.PI * 2) / N_MESS * i + offset);
     yield* wait(GAP);
 
     whiteBullets.clear();
