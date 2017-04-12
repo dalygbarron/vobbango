@@ -74,8 +74,8 @@
       "health":1,"moveSpeed":180,"strafeSpeed":90
     },
     {
-      "name":"savePoint","key":"save","controller":"staticController.js","health":1,
-      "script":"save.js","directional":false,"moveOnSpot":true
+      "name":"savePoint","key":"save","controller":"saveController.js","health":1,
+      "directional":false,"moveOnSpot":true
     }
   ]
 }

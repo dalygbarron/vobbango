@@ -1,4 +1,17 @@
-Yeah nice the tasks
-✔ beat tango @done(2017-04-11 14:02)
-☐ beat him again
-✘ apologise to tango @cancelled(2017-04-11 14:03)
+Engine:
+  ☐ dead enemies should not block player
+
+Game:
+  ☐ Add hand drawn rooms to each house in the top village, and add cool stuff to them
+  ☐ add death animations to all bosses
+  ☐ finish credits
+  ☐ write text for ererars
+  ☐ compile authoritative document on terk language
+  ☐ translate all dialogue into terk language, and improve it also
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+  ✔ Add a way for bespoke scripts to get access to std or something @done(2017-04-12 22:05) @project(Engine)
+  ✔ need a way for controllers to get values returned from the gui. probably put it in state. @done(2017-04-12 23:13) @project(Engine)
+  ✔ completely replace script class with controller @done(2017-04-13 00:05) @project(Engine)
+  ✘ make a scene for all things like gameover/menu @cancelled(2017-04-13 00:05) @project(Engine)

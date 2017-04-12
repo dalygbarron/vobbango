@@ -12,13 +12,10 @@ var Scumbag;
             let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, enemyData.key, enemyData.controller, enemyData.health, enemyData.directional || enemyData.directional === undefined);
             moveProperties(enemyData, actor.properties);
             moveProperties(data.properties, actor.properties);
-            if (enemyData.hasOwnProperty("script"))
-                actor.script = game.cache.getText(enemyData.script);
             return actor;
         }
         let actor = new Actor(game, data.x + data.width / 2, data.y + data.height / 2, name, data.properties.key, data.properties.controller, data.properties.health, data.properties.directional);
         moveProperties(data.properties, actor.properties);
-        actor.script = data.properties.script;
         return actor;
     }
     Scumbag.createActor = createActor;
@@ -33,7 +30,7 @@ var Scumbag;
             super(game, x, y, key);
             this.updating = true;
             this.strafing = false;
-            this.script = "";
+            this.collision = 0;
             this.properties = {};
             this.mode = Mode.NORMAL;
             this.loadAnimations();
@@ -257,11 +254,23 @@ var Scumbag;
 var Scumbag;
 (function (Scumbag) {
     const generatorConstructor = Object.getPrototypeOf(function* () { }).constructor;
+    function storeActor(actor) {
+        if (!(actor instanceof Scumbag.Actor))
+            return;
+        Scumbag.StateOfGame.parameters.actors.push({ name: actor.name, x: actor.x, y: actor.y });
+    }
+    function storeActors(game) {
+        let state = game.state.getCurrentState();
+        if (state instanceof Scumbag.Overworld) {
+            Scumbag.StateOfGame.parameters.actors = [];
+            state.actors.forEach(storeActor, null);
+        }
+    }
     class Controller {
         constructor(game, scriptName, caller) {
             this.states = new Array();
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "Mode", "sound", "music", "Channel", "ctx", "StateOfGame", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, Scumbag.Mode, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.ScriptContext, Scumbag.StateOfGame, this);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "Mode", "sound", "music", "Channel", "StateOfGame", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, Scumbag.Mode, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.StateOfGame, this);
             this.caller = caller;
             this.game = game;
         }
@@ -284,6 +293,63 @@ var Scumbag;
         addState(minHealth, script) {
             this.states.push({ minHealth: minHealth, script: script() });
         }
+        changeState(newState, ...args) {
+            this.game.state.start(newState, true, false, args);
+        }
+        transport(level, playerRegion) {
+            this.game.state.start("Overworld", true, false, level, playerRegion);
+        }
+        toOverworld() {
+            this.game.state.start("Overworld");
+        }
+        setSwitch(key, value) {
+            Scumbag.StateOfGame.parameters.switches[key] = value;
+        }
+        getSwitch(key) {
+            if (key in Scumbag.StateOfGame.parameters.switches)
+                return Scumbag.StateOfGame.parameters.switches[key];
+            else
+                return false;
+        }
+        setVariable(key, value) {
+            Scumbag.StateOfGame.parameters.variables[key] = value;
+        }
+        getVarirable(key) {
+            if (key in Scumbag.StateOfGame.parameters.variables)
+                return Scumbag.StateOfGame.parameters.variables[key];
+            else
+                return 0;
+        }
+        saveGame() {
+            Scumbag.StateOfGame.parameters.lives = 3;
+            storeActors(this.game);
+            Scumbag.StateOfGame.save();
+        }
+        loadGame(slot) {
+            Scumbag.StateOfGame.load(slot);
+        }
+        addCharacter(character) {
+            Scumbag.StateOfGame.parameters.characters.push(character);
+        }
+        getCharacters() { return Scumbag.StateOfGame.parameters.characters; }
+        setPlayerKey(key) {
+            let state = this.game.state.getCurrentState();
+            if (state instanceof Scumbag.Overworld)
+                state.player.setKey(key);
+            Scumbag.StateOfGame.parameters.playerKey = key;
+        }
+        playSound(key) { this.game.sound.play(key); }
+        playAmbience(key) {
+            Scumbag.MusicManager.playSong(key, Scumbag.MusicChannel.Ambience);
+        }
+        playMusic(key) {
+            Scumbag.MusicManager.playSong(key, Scumbag.MusicChannel.Music);
+        }
+        stopMusic() { Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Music); }
+        setSlot(slot) { Scumbag.StateOfGame.parameters.slot = slot; }
+        getSlot() { return Scumbag.StateOfGame.parameters.slot; }
+        getScore() { return Scumbag.StateOfGame.parameters.score; }
+        win() { this.game.state.start("Credits"); }
     }
     Scumbag.Controller = Controller;
 })(Scumbag || (Scumbag = {}));
@@ -446,123 +512,6 @@ var Scumbag;
         }
         StateOfGame.load = load;
     })(StateOfGame = Scumbag.StateOfGame || (Scumbag.StateOfGame = {}));
-})(Scumbag || (Scumbag = {}));
-;
-var Scumbag;
-(function (Scumbag) {
-    const generatorConstructor = Object.getPrototypeOf(function* () { }).constructor;
-    let game;
-    let blocks;
-    function storeActor(actor) {
-        if (!(actor instanceof Scumbag.Actor))
-            return;
-        Scumbag.StateOfGame.parameters.actors.push({ name: actor.name, x: actor.x, y: actor.y });
-    }
-    function storeActors() {
-        let state = game.state.getCurrentState();
-        if (state instanceof Scumbag.Overworld) {
-            Scumbag.StateOfGame.parameters.actors = [];
-            state.actors.forEach(storeActor, null);
-        }
-    }
-    var ScriptContext;
-    (function (ScriptContext) {
-        function changeState(newState, ...args) {
-            console.log("uhoh, I'm using that function");
-            game.state.start(newState, true, false, args);
-        }
-        ScriptContext.changeState = changeState;
-        function transport(level, playerRegion) {
-            game.state.start("Overworld", true, false, level, playerRegion);
-        }
-        ScriptContext.transport = transport;
-        function toOverworld() {
-            game.state.start("Overworld");
-        }
-        ScriptContext.toOverworld = toOverworld;
-        function setSwitch(key, value) {
-            Scumbag.StateOfGame.parameters.switches[key] = value;
-        }
-        ScriptContext.setSwitch = setSwitch;
-        function getSwitch(key) {
-            if (key in Scumbag.StateOfGame.parameters.switches)
-                return Scumbag.StateOfGame.parameters.switches[key];
-            else
-                return false;
-        }
-        ScriptContext.getSwitch = getSwitch;
-        function setVariable(key, value) {
-            Scumbag.StateOfGame.parameters.variables[key] = value;
-        }
-        ScriptContext.setVariable = setVariable;
-        function getVarirable(key) {
-            if (key in Scumbag.StateOfGame.parameters.variables)
-                return Scumbag.StateOfGame.parameters.variables[key];
-            else
-                return 0;
-        }
-        ScriptContext.getVarirable = getVarirable;
-        function saveGame() {
-            Scumbag.StateOfGame.parameters.lives = 3;
-            storeActors();
-            Scumbag.StateOfGame.save();
-        }
-        ScriptContext.saveGame = saveGame;
-        function loadGame(slot) {
-            Scumbag.StateOfGame.load(slot);
-        }
-        ScriptContext.loadGame = loadGame;
-        function addCharacter(character) {
-            Scumbag.StateOfGame.parameters.characters.push(character);
-        }
-        ScriptContext.addCharacter = addCharacter;
-        function getCharacters() { return Scumbag.StateOfGame.parameters.characters; }
-        ScriptContext.getCharacters = getCharacters;
-        function setPlayerKey(key) {
-            if (this.state instanceof Scumbag.Overworld)
-                this.state.player.setKey(key);
-            Scumbag.StateOfGame.parameters.playerKey = key;
-        }
-        ScriptContext.setPlayerKey = setPlayerKey;
-        function playSound(key) { game.sound.play(key); }
-        ScriptContext.playSound = playSound;
-        function playAmbience(key) {
-            Scumbag.MusicManager.playSong(key, Scumbag.MusicChannel.Ambience);
-        }
-        ScriptContext.playAmbience = playAmbience;
-        function playMusic(key) {
-            Scumbag.MusicManager.playSong(key, Scumbag.MusicChannel.Music);
-        }
-        ScriptContext.playMusic = playMusic;
-        function stopMusic() { Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Music); }
-        ScriptContext.stopMusic = stopMusic;
-        function setSlot(slot) { Scumbag.StateOfGame.parameters.slot = slot; }
-        ScriptContext.setSlot = setSlot;
-        function getSlot() { return Scumbag.StateOfGame.parameters.slot; }
-        ScriptContext.getSlot = getSlot;
-        function getScore() { return Scumbag.StateOfGame.parameters.score; }
-        ScriptContext.getScore = getScore;
-        function win() { game.state.start("Credits"); }
-        ScriptContext.win = win;
-    })(ScriptContext = Scumbag.ScriptContext || (Scumbag.ScriptContext = {}));
-    var Script;
-    (function (Script) {
-        function init(pGame) {
-            game = pGame;
-        }
-        Script.init = init;
-        function setScript(content, caller) {
-            ScriptContext.state = game.state.getCurrentState();
-            ScriptContext.caller = caller;
-            blocks = generatorConstructor("ctx", content)(ScriptContext);
-            runScript(0);
-        }
-        Script.setScript = setScript;
-        function runScript(value) {
-            blocks.next(value);
-        }
-        Script.runScript = runScript;
-    })(Script = Scumbag.Script || (Scumbag.Script = {}));
 })(Scumbag || (Scumbag = {}));
 ;
 var Scumbag;
@@ -1330,25 +1279,26 @@ var Scumbag;
     }
     Scumbag.numberAsTime = numberAsTime;
     class GuiState extends Phaser.State {
-        constructor(...args) {
-            super(...args);
-            this.gui = null;
-        }
         create() {
             this.gui = null;
+            this.guiValue = 0;
+            this.controller = null;
         }
         update() {
             if (this.gui == null || !this.gui.blocking) {
+                if (this.controller != null) {
+                    if (this.controller.run(this.game.time.elapsed / 1000))
+                        this.controller = null;
+                }
                 this.postGuiUpdate();
             }
             if (this.gui != null) {
-                let value = this.gui.update();
-                if (value != 0) {
+                this.guiValue = this.gui.update();
+                if (this.guiValue != 0) {
                     if (this.gui.blocking)
                         this.onGuiEnd();
                     this.gui.destroy();
                     this.gui = null;
-                    Scumbag.Script.runScript(value);
                 }
             }
         }
@@ -1412,6 +1362,8 @@ var Scumbag;
             Scumbag.StateOfGame.flush();
         }
         setGui(gui) {
+            if (this.gui != null)
+                this.gui.destroy();
             this.gui = gui;
             this.gui.addPosition(this.game.camera.x, this.game.camera.y);
             if (this.gui.blocking)
@@ -1481,6 +1433,7 @@ var Scumbag;
 (function (Scumbag) {
     class Gameover extends Scumbag.GuiState {
         create() {
+            super.create();
             this.game.camera.x = 0;
             this.game.camera.y = 0;
             this.background = this.add.sprite(0, 0, 'titlepage');
@@ -1490,7 +1443,7 @@ var Scumbag;
             this.add.tween(this.background).to({ alpha: 1 }, 500, Phaser.Easing.Default, true);
             this.add.tween(this.logo).to({ y: this.game.height / 2 - this.logo.height / 2 }, 700, Phaser.Easing.Elastic.In, true, 500);
             Scumbag.MusicManager.playSong('deadMusic', Scumbag.MusicChannel.Music);
-            Scumbag.Script.setScript(this.game.cache.getText("deadScript"));
+            this.controller = new Scumbag.Controller(this.game, "dead.js", null);
         }
         postGuiUpdate() { }
         onGuiStart() { }
@@ -1502,6 +1455,7 @@ var Scumbag;
 (function (Scumbag) {
     class MainMenu extends Scumbag.GuiState {
         create() {
+            super.create();
             this.background = this.add.sprite(0, 0, "titlepage");
             this.background.alpha = 0;
             this.logo = this.add.sprite(this.game.width / 2, this.game.height / 2, 'logo');
@@ -1516,8 +1470,7 @@ var Scumbag;
             Scumbag.InputManager.init(this.game);
             Scumbag.StateOfGame.flush();
             Scumbag.StateOfGame.stopTimer();
-            Scumbag.Script.init(this.game);
-            Scumbag.Script.setScript(this.game.cache.getText("menuScript"));
+            this.controller = new Scumbag.Controller(this.game, "menu.js", null);
         }
         postGuiUpdate() { }
         onGuiStart() { }
@@ -1538,34 +1491,28 @@ var Scumbag;
                 this.hurtPlayer();
                 return false;
             }
-            else if (b.script != "" && this.collideCooldown <= 0) {
+            else {
                 this.player.body.immovable = false;
-                this.collideCooldown = 1.0;
-                Scumbag.Script.setScript(b.script, b);
+                b.collision = Date.now();
                 return true;
             }
-            else
-                return false;
         }
-        if (b == this.player) {
+        else if (b == this.player) {
             if (aEnemy >= 0) {
                 this.hurtPlayer();
                 return false;
             }
-            else if (a.script != "" && this.collideCooldown <= 0) {
+            else {
                 this.player.body.immovable = false;
-                this.collideCooldown = 1.0;
-                Scumbag.Script.setScript(a.script, a);
+                a.collision = Date.now();
                 return true;
             }
-            else
-                return false;
         }
     }
     function pause() {
         if (this.gui != null)
             return;
-        Scumbag.Script.setScript(this.game.cache.getText("pauseScript"));
+        this.controller = new Scumbag.Controller(this.game, "pause.js", null);
     }
     function addPlayerAtRegion(game, region, key) {
         let playerData = {
@@ -1769,7 +1716,7 @@ var Scumbag;
                         this.player.x < this.regions[i].x + this.regions[i].width &&
                         this.player.y > this.regions[i].y &&
                         this.player.y < this.regions[i].y + this.regions[i].height) {
-                        Scumbag.Script.setScript(this.regions[i].script);
+                        this.controller = new Scumbag.Controller(this.game, this.regions[i].script, this.regions[i]);
                     }
                 }
             }

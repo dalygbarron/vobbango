@@ -23,7 +23,6 @@
     {"type":"image","key":"sky","url":"images/sky.png"},
     {"type":"image","key":"storm","url":"images/storm.png"},
     {"type":"image","key":"bloodSky","url":"images/bloodSky.png"},
-    {"type":"image","key":"water","url":"images/water.png"},
     {"type":"image","key":"clouds","url":"images/clouds.png"},
 
     {"type":"image","key":"bugBullet","url":"images/bugBullet.png"},
@@ -36,7 +35,6 @@
     {"type":"image","key":"legBullet","url":"images/legBullet.png"},
     {"type":"image","key":"mud","url":"images/mud.png"},
     {"type":"image","key":"bullet2","url":"images/bullet2.png"},
-    {"type":"image","key":"spear","url":"images/spear.png"},
     {"type":"image","key":"hammerBullet","url":"images/hammerBullet.png"},
     {"type":"image","key":"blueBullet","url":"images/blueBullet.png"},
     {"type":"image","key":"cBullet","url":"images/cBullet.png"},
@@ -63,11 +61,11 @@
     {"type":"audio","key":"centipede","urls":["audio/centipede.ogg"],"autoDecode": true},
     {"type":"audio","key":"flyNoise","urls":["audio/flyNoise.ogg"],"autoDecode": true},
 
-    {"type":"audio","key":"firs
-      t","urls":["audio/first.ogg"],"autoDecode":true},
+    {"type":"audio","key":"first","urls":["audio/first.ogg"],"autoDecode":true},
     {"type":"audio","key":"firstBoss","urls":["audio/firstBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"secondBoss","urls":["audio/secondBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"thirdBoss","urls":["audio/thirdBoss.ogg"],"autoDecode":true},
-    {"type":"audio","key":"menu","urls":["audio/menu.ogg"],"autoDecode":true}
+    {"type":"audio","key":"menu","urls":["audio/menu.ogg"],"autoDecode":true},
+    {"type":"audio","key":"ererom","urls":["audio/ererom.ogg"],"autoDecode":true}
   ]
 }

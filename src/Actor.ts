@@ -22,14 +22,12 @@ module Scumbag
       let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,enemyData.key,enemyData.controller,enemyData.health,enemyData.directional || enemyData.directional === undefined);
       moveProperties(enemyData,actor.properties);
       moveProperties(data.properties,actor.properties);
-      if (enemyData.hasOwnProperty("script")) actor.script = game.cache.getText(enemyData.script);
       return actor;
     }
 
     /* bespoke artisanal enemy */
     let actor = new Actor(game,data.x + data.width / 2,data.y + data.height / 2,name,data.properties.key,data.properties.controller,data.properties.health,data.properties.directional);
     moveProperties(data.properties,actor.properties);
-    actor.script = data.properties.script;
     return actor;
   }
 
@@ -56,7 +54,7 @@ module Scumbag
     heart:      Phaser.Sprite;
     halo:       Phaser.Sprite;
     controller: Controller;
-    script:     string    = "";
+    collision = 0;
     properties: any       = {};
     mode:       Mode      = Mode.NORMAL;
 

@@ -20,12 +20,12 @@ function* speak(text)
 
 /** reads out the contents of the book property belonging to the actor denoted
  * by name */
-function* read(book,bookName,bookChip)
+function* read(book,bookName)
 {
   var content = ctx.state.tilemap.properties[book].split("-");
   for (var i = 0;i < content.length;i++)
   {
-    yield* say(bookName,bookChip,content[i].trim());
+    yield* say(bookName,content[i].trim());
   }
 }
 
@@ -71,6 +71,30 @@ function* endSpooky(time)
       );
       state.tilemap.layers[i].dirty = true;
     }
+  }
+}
+
+function* awaitCollision()
+{
+  var collision = caller.collision;
+  while (true)
+  {
+    if (collision != caller.collision) break;
+    else yield;
+  }
+}
+
+function* awaitSeperation()
+{
+  const GAP = 50;
+
+
+  while (true)
+  {
+    var collision = caller.collision;
+    var elapsed = 0;
+    for (var elapsed = 0;elapsed < GAP;elapsed += yield);
+    if (collision == caller.collision) break;
   }
 }
 

@@ -11,6 +11,7 @@ module Scumbag
     /** overrides Phaser.State.create() */
     create()
     {
+      super.create();
       this.game.camera.x = 0;
       this.game.camera.y = 0;
 
@@ -27,7 +28,7 @@ module Scumbag
       MusicManager.playSong('deadMusic',MusicChannel.Music);
 
       //load the script
-      Script.setScript(this.game.cache.getText("deadScript"));
+      this.controller = new Controller(this.game,"dead.js",null);
     }
 
 

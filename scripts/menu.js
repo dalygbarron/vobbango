@@ -5,40 +5,40 @@ const CREDIT_MESSAGE = "Hello and welcome to my new game, I hope you have fun.\n
 
 function *load()
 {
-  ctx.state.buildSlot();
-  var slot = yield;
+  state.buildSlot();
+  yield;
 
-  if (slot >= 1 && slot <= 3)
+  if (state.guiValue >= 1 && state.guiValue <= 3)
   {
-    ctx.loadGame(slot);
-    if (ctx.getCharacters().length == 0)
+    controller.loadGame(state.guiValue);
+    if (controller.getCharacters().length == 0)
     {
-      ctx.setSlot(slot);
-      ctx.addCharacter("stasbangoraKebabom");
-      ctx.transport("next","start");
+      controller.setSlot(state.guiValue);
+      controller.addCharacter("stasbangoraKebabom");
+      controller.transport("next","start");
     }
-    ctx.toOverworld();
+    controller.toOverworld();
   }
 }
 
 
 function *credits()
 {
-  ctx.state.buildTextbox("Dany Burton",CREDIT_MESSAGE,"dany_n");
+  state.buildTextbox("Dany Burton",CREDIT_MESSAGE,"dany_n");
   yield;
 }
 
 
 function *deleting()
 {
-  ctx.state.buildSlot(true);
-  var slot = yield;
+  state.buildSlot(true);
+  yield;
 
-  if (slot >= 2 && slot <= 4)
+  if (state.guiValue >= 2 && state.guiValue <= 4)
   {
-    ctx.setSlot(slot - 1);
-    ctx.saveGame();
-    ctx.state.buildTextbox("Deleted","Slot "+ctx.getSlot()+" deleted!",null);
+    controller.setSlot(state.guiValue - 1);
+    controller.saveGame();
+    state.buildTextbox("Deleted","Slot "+controller.getSlot()+" deleted!",null);
     yield;
   }
 }
@@ -46,23 +46,23 @@ function *deleting()
 
 while (true)
 {
-  ctx.state.buildQA("Vobangora Gorad Dortsars",null,"Play",
+  state.buildQA("Vobangora Gorad Dortsars",null,"Play",
                                               "A game by Dany Burton",
                                               "Delete Saves");
-  var value = yield;
+  yield;
 
   //start new game
-  if (value == 1)
+  if (state.guiValue == 1)
   {
     yield* load();
   }
   //show a pic of me!
-  else if (value == 2)
+  else if (state.guiValue == 2)
   {
     yield* credits();
   }
   //delete some saves
-  else if (value == 3)
+  else if (state.guiValue == 3)
   {
     yield* deleting();
   }

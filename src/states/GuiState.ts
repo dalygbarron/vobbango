@@ -23,11 +23,15 @@ module Scumbag
   /** this is used for any game state that contains gui windows n shit */
   export abstract class GuiState extends Phaser.State
   {
-    gui:  GuiElement  = null;
+    gui:        GuiElement;
+    guiValue:   number;
+    controller: Controller;
 
     create()
     {
       this.gui = null;
+      this.guiValue = 0;
+      this.controller = null;
     }
 
 
@@ -35,18 +39,21 @@ module Scumbag
     {
       if (this.gui == null || !this.gui.blocking)
       {
+        if (this.controller != null)
+        {
+          if (this.controller.run(this.game.time.elapsed / 1000)) this.controller = null;
+        }
         this.postGuiUpdate()
       }
 
       if (this.gui != null)
       {
-        let value = this.gui.update();
-        if (value != 0)
+        this.guiValue = this.gui.update();
+        if (this.guiValue != 0)
         {
           if (this.gui.blocking) this.onGuiEnd();
           this.gui.destroy();
           this.gui = null;
-          Script.runScript(value);
         }
       }
     }
@@ -59,7 +66,6 @@ module Scumbag
       let head = new TextElement(this.game,heading,headingFont);
       let text = new TextElement(this.game,content,bodyFont,true);
       let clicker = new ClickerElement(this.game,'clicker');
-
       this.setGui(new Window(this.game,"window",new Array<GuiElement>(head,text,clicker),chipKey));
     }
 
@@ -157,6 +163,7 @@ module Scumbag
     /** sets the gui to some gui element */
     private setGui(gui:GuiElement):void
     {
+      if (this.gui != null) this.gui.destroy();
       this.gui = gui;
       this.gui.addPosition(this.game.camera.x,this.game.camera.y);
       if (this.gui.blocking) this.onGuiStart();

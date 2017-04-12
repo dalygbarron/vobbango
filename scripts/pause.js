@@ -1,20 +1,20 @@
 while(true)
 {
-  ctx.state.buildPause("Paused","Return","Quit");
-  var value = yield;
+  state.buildPause("Paused","Return","Quit");
+  yield;
 
   //return
-  if (value == 1) return;
+  if (state.guiValue == 1) return;
 
   //quit
-  else if (value == 2)
+  else if (state.guiValue == 2)
   {
-    ctx.state.buildQA("are you sure you want to quit?",
-                       null,
-                       "I do not want to quit",
-                       "yeah");
-    var selection = yield;
-    if (selection == 2) ctx.changeState("MainMenu");
+    state.buildQA("are you sure you want to quit?",
+                  null,
+                  "Absolutely Not",
+                  "Absolutely");
     yield;
+    if (state.guiValue == 2) controller.changeState("MainMenu");
+    else return;
   }
 }

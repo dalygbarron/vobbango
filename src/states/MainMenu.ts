@@ -6,10 +6,12 @@ module Scumbag
   {
     background:   Phaser.Sprite;
     logo:         Phaser.Sprite;
+    controller:   Controller;
 
     /** overrides Phaser.State.create() */
     create()
     {
+      super.create();
       this.background = this.add.sprite(0,0,"titlepage");
       this.background.alpha = 0;
 
@@ -36,8 +38,7 @@ module Scumbag
       StateOfGame.stopTimer();
 
       //load the script
-      Script.init(this.game);
-      Script.setScript(this.game.cache.getText("menuScript"));
+      this.controller = new Controller(this.game,"menu.js",null);
     }
 
 

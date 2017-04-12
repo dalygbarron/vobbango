@@ -13,7 +13,7 @@
       "name":"water",
       "content":
       [
-        {"image":"water","x":10,"y":32}
+        {"image":"water","x":10,"y":32,"speed":6}
       ]
     },
     {

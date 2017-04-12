@@ -10,6 +10,7 @@ module Scumbag
     var aEnemy = this.enemies.indexOf(a);
     var bEnemy = this.enemies.indexOf(b);
 
+    // This means they're both enemies.
     if (aEnemy >= 0 && bEnemy >= 0) return false;
 
     if (a == this.player)
@@ -19,31 +20,26 @@ module Scumbag
         this.hurtPlayer();
         return false;
       }
-      else if (b.script != "" && this.collideCooldown <= 0)
+      else
       {
         this.player.body.immovable = false;
-        this.collideCooldown = 1.0;
-        Script.setScript(b.script,b);
+        b.collision = Date.now();
         return true;
       }
-      else return false;
     }
-
-    if (b == this.player)
+    else if (b == this.player)
     {
       if (aEnemy >= 0)
       {
         this.hurtPlayer();
         return false;
       }
-      else if (a.script != "" && this.collideCooldown <= 0)
+      else
       {
         this.player.body.immovable = false;
-        this.collideCooldown = 1.0;
-        Script.setScript(a.script,a);
+        a.collision = Date.now();
         return true;
       }
-      else return false;
     }
   }
 
@@ -52,7 +48,7 @@ module Scumbag
   function pause()
   {
     if (this.gui != null) return;
-    Script.setScript(this.game.cache.getText("pauseScript"));
+    this.controller = new Controller(this.game,"pause.js",null);
   }
 
 
@@ -426,7 +422,7 @@ module Scumbag
                this.player.y > this.regions[i].y &&
                this.player.y < this.regions[i].y + this.regions[i].height)
            {
-             Script.setScript(this.regions[i].script);
+             this.controller = new Controller(this.game,this.regions[i].script,this.regions[i]);
            }
          }
        }
