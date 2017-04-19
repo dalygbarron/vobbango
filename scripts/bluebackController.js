@@ -26,4 +26,5 @@ state.removeEnemy(caller);
 sound.play("bugDeath");
 yield* waitAnimation("death");
 caller.properties.moveOnSpot = false;
+caller.collide = false;
 while (true) yield;

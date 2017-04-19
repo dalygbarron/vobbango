@@ -55,17 +55,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -80,17 +74,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -105,17 +93,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -130,17 +112,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -155,17 +131,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -180,17 +150,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -205,17 +169,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -230,17 +188,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -255,17 +207,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -280,17 +226,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -305,17 +245,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -330,17 +264,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -355,17 +283,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -380,17 +302,11 @@
                  "name":"stasbango",
                  "properties":
                     {
-                     "controller":"watcherController.js",
-                     "directional":true,
-                     "key":"stasbango",
-                     "script":"ctx.state.buildTextbox(\"Stasbango\",\"Gorad Kebabom....\");\nyield;"
+                     "kind":"stasbango"
                     },
                  "propertytypes":
                     {
-                     "controller":"string",
-                     "directional":"bool",
-                     "key":"string",
-                     "script":"string"
+                     "kind":"string"
                     },
                  "rotation":0,
                  "type":"actor",
@@ -428,10 +344,14 @@
                  "name":"exit",
                  "properties":
                     {
-                     "script":"ctx.transport(\"theBody\",\"start\");"
+                     "map":"theBody",
+                     "region":"start",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,

@@ -90,25 +90,6 @@
                  "width":61.3333333333333,
                  "x":371,
                  "y":397
-                }, 
-                {
-                 "height":38,
-                 "id":163,
-                 "name":"end",
-                 "properties":
-                    {
-                     "script":"ctx.transport(\"toVine\",\"start\");"
-                    },
-                 "propertytypes":
-                    {
-                     "script":"string"
-                    },
-                 "rotation":0,
-                 "type":"region",
-                 "visible":true,
-                 "width":362,
-                 "x":219,
-                 "y":-1
                 }],
          "opacity":1,
          "type":"objectgroup",

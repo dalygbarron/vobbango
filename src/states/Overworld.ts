@@ -5,7 +5,7 @@ module Scumbag
 {
 
   /** detects if it's time to run a script or yeah or nah or whatever and that */
-  function touches(a:Actor,b:Actor)
+  function touches(a:Actor,b:Actor):boolean
   {
     var aEnemy = this.enemies.indexOf(a);
     var bEnemy = this.enemies.indexOf(b);
@@ -22,9 +22,9 @@ module Scumbag
       }
       else
       {
-        this.player.body.immovable = false;
+        this.player.body.immovable = !b.collide;
         b.collision = Date.now();
-        return true;
+        return b.collide;
       }
     }
     else if (b == this.player)
@@ -36,9 +36,9 @@ module Scumbag
       }
       else
       {
-        this.player.body.immovable = false;
+        this.player.body.immovable = !a.collide;
         a.collision = Date.now();
-        return true;
+        return a.collide;
       }
     }
   }

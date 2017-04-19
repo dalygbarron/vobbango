@@ -98,7 +98,7 @@ function* stench()
   blackBullets.clear();
   whiteBullets.clear();
   largeBullets.clear();
-  yield* speak("When you are dead and we descend down the vine,\nI promise to rape your wife first.");
+  yield* speak("valom mor todad tu gamom godmem vobars let gamom gosemem valra arumemad rorars saasar.\ngamom mor tovotars.");
 
   while (true)
   {
@@ -150,7 +150,7 @@ function* swarm()
 function* maggot()
 {
   const GAP = 1900;
-  const RADIUS = 50;
+  const RADIUS = 65;
   const SPACING = 15;
   const N_ROWS = 10;
   const N_BULLETS = 10;
@@ -159,7 +159,7 @@ function* maggot()
   blackBullets.clear();
   whiteBullets.clear();
 
-  yield* speak("You're going to regret doing this mate.");
+  yield* speak("urtomad valom salodmem dormemtovotmemars.");
 
   while (true)
   {
@@ -206,9 +206,7 @@ controller.addState(-700,maggot);
 yield;
 
 
-
-yield* waitAnimation("dead");
-state.removeEnemy(caller);
-caller.properties.moveOnSpot = false;
-caller.script = "ctx.state.buildTextbox('Stasbangora Kebabom','I drink the blood');ctx.win();yield;";
-while (true) yield;
+yield* speak("tovotom mor urgomadad torememars. \nvalra todmemom mor tekemad. valom todmem.\ntorememom kobemem gamra gobars. kot tovotom mur gamars");
+yield* speak("valom karo embars lev selead tobom kobemem gamra gobars.");
+sound.play("fiendDeath");
+controller.win();

@@ -29,6 +29,27 @@ function* read(book,bookName)
   }
 }
 
+/** make the actor look at the player */
+function* watch()
+{
+  var dx = state.player.x - (caller.body.x + caller.body.width / 2);
+  var dy = state.player.y - caller.y;
+  var distance = Math.hypot(dx,dy);
+  if (distance < caller.width) return;
+
+  var x = caller.x;
+  var y = caller.y;
+  var angle = Math.atan2(state.player.y - caller.y,state.player.x - (caller.body.x + caller.body.width / 2));
+  caller.body.velocity.x = Math.cos(angle);
+  caller.body.velocity.y = Math.sin(angle);
+  yield;
+  caller.body.velocity.set(0);
+  caller.x = x;
+  caller.y = y;
+  var elapsed = 0;
+  while (elapsed < 200) elapsed += yield;
+}
+
 
 function* goSpooky(time)
 {
@@ -74,20 +95,24 @@ function* endSpooky(time)
   }
 }
 
-function* awaitCollision()
+function* awaitCollision(meanwhile=null)
 {
   var collision = caller.collision;
   while (true)
   {
     if (collision != caller.collision) break;
+    else if (meanwhile != null)
+    {
+      yield;
+      yield* meanwhile();
+    }
     else yield;
   }
 }
 
 function* awaitSeperation()
 {
-  const GAP = 50;
-
+  const GAP = 100;
 
   while (true)
   {

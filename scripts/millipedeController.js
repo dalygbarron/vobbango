@@ -34,9 +34,9 @@ function* legs()
 
     for (var i = 0;i < LEG_LENGTH;i++)
     {
-      for (leg in legList)
+      for (leg of legList)
       {
-        legBullets.fire(getX(),getY(),0,0,legList[leg]);
+        legBullets.fire(getX(),getY(),0,0,leg);
       }
       yield* wait(LEG_PERIOD);
     }
@@ -111,8 +111,12 @@ yield;
 
 
 
-yield* waitAnimation("dead");
+sound.play("wormDeath");
+yield* waitAnimation("death");
 state.removeEnemy(caller);
 caller.properties.moveOnSpot = false;
-caller.script = "ctx.state.buildTextbox('Stasbangora Kebabom','I drink the blood','stasbangoraKebabom_n');yield;";
-while (true) yield;
+
+
+yield* awaitCollision();
+yield* say("Stasbangora Kebabom","gamom submem sudarsom");
+controller.transport("toVine","start");

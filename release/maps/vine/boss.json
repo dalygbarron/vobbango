@@ -108,10 +108,14 @@
                  "name":"end",
                  "properties":
                     {
-                     "script":"ctx.transport(\"dot\/start\",\"start\");"
+                     "map":"dot\/start",
+                     "region":"start",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,

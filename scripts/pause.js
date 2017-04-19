@@ -12,7 +12,7 @@ while(true)
     state.buildQA("are you sure you want to quit?",
                   null,
                   "Absolutely Not",
-                  "Absolutely");
+                  "Ooooooooooooooh yeeeeeeEEEEEEEEeees please!");
     yield;
     if (state.guiValue == 2) controller.changeState("MainMenu");
     else return;

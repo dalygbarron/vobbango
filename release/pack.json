@@ -2,6 +2,7 @@
   "main":
   [
     {"type":"image","key":"titlepage","url":"images/menu.jpg"},
+    {"type":"image","key":"creditspage","url":"images/credits.jpg"},
     {"type":"image","key":"logo","url":"images/logo.png"},
     {"type":"image","key":"dead","url":"images/dead.png"},
 
@@ -17,6 +18,7 @@
     {"type": "image","key": "life","url": "images/life.png"},
     {"type": "image","key": "power","url": "images/power.png"},
     {"type": "image","key": "dany_n","url": "images/dany.png"},
+    {"type": "image","key": "profile","url": "images/profile.png"},
 
     {"type":"image","key":"fog","url":"images/fog.png"},
 
@@ -66,6 +68,7 @@
     {"type":"audio","key":"secondBoss","urls":["audio/secondBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"thirdBoss","urls":["audio/thirdBoss.ogg"],"autoDecode":true},
     {"type":"audio","key":"menu","urls":["audio/menu.ogg"],"autoDecode":true},
-    {"type":"audio","key":"ererom","urls":["audio/ererom.ogg"],"autoDecode":true}
+    {"type":"audio","key":"ererom","urls":["audio/ererom.ogg"],"autoDecode":true},
+    {"type":"audio","key":"song","urls":["audio/song.ogg"],"autoDecode":true}
   ]
 }

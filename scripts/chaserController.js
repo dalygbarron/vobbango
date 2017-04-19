@@ -19,6 +19,7 @@ while (caller.health > 0)
 }
 sound.play("bugDeath");
 state.removeEnemy(caller);
+caller.collide = false;
 caller.body.velocity.set(0);
 yield* waitAnimation("death");
 while (true) yield;

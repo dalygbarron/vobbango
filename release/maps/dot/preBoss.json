@@ -97,10 +97,14 @@
                  "name":"next",
                  "properties":
                     {
-                     "script":"ctx.transport(\"dot\/boss\",\"start\");"
+                     "map":"dot\/boss",
+                     "region":"start",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,

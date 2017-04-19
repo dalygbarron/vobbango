@@ -287,10 +287,14 @@
                  "name":"next",
                  "properties":
                     {
-                     "script":"ctx.transport(\"dot\/preBoss\",\"start\");"
+                     "map":"dot\/preBoss",
+                     "region":"start",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,

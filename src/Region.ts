@@ -2,11 +2,12 @@ module Scumbag
 {
   export interface Region
   {
-    x:      number;
-    y:      number;
-    width:  number;
-    height: number;
-    script: string;
+    x:          number;
+    y:          number;
+    width:      number;
+    height:     number;
+    script:     string;
+    properties: any;
   }
 
 
@@ -27,8 +28,11 @@ module Scumbag
         {
           script = data[i].properties.script;
         }
+
+
       }
-      regions[name] = {x:x,y:y,width:width,height:height,script:script};
+      regions[name] = {x:x,y:y,width:width,height:height,script:script,
+                       properties:data[i].properties};
     }
     return regions;
   }

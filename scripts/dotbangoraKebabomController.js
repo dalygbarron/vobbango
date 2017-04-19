@@ -38,9 +38,9 @@ function* prongAttack()
   const GAP = 400;
 
   poisonBullets.clear();
-  yield* speak("haha, wait until you see this");
+  yield* speak("hahaha. valom takmem valra latarse gom tovotars");
   music.fadeOut(1000,Channel.Music);
-  yield* speak("Send in the guns.");
+  yield* speak("vesdmem betarse");
 
   for (var i = 0;i < N_GUNS;i++)
   {
@@ -143,11 +143,10 @@ function* mazeAttack()
   clearGuns(guns);
   cBullets.clear();
   poisonBullets.clear();
-  yield* speak("Even if you should defeat me, the order of the world cannot be changed.\nNot by any man.");
-  yield* say("Stasbangora Kebabom","Where did all this weaponry come from?");
-  yield* speak("Susbangom.\nValom gamars dar testmem.");
-  yield* say("Stasbangora Kebabom","stasbangoraKebabom_n","No");
-  yield* say("Stasbangora Kebabom","Valom mor dotbangoars.\nGamom mor stasbangoars\nCunt");
+  yield* speak("tebu valom mutvemem gamars let terkra toktom mor kabtad. beamgouom seak tovotars.");
+  yield* say("Stasbangora Kebabom","tovotad tekaketum gedarmem tend.");
+  yield* speak("gamom mor stovad");
+  yield* say("Stasbangora Kebabom","Valom mor dotbangoars.\nGamom mor stasbangoars");
 
   yield* goSpooky(1000);
 
@@ -199,4 +198,7 @@ sound.play("fiendDeath");
 yield* waitAnimation("death");
 state.removeEnemy(caller);
 yield* endSpooky(1000);
-while (true) yield;
+
+yield* awaitCollision();
+yield* say("Stasbangora Kebabom","gamom submem sudarsom");
+controller.transport("dot/start","start");

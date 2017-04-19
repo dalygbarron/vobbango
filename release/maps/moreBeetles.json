@@ -159,10 +159,14 @@
                  "name":"end",
                  "properties":
                     {
-                     "script":"ctx.transport(\"firstSave\",\"start\");"
+                     "map":"firstSave",
+                     "region":"start",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,

@@ -7,7 +7,9 @@
       "animations":
       [
         {"name":"front","frames":[1,1],"fps":1,"loop":true},
-        {"name":"back","frames":[1,1],"fps":1,"loop":true}
+        {"name":"back","frames":[1,1],"fps":1,"loop":true},
+        {"name":"dying","frames":[2,3],"fps":8,"loop":true},
+        {"name":"death","frames":[4,7],"fps":3,"loop":false}
       ]
     },
     {
@@ -48,12 +50,21 @@
       ]
     },
     {
+      "key":"ghost",
+      "url":"images/ghost.png",
+      "animations":
+      [
+        {"name":"front","frames":[1,1],"fps":1,"loop":true},
+        {"name":"back","frames":[1,1],"fps":1,"loop":true}
+      ]
+    },
+    {
       "key":"ererom",
       "url":"images/ererom.png",
       "animations":
       [
         {"name":"front","frames":[1,1],"fps":1,"loop":true},
-        {"name":"back","frames":[5,1],"fps":1,"loop":true}
+        {"name":"back","frames":[1,1],"fps":1,"loop":true}
       ]
     },
     {

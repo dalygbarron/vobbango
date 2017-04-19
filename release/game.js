@@ -19,20 +19,14 @@ var Scumbag;
         return actor;
     }
     Scumbag.createActor = createActor;
-    (function (Mode) {
-        Mode[Mode["NORMAL"] = 0] = "NORMAL";
-        Mode[Mode["FIGHTING"] = 1] = "FIGHTING";
-        Mode[Mode["DEAD"] = 2] = "DEAD";
-    })(Scumbag.Mode || (Scumbag.Mode = {}));
-    var Mode = Scumbag.Mode;
     class Actor extends Phaser.Sprite {
         constructor(game, x, y, name, key, controllerName, health, directional) {
             super(game, x, y, key);
             this.updating = true;
             this.strafing = false;
             this.collision = 0;
+            this.collide = true;
             this.properties = {};
-            this.mode = Mode.NORMAL;
             this.loadAnimations();
             this.animations.play("front");
             this.name = name;
@@ -270,7 +264,7 @@ var Scumbag;
         constructor(game, scriptName, caller) {
             this.states = new Array();
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "Mode", "sound", "music", "Channel", "StateOfGame", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, Scumbag.Mode, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.StateOfGame, this);
+            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", "StateOfGame", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.StateOfGame, this);
             this.caller = caller;
             this.game = game;
         }
@@ -446,7 +440,8 @@ var Scumbag;
                     script = data[i].properties.script;
                 }
             }
-            regions[name] = { x: x, y: y, width: width, height: height, script: script };
+            regions[name] = { x: x, y: y, width: width, height: height, script: script,
+                properties: data[i].properties };
         }
         return regions;
     }
@@ -1492,9 +1487,9 @@ var Scumbag;
                 return false;
             }
             else {
-                this.player.body.immovable = false;
+                this.player.body.immovable = !b.collide;
                 b.collision = Date.now();
-                return true;
+                return b.collide;
             }
         }
         else if (b == this.player) {
@@ -1503,9 +1498,9 @@ var Scumbag;
                 return false;
             }
             else {
-                this.player.body.immovable = false;
+                this.player.body.immovable = !a.collide;
                 a.collision = Date.now();
-                return true;
+                return a.collide;
             }
         }
     }

@@ -130,23 +130,27 @@
                  "y":380.825019924698
                 }, 
                 {
-                 "height":23.213675213675,
+                 "height":32.213675213675,
                  "id":142,
                  "name":"end",
                  "properties":
                     {
-                     "script":"ctx.transport(\"moreBeetles\",\"start\");"
+                     "map":"moreBeetles",
+                     "region":"start",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,
                  "type":"region",
                  "visible":true,
-                 "width":344.68843685865,
-                 "x":253.499597329384,
-                 "y":3.38461538461544
+                 "width":356.68843685865,
+                 "x":252.499597329384,
+                 "y":-2.61538461538456
                 }],
          "opacity":1,
          "type":"objectgroup",

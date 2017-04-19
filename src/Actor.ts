@@ -32,19 +32,6 @@ module Scumbag
   }
 
 
-  /** This is what mode the actor is in cos then different stuff happens YEAH!
-   * in normal mode everything is normal
-   * in fighting mode it can be hit by enemy bullets
-   * in dead mode it can be hit by bullets, but doesn't collide with actors
-   * in ghost mode it collides with nothing */
-  export enum Mode
-  {
-    NORMAL,
-    FIGHTING,
-    DEAD
-  }
-
-
   /** a fighter that will jump about and all that in the battle system */
   export class Actor extends Phaser.Sprite
   {
@@ -55,8 +42,8 @@ module Scumbag
     halo:       Phaser.Sprite;
     controller: Controller;
     collision = 0;
+    collide = true;
     properties: any       = {};
-    mode:       Mode      = Mode.NORMAL;
 
     /** like a sprite, but also with tile width and height */
     constructor

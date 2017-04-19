@@ -97,10 +97,14 @@
                  "name":"next",
                  "properties":
                     {
-                     "script":"ctx.transport(\"vine\/last\",\"start\");"
+                     "map":"vine\/last",
+                     "region":"start",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,

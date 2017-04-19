@@ -2,8 +2,8 @@
   "enemies":
   [
     {
-      "name":"chad","key":"chad2","controller":"circleController.js",
-      "health":100,"directional":false,"moveSpeed":100
+      "name":"stasbango","key":"stasbango","controller":"readerController.js",
+      "directional":true,"text":"....gorad kebabarson...."
     },
     {
       "name":"millipede","key":"millipede","controller":"millipedeController.js",
@@ -16,6 +16,10 @@
     {
       "name":"dotbangoraKebabom","key":"dotbangoraKebabom","directional":false,
       "controller":"dotbangoraKebabomController.js","health":900,"moveSpeed": 50
+    },
+    {
+      "name":"ghost","key":"ghost","directional":false,
+      "controller":"ghostController.js","moveSpeed": 50
     },
     {
       "name":"beetle","key":"beetle","controller":"kubusController.js",

@@ -57,7 +57,7 @@
                     {
                      "controller":"readerController.js",
                      "key":"ererom",
-                     "text":"hello friends\nhow are you today?\n~\n\nI am the best\nyes I am\n~\n\nI am so ngosd :)"
+                     "text":"Stoama mor Valread Treparsom!\n~\n\ngorad gebelum vumem me gamum sademem ursasmad ursotad tobure.\ngamom sademem tovotarse tob tovotom mor kavesars.\n~\n\ntamsad gamom telemem sotarse let gamom telemem tovotad kabtra lusad redars.\ngamra latarse mar goka tu ordom garmem lestesarse ger gamra molars let sotad\ngamom telemem tovotad kabtars kole mosad geadama delarmem gamars.\n~\n\nbort tovotad gebelure let gamum tormamem sotur kot altarad esom beam ta\nsaresra tagedom seakmem gamra molaur let gamum obemem ladmemterkmemra temars tu\nmormemBEAMGOUmemra temars."
                     },
                  "propertytypes":
                     {
@@ -96,15 +96,19 @@
                  "y":226.178316788195
                 }, 
                 {
-                 "height":74,
+                 "height":140,
                  "id":165,
                  "name":"toToVine",
                  "properties":
                     {
-                     "script":"ctx.transport(\"toVine\",\"fromErerom\");"
+                     "map":"toVine",
+                     "region":"fromErerom",
+                     "script":"region.js"
                     },
                  "propertytypes":
                     {
+                     "map":"string",
+                     "region":"string",
                      "script":"string"
                     },
                  "rotation":0,
@@ -112,7 +116,7 @@
                  "visible":true,
                  "width":32.2262745846858,
                  "x":798.845641992085,
-                 "y":197.585400934915
+                 "y":154.585400934915
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -121,7 +125,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":168,
+ "nextobjectid":170,
  "orientation":"orthogonal",
  "properties":
     {
@@ -142,7 +146,7 @@
          "columns":10,
          "firstgid":1,
          "image":"..\/images\/outside.png",
-         "imageheight":1280,
+         "imageheight":1440,
          "imagewidth":320,
          "margin":0,
          "name":"outsideTiles",
@@ -172,7 +176,7 @@
                  "name":"water",
                  "tile":-1
                 }],
-         "tilecount":400,
+         "tilecount":450,
          "tileheight":32,
          "tileproperties":
             {

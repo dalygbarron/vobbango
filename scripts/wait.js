@@ -7,10 +7,7 @@
 function* wait(time)
 {
   var elapsed = 0;
-  while (elapsed < time)
-  {
-    elapsed += yield;
-  }
+  while (elapsed < time) elapsed += yield;
   return elapsed - time;
 }
 
