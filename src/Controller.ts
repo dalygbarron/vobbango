@@ -47,7 +47,7 @@ namespace Scumbag
 
     /** runs the controller's script.
      * returns false normally, or true when the script is over */
-    run(elapsed:number):boolean
+    run(elapsed: number): boolean
     {
       if (this.states.length > 0)
       {
@@ -65,7 +65,7 @@ namespace Scumbag
         else this.states = [];
       }
 
-      return this.script.next(elapsed).done;
+      return this.script.next(elapsed as undefined).done;
     }
 
 

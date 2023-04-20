@@ -350,7 +350,7 @@ var Scumbag;
 ;
 var Scumbag;
 (function (Scumbag) {
-    var Enemies;
+    let Enemies;
     (function (Enemies) {
         function getEnemyData(type, game) {
             let data = game.cache.getJSON("enemies").enemies;
@@ -383,13 +383,13 @@ var Scumbag;
 })(Scumbag || (Scumbag = {}));
 var Scumbag;
 (function (Scumbag) {
+    let MusicChannel;
     (function (MusicChannel) {
         MusicChannel[MusicChannel["Music"] = 0] = "Music";
         MusicChannel[MusicChannel["Ambience"] = 1] = "Ambience";
         MusicChannel[MusicChannel["NChannels"] = 2] = "NChannels";
-    })(Scumbag.MusicChannel || (Scumbag.MusicChannel = {}));
-    var MusicChannel = Scumbag.MusicChannel;
-    var MusicManager;
+    })(MusicChannel = Scumbag.MusicChannel || (Scumbag.MusicChannel = {}));
+    let MusicManager;
     (function (MusicManager) {
         let game;
         let currentSongKey = new Array(MusicChannel.NChannels);
@@ -450,7 +450,7 @@ var Scumbag;
 ;
 var Scumbag;
 (function (Scumbag) {
-    var StateOfGame;
+    let StateOfGame;
     (function (StateOfGame) {
         function flush() {
             StateOfGame.parameters =
@@ -511,7 +511,7 @@ var Scumbag;
 ;
 var Scumbag;
 (function (Scumbag) {
-    var Util;
+    let Util;
     (function (Util) {
         function slow(value) {
             if (value.x > 1)
@@ -1108,20 +1108,20 @@ var Scumbag;
 })(Scumbag || (Scumbag = {}));
 var Scumbag;
 (function (Scumbag) {
+    let Button;
     (function (Button) {
         Button[Button["Shoot"] = 0] = "Shoot";
         Button[Button["Strafe"] = 1] = "Strafe";
         Button[Button["Bomb"] = 2] = "Bomb";
         Button[Button["Pause"] = 3] = "Pause";
         Button[Button["nButtons"] = 4] = "nButtons";
-    })(Scumbag.Button || (Scumbag.Button = {}));
-    var Button = Scumbag.Button;
+    })(Button = Scumbag.Button || (Scumbag.Button = {}));
+    let Axis;
     (function (Axis) {
         Axis[Axis["Horizontal"] = 0] = "Horizontal";
         Axis[Axis["Vertical"] = 1] = "Vertical";
         Axis[Axis["nAxes"] = 2] = "nAxes";
-    })(Scumbag.Axis || (Scumbag.Axis = {}));
-    var Axis = Scumbag.Axis;
+    })(Axis = Scumbag.Axis || (Scumbag.Axis = {}));
     class InputDevice {
     }
     Scumbag.InputDevice = InputDevice;
@@ -1167,7 +1167,7 @@ var Scumbag;
 var Scumbag;
 (function (Scumbag) {
     const N_INPUT_DEVICES = 1;
-    var InputManager;
+    let InputManager;
     (function (InputManager) {
         let inputDevices = Array(N_INPUT_DEVICES);
         function init(game) {
@@ -1516,8 +1516,8 @@ var Scumbag;
         return Scumbag.createActor(game, "player", playerData);
     }
     class Overworld extends Scumbag.GuiState {
-        constructor(...args) {
-            super(...args);
+        constructor() {
+            super(...arguments);
             this.background = null;
             this.enemies = [];
             this.overlay = null;
