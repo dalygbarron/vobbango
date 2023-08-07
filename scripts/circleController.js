@@ -1,4 +1,30 @@
-#include "std.js"
+function getAngleToPlayer()
+{
+  return Math.atan2(state.player.y - (caller.y),state.player.x - (caller.body.x + caller.body.width / 2));
+}
+function getFutureAngleToPlayer(bulletSpeed)
+{
+  var time = Math.hypot(state.player.x - (caller.body.x + caller.body.width / 2),state.player.y - (caller.y)) / bulletSpeed;
+  return Math.atan2((state.player.y + time * state.scroll.y) - (caller.y),(state.player.x + time * state.scroll.x) - (caller.body.x + caller.body.width / 2));
+}
+function bulletAngleToPlayer(bullet)
+{
+  return Math.atan2(state.player.y - bullet.y,state.player.x - bullet.x);
+}
+function setSelfSwitch(name,value)
+{
+  ctx.setSwitch(ctx.state.tilemap.key+"-"+ctx.caller.name+"-"+name,value);
+}
+function getSelfSwitch(name)
+{
+  return ctx.getSwitch(ctx.state.tilemap.key+"-"+ctx.caller.name+"-"+name,value);
+}
+function compareArrays(a,b)
+{
+  if (a.length != b.length) return false;
+  for (var i = 0 ;i < a.length;i++) if (a[i] != b[i]) return false;
+  return true;
+}
 
 var angle = 0;
 var bullets = state.createBulletGroup(caller,100,60,'blood1','shot');
@@ -7,19 +33,14 @@ var hammerBullets = state.createBulletGroup(caller,100,60,'hammerBullet','shot')
 var player = state.player;
 var xOffset = caller.body.width / 2;
 var yOffset = caller.body.height / 2;
-
-
 function* waveBit()
 {
   const N_WAVES = 10;
   var currentOnes = [];
-
   for (var i = 0;i < N_WAVES;i++) currentOnes.push(bullets.fire(caller.body.x + xOffset,caller.body.y + yOffset,0,0,Math.PI * 2 / N_WAVES * i - Math.PI));
   yield* wait(1000);
   for (var i = 0;i < N_WAVES;i++) currentOnes[i].redirect(Math.atan2(player.y - currentOnes[i].y,player.x - currentOnes[i].x),bullets.speed);
 }
-
-
 function* gravityBit()
 {
   var elapsed = yield(null);
@@ -29,22 +50,17 @@ function* gravityBit()
   thickCircle.update(elapsed);
   thinCircle.update(elapsed);
 }
-
-
 function* hammerBit()
 {
   const SPREAD = 1;
   const WIDTH = 7;
   const LENGTH = 2;
   const GAP = 300;
-
   var angle = Math.atan2(player.y - caller.y,player.x - caller.x);
-
   for (var i = 0;i < WIDTH;i++)
   {
     hammerBullets.fire(caller.body.x + xOffset,caller.body.y,0,0,angle + i * SPREAD / WIDTH - SPREAD / 2);
   }
-
   for (var i = 0;i < LENGTH;i++)
   {
     yield* wait(GAP);
@@ -52,7 +68,6 @@ function* hammerBit()
   }
   yield* wait(GAP);
 }
-
 function* spearBit()
 {
   const LENGTH = 7;
@@ -60,34 +75,21 @@ function* spearBit()
   const DAMP = 0.9;
   const RING = 20;
   const PERIOD = Math.PI * 2 / RING;
-
   var angle = Math.atan2(player.y - caller.y,player.x - caller.x);
-
   var speed = hammerBullets.speed;
   for (var i = 0;i < LENGTH;i++)
   {
     hammerBullets.fireAtSpeed(caller.body.x + xOffset,caller.body.y,angle,speed);
     speed *= DAMP;
   }
-
   for (var i = 0;i < RING;i++)
   {
     var bullet = bullets.fire(caller.body.x + xOffset,caller.body.y,0,0,i * PERIOD - Math.PI);
     bullet.body.acceleration.x = Math.random() * 50 - 25;
     bullet.body.acceleration.y = Math.random() * 50 - 25;
   }
-
   yield* waitRandomMove(GAP);
 }
-
-
-
-
-//caller.setHalo("waves",3,10);
-
-
-
-/** a periodic thing for firing a thick circle in the bullets group */
 var thickCircle = new Periodic(90,function()
 {
   bullets.fire
@@ -96,22 +98,11 @@ var thickCircle = new Periodic(90,function()
     player.body.y - caller.body.y,Math.random() * Math.PI * 2 - Math.PI
   );
 });
-
-/** periodic for a thin circle in otherBullets */
 var thinCircle = new Periodic(70,function()
 {
   otherBullets.fire(caller.body.x + xOffset,caller.body.y + yOffset,0,0,angle);
 });
-
-
-
-
-//logic starts hereW
 yield* speak("I am going to kill you");
-
-
-
-/* just fires thinCircle */
 caller.fighting = true;
 while (caller.health > 80)
 {
@@ -119,10 +110,8 @@ while (caller.health > 80)
   angle += elapsed / 110;
   thinCircle.update(elapsed);
 }
-
-//a little chat in between
 caller.fighting = false;
-music.fadeOut(1000,Channel.Music);//TODO: put this into std
+music.fadeOut(1000,Channel.Music);
 yield* speak("n","Yeah ok, but check out...");
 sound.play("charge");
 yield* waitAnimation("red");
@@ -130,17 +119,10 @@ music.playSong("trogBattle",Channel.Music);
 yield* speak("n","MELTING ATTACK!!");
 state.setOverlay("fog",100,300);
 caller.fighting = true;
-
-
-
-//second loop with both at once
 thinCircle.period *= 2;
 while (caller.health > 40) yield* hammerBit();
-
 yield* waitMoveToRegion("finalArea");
-
 while (caller.health > 0) yield* gravityBit();
-
 caller.fighting = false;
 yield* speak("n","I am dead now");
 state.removeOverlay();

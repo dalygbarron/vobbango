@@ -1,52 +1,63 @@
-#ifndef WAIT_H
-#define WAIT_H
-
-#include "std.js"
-
-/** makes the actor wait until a certain amount of time has passed */
+function getAngleToPlayer()
+{
+  return Math.atan2(state.player.y - (caller.y),state.player.x - (caller.body.x + caller.body.width / 2));
+}
+function getFutureAngleToPlayer(bulletSpeed)
+{
+  var time = Math.hypot(state.player.x - (caller.body.x + caller.body.width / 2),state.player.y - (caller.y)) / bulletSpeed;
+  return Math.atan2((state.player.y + time * state.scroll.y) - (caller.y),(state.player.x + time * state.scroll.x) - (caller.body.x + caller.body.width / 2));
+}
+function bulletAngleToPlayer(bullet)
+{
+  return Math.atan2(state.player.y - bullet.y,state.player.x - bullet.x);
+}
+function setSelfSwitch(name,value)
+{
+  ctx.setSwitch(ctx.state.tilemap.key+"-"+ctx.caller.name+"-"+name,value);
+}
+function getSelfSwitch(name)
+{
+  return ctx.getSwitch(ctx.state.tilemap.key+"-"+ctx.caller.name+"-"+name,value);
+}
+function compareArrays(a,b)
+{
+  if (a.length != b.length) return false;
+  for (var i = 0 ;i < a.length;i++) if (a[i] != b[i]) return false;
+  return true;
+}
 function* wait(time)
 {
   var elapsed = 0;
   while (elapsed < time) elapsed += yield;
   return elapsed - time;
 }
-
-
-/** makes the actor wait until an animation has played to continue */
 function* waitAnimation(name)
 {
   caller.animations.play(name);
   while (!caller.animations.currentAnim.isFinished) yield;
 }
-
 function* waitEffect(x,y,name,nFrames,framerate)
 {
   var effect = state.addEffect(x,y,name,nFrames,framerate);
   while (effect.alive) yield;
 }
-
-
-/** wait for caller to move to a location */
 function* waitMove(x,y)
 {
   while (true)
   {
     var elapsed = yield;
-    if (close(getX(),x,caller.body.velocity.x * elapsed / 1000) &&
-        close(getY(),y,caller.body.velocity.y * elapsed / 1000))
+    if (close((caller.body.x + caller.body.width / 2),x,caller.body.velocity.x * elapsed / 1000) &&
+        close((caller.y),y,caller.body.velocity.y * elapsed / 1000))
     {
       caller.x = x - caller.body.width / 2;
       caller.y = y;
       return;
     }
-    var angle = Math.atan2(y - getY(),x - getX());
+    var angle = Math.atan2(y - (caller.y),x - (caller.body.x + caller.body.width / 2));
     caller.body.velocity.x = Math.cos(angle) * caller.properties.moveSpeed;
     caller.body.velocity.y = Math.sin(angle) * caller.properties.moveSpeed;
   }
 }
-
-
-/** wait for caller to move randomly for a set period of time */
 function* waitRandomMove(time)
 {
   var angle = Math.random() * Math.PI * 2 - Math.PI;
@@ -54,13 +65,9 @@ function* waitRandomMove(time)
   caller.body.velocity.y = Math.cos(angle) * caller.properties.moveSpeed;
   yield* wait(time);
 }
-
-
-/** wait for caller to move randomly for a certain amount of time, unless he goes too
- * far from home in which case he returns to it */
 function* waitMoveNearPosition(time,x,y,maxDistance)
 {
-  var distance = Math.cos(Math.atan2(getY() - y,getX() - x)) * (getX() - x);
+  var distance = Math.cos(Math.atan2((caller.y) - y,(caller.body.x + caller.body.width / 2) - x)) * ((caller.body.x + caller.body.width / 2) - x);
   if (distance < maxDistance)
   {
     var angle = Math.random() * Math.PI * 2 - Math.PI;
@@ -73,9 +80,6 @@ function* waitMoveNearPosition(time,x,y,maxDistance)
     yield* waitMove(x,y);
   }
 }
-
-
-/** wait for caller to move into a region */
 function* waitMoveToRegion(region)
 {
   var region = state.regions[region];
@@ -84,15 +88,8 @@ function* waitMoveToRegion(region)
   yield* waitMove(x,y);
   caller.body.velocity.set(0);
 }
-
-
-
-/** tells you if a value is close to a target, within the margin */
 function close(value,target,margin)
 {
   margin = Math.abs(margin);
   return ((value >= target - margin) && (value <= target + margin));
 }
-
-
-#endif

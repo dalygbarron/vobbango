@@ -1,25 +1,13 @@
-#ifndef THEATRE_H
-#define THEATRE_H
-
-/** builds a textbox where name is the speaker's name, chip is the chip graphic,
- * and text is the text in the textbox */
 function* say(name,text)
 {
   state.buildTextbox(name,text);
   yield;
 }
-
-
-/** like say, but uses info from the caller to guess the name and chip and stuff */
 function* speak(text)
 {
   state.buildTextbox(caller.properties.name,text);
   yield;
 }
-
-
-/** reads out the contents of the book property belonging to the actor denoted
- * by name */
 function* read(book,bookName)
 {
   var content = ctx.state.tilemap.properties[book].split("-");
@@ -28,15 +16,12 @@ function* read(book,bookName)
     yield* say(bookName,content[i].trim());
   }
 }
-
-/** make the actor look at the player */
 function* watch()
 {
   var dx = state.player.x - (caller.body.x + caller.body.width / 2);
   var dy = state.player.y - caller.y;
   var distance = Math.hypot(dx,dy);
   if (distance < caller.width) return;
-
   var x = caller.x;
   var y = caller.y;
   var angle = Math.atan2(state.player.y - caller.y,state.player.x - (caller.body.x + caller.body.width / 2));
@@ -49,8 +34,6 @@ function* watch()
   var elapsed = 0;
   while (elapsed < 200) elapsed += yield;
 }
-
-
 function* goSpooky(time)
 {
   var totalTime = 0;
@@ -72,7 +55,6 @@ function* goSpooky(time)
     }
   }
 }
-
 function* endSpooky(time)
 {
   var totalTime = 0;
@@ -94,7 +76,6 @@ function* endSpooky(time)
     }
   }
 }
-
 function* awaitCollision(meanwhile=null)
 {
   var collision = caller.collision;
@@ -109,11 +90,9 @@ function* awaitCollision(meanwhile=null)
     else yield;
   }
 }
-
 function* awaitSeperation()
 {
   const GAP = 100;
-
   while (true)
   {
     var collision = caller.collision;
@@ -122,5 +101,3 @@ function* awaitSeperation()
     if (collision == caller.collision) break;
   }
 }
-
-#endif
