@@ -1,41 +1,34 @@
-const CREDIT_MESSAGE = "Hello and welcome to my new game, I hope you have fun.\n"+
-                      "Feel free to send me email about aspects of this game or my\n"+
-                      "personality that you hate. marineorganism@gmail.com"
+const CREDIT_MESSAGE = `Hello and welcome to my the new EXPANSION pack to the
+greatest game of the early 21st century. Vobbangora Gorad Dortsars: THE DOGS
+ARE COMING OUT OF THE WATER. My name is DANY BURTON AND I AM BACK.
+Yes I have been hardening my brain in the hottest forges of HELL. BUT I AM BACK.
+This game is dedicated to all freaks, degenerates, bastards, swinepigs and
+moths.`;
 
-
-function *load()
-{
+function *load() {
   state.buildSlot();
   yield;
-
-  if (state.guiValue >= 1 && state.guiValue <= 3)
-  {
+  if (state.guiValue >= 1 && state.guiValue <= 3) {
     controller.loadGame(state.guiValue);
-    if (controller.getCharacters().length == 0)
-    {
+    if (controller.getCharacters().length == 0) {
       controller.setSlot(state.guiValue);
       controller.addCharacter("stasbangoraKebabom");
       controller.transport("next","start");
+    } else {
+      controller.toOverworld();
     }
-    controller.toOverworld();
   }
 }
 
-
-function *credits()
-{
+function *credits() {
   state.buildTextbox("Dany Burton",CREDIT_MESSAGE,"dany_n");
   yield;
 }
 
-
-function *deleting()
-{
+function *deleting() {
   state.buildSlot(true);
   yield;
-
-  if (state.guiValue >= 2 && state.guiValue <= 4)
-  {
+  if (state.guiValue >= 2 && state.guiValue <= 4) {
     controller.setSlot(state.guiValue - 1);
     controller.saveGame();
     state.buildTextbox("Deleted","Slot "+controller.getSlot()+" deleted!",null);
@@ -43,27 +36,20 @@ function *deleting()
   }
 }
 
-
-while (true)
-{
-  state.buildQA("Vobangora Gorad Dortsars",null,"Play",
-                                              "A game by Dany Burton",
-                                              "Delete Saves");
+while (true) {
+  state.buildQA(
+    "Vobangora Gorad Dortsars: Vaedsom Gedarmem Somoarse",
+    null,
+    "Play",
+    "A game by Dany Burton",
+    "Delete Saves"
+  );
   yield;
-
-  //start new game
-  if (state.guiValue == 1)
-  {
+  if (state.guiValue == 1) {
     yield* load();
-  }
-  //show a pic of me!
-  else if (state.guiValue == 2)
-  {
+  } else if (state.guiValue == 2) {
     yield* credits();
-  }
-  //delete some saves
-  else if (state.guiValue == 3)
-  {
+  } else if (state.guiValue == 3) {
     yield* deleting();
   }
 }

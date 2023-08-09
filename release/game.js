@@ -116,6 +116,7 @@ var Scumbag;
         }
         loadAnimations() {
             let animations = this.game.cache.getJSON("animations").animations[this.key];
+            console.log(this.key);
             for (let animation of animations) {
                 this.animations.add(animation.name, Scumbag.Util.range(animation.frames[0] - 1, animation.frames[1] - 1), animation.fps, animation.loop);
             }
@@ -204,6 +205,7 @@ var Scumbag;
             this.master = master;
             this.speed = speed;
             this.sound = sound;
+            this.lastSound = this.game.time.now;
             for (let i = 0; i < size; i++) {
                 let bullet = new Scumbag.Bullet(game, key);
                 this.add(bullet, true);
@@ -211,11 +213,19 @@ var Scumbag;
                 bullet.alive = false;
             }
         }
+        doSound() {
+            if (this.sound == null)
+                return;
+            let currentTime = this.game.time.now;
+            if (currentTime > this.lastSound) {
+                this.lastSound = currentTime;
+                this.game.sound.play(this.sound);
+            }
+        }
         fire(x, y, gx, gy, angle) {
             if (!Scumbag.Util.onScreen(x, y, this.game))
                 return null;
-            if (this.sound != null)
-                this.game.sound.play(this.sound);
+            this.doSound();
             let bullet = this.getFirstExists(false);
             if (bullet != null)
                 bullet.fire(x, y, angle, this.speed, gx, gy);
@@ -228,8 +238,7 @@ var Scumbag;
                 y > this.game.camera.y + this.game.camera.height + this.game.camera.height / 2) {
                 return null;
             }
-            if (this.sound != null)
-                this.game.sound.play(this.sound);
+            this.doSound();
             let bullet = this.getFirstExists(false);
             if (bullet != null)
                 bullet.fire(x, y, angle, speed, gx, gy);
@@ -247,11 +256,26 @@ var Scumbag;
 ;
 var Scumbag;
 (function (Scumbag) {
-    const generatorConstructor = Object.getPrototypeOf(function* () { }).constructor;
+    function createGenerator(code, env) {
+        const generatorConstructor = Object.getPrototypeOf(function* () { }).constructor;
+        let keys = [];
+        let values = [];
+        for (let key in env) {
+            keys.push(key);
+            values.push(env[key]);
+        }
+        keys.push(code);
+        let generator = generatorConstructor(...keys);
+        return generator(...values);
+    }
     function storeActor(actor) {
         if (!(actor instanceof Scumbag.Actor))
             return;
-        Scumbag.StateOfGame.parameters.actors.push({ name: actor.name, x: actor.x, y: actor.y });
+        Scumbag.StateOfGame.parameters.actors.push({
+            name: actor.name,
+            x: actor.x,
+            y: actor.y
+        });
     }
     function storeActors(game) {
         let state = game.state.getCurrentState();
@@ -264,7 +288,18 @@ var Scumbag;
         constructor(game, scriptName, caller) {
             this.states = new Array();
             let input = Scumbag.InputManager.getInputDevice(0);
-            this.script = generatorConstructor("state", "caller", "input", "Axis", "Button", "sound", "music", "Channel", "StateOfGame", "controller", game.cache.getText(scriptName))((game.state.getCurrentState()), caller, input, Scumbag.Axis, Scumbag.Button, game.sound, Scumbag.MusicManager, Scumbag.MusicChannel, Scumbag.StateOfGame, this);
+            this.script = createGenerator(game.cache.getText(scriptName), {
+                "state": (game.state.getCurrentState()),
+                "caller": caller,
+                "input": input,
+                "Axis": Scumbag.Axis,
+                "Button": Scumbag.Button,
+                "sound": game.sound,
+                "music": Scumbag.MusicManager,
+                "Channel": Scumbag.MusicChannel,
+                "StateOfGame": Scumbag.StateOfGame,
+                "controller": this,
+            });
             this.caller = caller;
             this.game = game;
         }
@@ -453,19 +488,18 @@ var Scumbag;
     let StateOfGame;
     (function (StateOfGame) {
         function flush() {
-            StateOfGame.parameters =
-                {
-                    slot: 0,
-                    switches: {},
-                    variables: {},
-                    characters: [],
-                    map: "",
-                    playerKey: "",
-                    actors: new Array(),
-                    score: 0,
-                    lives: 3,
-                    time: 0
-                };
+            StateOfGame.parameters = {
+                slot: 0,
+                switches: {},
+                variables: {},
+                characters: [],
+                map: "",
+                playerKey: "",
+                actors: new Array(),
+                score: 0,
+                lives: 3,
+                time: 0
+            };
         }
         StateOfGame.flush = flush;
         let timerFunction = 0;
@@ -492,8 +526,9 @@ var Scumbag;
         function load(slot) {
             if (typeof (Storage) !== "undefined") {
                 let data = localStorage.getItem("save" + slot);
-                if (data != null)
+                if (data != null) {
                     StateOfGame.parameters = JSON.parse(data);
+                }
                 else {
                     console.log("oing the other way");
                     flush();
@@ -506,6 +541,16 @@ var Scumbag;
             StateOfGame.parameters.slot = slot;
         }
         StateOfGame.load = load;
+        function s(key, value = null) {
+            if (value !== null)
+                StateOfGame.parameters.switches[key] = value;
+            return StateOfGame.parameters.switches[key];
+        }
+        StateOfGame.s = s;
+        function ss(key, value = null) {
+            return s(`_${StateOfGame.parameters.map}_${key}_`, value);
+        }
+        StateOfGame.ss = ss;
     })(StateOfGame = Scumbag.StateOfGame || (Scumbag.StateOfGame = {}));
 })(Scumbag || (Scumbag = {}));
 ;
@@ -1509,9 +1554,15 @@ var Scumbag;
             return;
         this.controller = new Scumbag.Controller(this.game, "pause.js", null);
     }
-    function addPlayerAtRegion(game, region, key) {
+    function addPlayerAtRegion(game, region) {
         let playerData = {
-            x: region.x, y: region.y, width: region.width, height: region.height, properties: { kind: "player" }
+            x: region.x,
+            y: region.y,
+            width: region.width,
+            height: region.height,
+            properties: {
+                kind: "player"
+            }
         };
         return Scumbag.createActor(game, "player", playerData);
     }
@@ -1525,7 +1576,7 @@ var Scumbag;
             this.hitCooldown = 0.0;
             this.scroll = { x: 0, y: 0 };
         }
-        init(map = null, playerRegion) {
+        init(map, playerRegion) {
             this.playerRegion = playerRegion;
             if (map == null) {
                 this.map = Scumbag.StateOfGame.parameters.map;
@@ -1551,14 +1602,17 @@ var Scumbag;
                     if (this.tilemap.properties.background != "") {
                         this.background = new Scumbag.Background(this.tilemap.properties.background, this.game);
                     }
-                    else
+                    else {
                         this.background = null;
+                    }
                 }
-                else
+                else {
                     this.background = null;
+                }
             }
-            else
+            else {
                 this.background = null;
+            }
             this.tilemap.destroy();
             this.tilemap = this.add.tilemap(this.map);
             for (let i in this.tilemap.tilesets) {
@@ -1578,7 +1632,7 @@ var Scumbag;
                 this.player.body.immovable = false;
             }
             else {
-                this.player = addPlayerAtRegion(this.game, this.regions[this.playerRegion], Scumbag.StateOfGame.parameters.playerKey);
+                this.player = addPlayerAtRegion(this.game, this.regions[this.playerRegion]);
             }
             this.actors = this.game.add.group();
             this.actors.add(this.player);
@@ -1596,9 +1650,11 @@ var Scumbag;
                         var type = data[0];
                         var chance = parseFloat(data[1]);
                         if (Math.random() < chance) {
-                            let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, (tile.y * tile.height - this.player.height) + Math.random() * tile.height, type);
+                            let object = new Phaser.Sprite(this.game, tile.x * tile.width + Math.random() * tile.width, (tile.y * tile.height - this.player.height) +
+                                Math.random() * tile.height, type);
                             object.anchor.set(0.5, 0);
-                            let animationSpeed = this.game.cache.getJSON("animations").animations[type][0].fps;
+                            let animationSpeed = this.game.cache.getJSON("animations")
+                                .animations[type][0].fps;
                             object.animations.add("stand", null, Math.random() * animationSpeed, true);
                             object.animations.play("stand");
                             this.actors.add(object);
@@ -1612,42 +1668,48 @@ var Scumbag;
             this.game.camera.focusOn(this.player);
             if (this.tilemap.properties != null) {
                 if (this.tilemap.properties.hasOwnProperty("music")) {
-                    if (this.tilemap.properties.music == "none")
+                    if (this.tilemap.properties.music == "none") {
                         Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Music);
-                    else
+                    }
+                    else {
                         Scumbag.MusicManager.playSong(this.tilemap.properties.music, Scumbag.MusicChannel.Music);
+                    }
                 }
                 if (this.tilemap.properties.hasOwnProperty("ambience")) {
-                    if (this.tilemap.properties.ambience == "none")
+                    if (this.tilemap.properties.ambience == "none") {
                         Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
-                    else
+                    }
+                    else {
                         Scumbag.MusicManager.playSong(this.tilemap.properties.ambience, Scumbag.MusicChannel.Ambience);
+                    }
                 }
-                else
+                else {
                     Scumbag.MusicManager.stopSong(Scumbag.MusicChannel.Ambience);
-                if (this.tilemap.properties.hasOwnProperty("overlay")) {
-                    let overlayData = this.tilemap.properties.overlay.split(",");
-                    this.overlayDrift = { x: overlayData[1], y: overlayData[2] };
-                    this.overlay = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, overlayData[0]);
-                    this.overlay.fixedToCamera = true;
-                    this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
                 }
-                if (this.tilemap.properties.hasOwnProperty("scrollX"))
+                if (this.tilemap.properties.hasOwnProperty("scrollX")) {
                     this.scroll.x = this.tilemap.properties.scrollX;
-                else
+                }
+                else {
                     this.scroll.x = 0;
-                if (this.tilemap.properties.hasOwnProperty("scrollY"))
+                }
+                if (this.tilemap.properties.hasOwnProperty("scrollY")) {
                     this.scroll.y = this.tilemap.properties.scrollY;
-                else
+                }
+                else {
                     this.scroll.y = 0;
+                }
             }
             else {
                 this.scroll = { x: 0, y: 0 };
             }
-            if (this.scroll.x == 0 && this.scroll.y == 0)
+            if (this.scroll.x == 0 && this.scroll.y == 0 &&
+                (this.tilemap.widthInPixels > 842 ||
+                    this.tilemap.heightInPixels > 420)) {
                 this.game.camera.follow(this.player);
-            else
+            }
+            else {
                 this.game.camera.roundPx = false;
+            }
             this.lives = this.game.add.tileSprite(0, 0, 60, 20, "life");
             this.lives.fixedToCamera = true;
             let device = Scumbag.InputManager.getInputDevice(0);
@@ -1673,8 +1735,9 @@ var Scumbag;
             }
             if (this.hitCooldown > 0) {
                 this.hitCooldown -= this.game.time.elapsedMS;
-                if (this.hitCooldown <= 0)
+                if (this.hitCooldown <= 0) {
                     this.player.blendMode = PIXI.blendModes.NORMAL;
+                }
             }
             for (let child of this.bullets.children) {
                 if (child instanceof Scumbag.BulletGroup) {
@@ -1752,7 +1815,6 @@ var Scumbag;
         }
         restoreActors() {
             for (let i = 0; i < Scumbag.StateOfGame.parameters.actors.length; i++) {
-                console.log(Scumbag.StateOfGame.parameters.actors[i].name);
                 let dude = this.getActorByName(Scumbag.StateOfGame.parameters.actors[i].name);
                 dude.x = Scumbag.StateOfGame.parameters.actors[i].x;
                 dude.y = Scumbag.StateOfGame.parameters.actors[i].y;
@@ -1778,22 +1840,6 @@ var Scumbag;
             effect.animations.play("animation");
             effect.animations.currentAnim.killOnComplete = true;
             return effect;
-        }
-        setOverlay(key, drift, time = 1000) {
-            if (this.overlay != null)
-                this.overlay.destroy();
-            this.overlay = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, key);
-            this.overlay.fixedToCamera = true;
-            this.overlay.blendMode = PIXI.blendModes.MULTIPLY;
-            this.overlayDrift = drift;
-            this.overlay.alpha = 0;
-            this.add.tween(this.overlay).to({ alpha: 1 }, time, Phaser.Easing.Default, true);
-        }
-        removeOverlay(time = 1000) {
-            if (this.overlay == null)
-                return;
-            let tween = this.add.tween(this.overlay).to({ alpha: 0 }, time, Phaser.Easing.Default, true);
-            tween.onComplete.add(function () { this.overlay.destroy(); }, this);
         }
         addEnemy(enemy) {
             this.enemies.push(enemy);

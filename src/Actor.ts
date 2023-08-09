@@ -102,10 +102,8 @@ module Scumbag
 
 
     /** overrides Phaser.Sprite.update() */
-    update()
-    {
-      if (!(this.updating && this.alive))
-      {
+    update() {
+      if (!(this.updating && this.alive)) {
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
         if (!this.properties.moveOnSpot) this.animations.stop();
@@ -146,21 +144,18 @@ module Scumbag
     }
 
     /** sets the actor's string on the current page */
-    setKey(key:string):void
-    {
+    setKey(key:string):void {
       if (key == "") this.alpha = 0;
       else this.loadTexture(key);
     }
 
     /** overrides damage() so that it doesn't kill them */
-    damage(amount:number):Actor
-    {
+    damage(amount:number):Actor {
       this.health -= amount;
       return this;
     }
 
-    setHalo(key:string,nFrames:number,framerate:number,duration:number=1000)
-    {
+    setHalo(key:string,nFrames:number,framerate:number,duration:number=1000) {
       if (this.halo != null) this.halo.destroy();
       this.halo = this.game.add.sprite(0,0,key);
       this.halo.anchor.set(0.5);
@@ -174,14 +169,15 @@ module Scumbag
       this.halo.blendMode = PIXI.blendModes.MULTIPLY;
     }
 
-    private loadAnimations():void
-    {
+    private loadAnimations(): void {
       let animations = this.game.cache.getJSON("animations").animations[<string>this.key];
-      for (let animation of animations)
-      {
-        this.animations.add(animation.name,
-                            Util.range(animation.frames[0] - 1,animation.frames[1] - 1),
-                            animation.fps,animation.loop);
+      console.log(this.key);
+      for (let animation of animations) {
+        this.animations.add(
+          animation.name,
+          Util.range(animation.frames[0] - 1,animation.frames[1] - 1),
+          animation.fps,animation.loop
+        );
       }
     }
   }

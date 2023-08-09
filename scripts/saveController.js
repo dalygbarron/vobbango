@@ -1,18 +1,16 @@
 #include "theatre.js"
 
-while (true)
-{
+while (true) {
   yield* awaitCollision();
-  state.buildPause("Savepoint","Save","Don't Save");
+  state.buildPause("Savepoint", "Save", "Return Home", "Don't Save");
   yield;
-
-
-  console.log(state.guiValue);
-
-  if (state.guiValue == 1)
-  {
+  if (state.guiValue == 1) {
+    yield* awaitSeperation();
     controller.saveGame();
     controller.playSound("charge");
+  } else if (state.guiValue == 2) {
+    controller.transport("next","start");
+    yield;
   }
   yield* awaitSeperation();
 }

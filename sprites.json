@@ -13,6 +13,15 @@
       ]
     },
     {
+      "key":"alain",
+      "url":"images/alain.png",
+      "animations":
+      [
+        {"name":"front","frames":[1,4],"fps":10,"loop":true},
+        {"name":"back","frames":[5,8],"fps":10,"loop":true}
+      ]
+    },
+    {
       "key":"fly",
       "url":"images/fly.png",
       "animations":

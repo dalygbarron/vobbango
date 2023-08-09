@@ -3,18 +3,27 @@
 
 /** builds a textbox where name is the speaker's name, chip is the chip graphic,
  * and text is the text in the textbox */
-function* say(name,text)
-{
+function* say(name,text) {
   state.buildTextbox(name,text);
   yield;
 }
 
-
 /** like say, but uses info from the caller to guess the name and chip and stuff */
-function* speak(text)
-{
-  state.buildTextbox(caller.properties.name,text);
+function* speak(text) {
+  state.buildTextbox(caller.properties.name || caller.name, text);
   yield;
+}
+
+/**
+ * Basic ass binary question asker that asks a yes no question and gives you a
+ * boolean for a response.
+ * @param string text 
+ * @returns boolean true iff the answer was true and false otherwise.
+ */
+function* binaryQuestion(text) {
+  state.buildPause(text, "Yes", "NO NO PLEASE AAHHHHH");
+  yield;
+  return state.guiValue == 1;
 }
 
 
@@ -32,22 +41,18 @@ function* read(book,bookName)
 /** make the actor look at the player */
 function* watch()
 {
-  var dx = state.player.x - (caller.body.x + caller.body.width / 2);
-  var dy = state.player.y - caller.y;
-  var distance = Math.hypot(dx,dy);
-  if (distance < caller.width) return;
-
-  var x = caller.x;
-  var y = caller.y;
-  var angle = Math.atan2(state.player.y - caller.y,state.player.x - (caller.body.x + caller.body.width / 2));
-  caller.body.velocity.x = Math.cos(angle);
-  caller.body.velocity.y = Math.sin(angle);
+  const x = caller.x;
+  const y = caller.y;
+  const dx = state.player.x - (x + caller.body.width / 2);
+  const dy = state.player.y - y;
+  const distance =  1 / (Math.hypot(dx,dy) * 1000);
+  caller.body.velocity.x = dx * distance;
+  caller.body.velocity.y = dy * distance;
   yield;
   caller.body.velocity.set(0);
-  caller.x = x;
-  caller.y = y;
-  var elapsed = 0;
-  while (elapsed < 200) elapsed += yield;
+  caller.x = x - dx * distance * 0.1;
+  caller.y = y - dy * distance * 0.1;
+  for (let i = 0; i < 10; i++) yield;
 }
 
 
@@ -95,14 +100,11 @@ function* endSpooky(time)
   }
 }
 
-function* awaitCollision(meanwhile=null)
-{
+function* awaitCollision(meanwhile = null) {
   var collision = caller.collision;
-  while (true)
-  {
+  while (true) {
     if (collision != caller.collision) break;
-    else if (meanwhile != null)
-    {
+    else if (meanwhile != null) {
       yield;
       yield* meanwhile();
     }
@@ -110,12 +112,9 @@ function* awaitCollision(meanwhile=null)
   }
 }
 
-function* awaitSeperation()
-{
+function* awaitSeperation() {
   const GAP = 100;
-
-  while (true)
-  {
+  while (true) {
     var collision = caller.collision;
     var elapsed = 0;
     for (var elapsed = 0;elapsed < GAP;elapsed += yield);
